@@ -34,7 +34,10 @@ export default defineConfig(({ command }) => {
     },
   };
 
+  const publicDemo = process.env.VITE_PUBLIC_DEMO === 'true';
+
   return {
+  base: publicDemo ? '/B2B/' : '/',
   plugins: [vue()],
   test: {
     environment: 'jsdom',

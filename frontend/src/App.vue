@@ -4,10 +4,15 @@ import { ApiError, applicationAssetContentUrl, deleteApplicationAsset, listAppli
 import { allSettings, categories, catalog, categoryFor, categoryDisplayLabel, categoryEnglishLabel, displayLabel, englishDisplayLabel, helpText, helpTextEnglish, mappingAudit, mappingLabel, type SettingDefinition } from './catalog';
 import { isOptionEnabled } from './bitmask';
 import { optionDisplayLabel, optionSearchLabels } from './option-labels.tr';
+import { createPublicDemoItems } from './public-demo';
 
 type Language = 'en' | 'tr';
+const publicDemo = import.meta.env.VITE_PUBLIC_DEMO === 'true';
+const publicDemoNotice = 'Herkese açık demo modu etkin. Tüm ayarlar sentetik ve boş başlar. API veya SQL bağlantısı kullanılmaz; düzenlemeler yalnızca bu tarayıcıda taslak olarak kalır.';
 const language = ref<Language>(localStorage.getItem('b2b-settings-language') === 'tr' ? 'tr' : 'en');
 const englishUi: Record<string, string> = {
+  'Herkese açık demo modu etkin. Tüm ayarlar sentetik ve boş başlar. API veya SQL bağlantısı kullanılmaz; düzenlemeler yalnızca bu tarayıcıda taslak olarak kalır.': 'Public demo mode is active. All settings are synthetic and start unset. No API or SQL connection is used; edits remain drafts in this browser only.',
+  'Herkese açık demo': 'Public demo', 'Demo verilerini sıfırla': 'Reset demo',
   'AYARLAR': 'SETTINGS', 'Ayar yönetimi': 'Settings management', 'Arama sonuçları': 'Search results', 'Bağlandı': 'Connected', 'Bağlı değil': 'Disconnected',
   'Ayarları arayın': 'Find settings', 'Bayi mağazanızın ayarlarını buradan inceleyip düzenleyin.': 'Review and manage your dealer store settings here.',
   'Bağlanıyor…': 'Connecting…', 'Ayarları yenile': 'Refresh settings', 'Bağlan': 'Connect', 'Toplam ayar': 'Total settings',
@@ -578,6 +583,18 @@ async function connect(): Promise<void> {
   error.value = '';
   notice.value = '';
   try {
+    if (publicDemo) {
+      const syntheticItems = createPublicDemoItems();
+      items.value = syntheticItems;
+      mode.value = 'Mock';
+      canSaveSettings.value = false;
+      canManageApplicationAssets.value = false;
+      applicationAssets.value = {};
+      syncDrafts(syntheticItems);
+      notice.value = t(publicDemoNotice);
+      return;
+    }
+
     const [result, capabilities] = await Promise.all([loadSettings(), loadSettingsCapabilities()]);
     items.value = result.items;
     mode.value = result.mode;
@@ -616,6 +633,8 @@ async function connect(): Promise<void> {
   }
 }
 
+if (publicDemo) void connect();
+
 onBeforeUnmount(() => {
   if (typeof URL.revokeObjectURL === 'function') for (const preview of Object.values(filePreviewUrls.value)) URL.revokeObjectURL(preview);
 });
@@ -642,7 +661,7 @@ onBeforeUnmount(() => {
       <header class="topbar">
         <div class="crumb">B2B STORE <span>/</span> <b>{{ searchActive ? t('Arama sonuçları') : categoryLabel(selectedCategory) }}</b></div>
         <div class="topbar-actions"><div class="language-switch" role="group" :aria-label="t('Language')"><button type="button" :aria-pressed="language === 'en'" @click="setLanguage('en')">EN</button><button type="button" :aria-pressed="language === 'tr'" @click="setLanguage('tr')">TR</button></div>
-        <div class="mode-pill" :class="mode ? 'mode-sql' : ''"><span aria-hidden="true"></span>{{ mode ? t('Bağlandı') : t('Bağlı değil') }}</div></div>
+        <div class="mode-pill" :class="mode ? 'mode-sql' : ''"><span aria-hidden="true"></span>{{ publicDemo ? t('Herkese açık demo') : mode ? t('Bağlandı') : t('Bağlı değil') }}</div></div>
       </header>
 
       <div class="content">
@@ -652,7 +671,7 @@ onBeforeUnmount(() => {
             <p class="subtitle">{{ t('Bayi mağazanızın ayarlarını buradan inceleyip düzenleyin.') }}</p>
           </div>
           <div class="connect-panel">
-            <button class="button button-primary" :disabled="loading" @click="connect">{{ loading ? t('Bağlanıyor…') : mode ? t('Ayarları yenile') : t('Bağlan') }}</button>
+            <button class="button button-primary" :disabled="loading" @click="connect">{{ loading ? t('Bağlanıyor…') : publicDemo ? t('Demo verilerini sıfırla') : mode ? t('Ayarları yenile') : t('Bağlan') }}</button>
           </div>
         </section>
 

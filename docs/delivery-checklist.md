@@ -19,13 +19,14 @@ Audit date: 2026-11-23. Scope: repository deliverables and local read-only runti
 | Public deployment URL | **Not deployed / none** | No public URL is claimed. Localhost is not a public deployment. |
 | Read-only mode / write flags | **Verified** | The local authenticated API reported `ReadOnly`, `canSaveSettings=false`, `canManageApplicationAssets=false`, and `testWritesEnabled=false`. |
 | No extension test rows remain | **Verified read-only** | The final SELECT-only count for `MemberCode='store5'` returned zero rows in `dbo.DealerSystemSettingExtension`; no other MemberCode was selected. |
-| Credentials and private config | **No usable baseline commit present** | In the uploaded snapshot, `.git/HEAD` points to `refs/heads/master`, but the branch ref and index are absent. `.gitignore` excludes local configuration/secrets, database backups/data files, raw legacy evidence, and temporary media files. Review staged content before creating a first commit. |
+| Git source baseline | **Committed and pushed** | Initial commit `263bb0b` is on `main` and pushed to the public `TalhaAntep/B2B` repository. The `public-demo` branch has been created locally but is not yet pushed. `source/store5.bak`, private local config, raw legacy evidence, and temporary media work files were excluded from the initial commit. Continue reviewing the public tree and history before each push. |
 
 ## Remaining delivery work
 
-1. Create the initial local Git commit only after reviewing the complete staged-file list and confirming that `source/store5.bak`, private configuration, raw legacy evidence, and unrelated loose images are excluded.
-2. Public deployment remains uncompleted and should be treated as a separate approved phase. It requires reviewed authentication, synthetic hosted SQL, compatibility testing, provider/account approval, and cost safeguards.
-3. Human acceptance review is still required for mapping decisions, Turkish terminology, legacy behavior limitations, and the demo's synthetic/read-only framing.
+1. Finish and review the synthetic-only `public-demo` branch, then commit and push it.
+2. Enable GitHub Pages with the GitHub Actions source, verify the workflow and public URL, and only then mark the static demo as deployed.
+3. Full-stack ASP.NET/SQL hosting remains a separate phase requiring synthetic hosted SQL, reviewed identity/authorization, compatibility testing, provider approval, and cost safeguards.
+4. Human acceptance review is still required for mapping decisions, Turkish terminology, legacy behavior limitations, and the demo's synthetic/read-only framing.
 
 ## Final checks recorded for this delivery pass
 
@@ -35,4 +36,4 @@ Audit date: 2026-11-23. Scope: repository deliverables and local read-only runti
 - Backend test suites and SQL integration groups were not rerun in this final delivery-capture pass; the prior **56/56** filtered non-database backend run and eight SQL integration groups remain historical evidence.
 - Final local API/capabilities and SQL checks were read-only. No database writes occurred during this pass.
 - Seven screenshots and MP4/WebM demo artifacts are present under `docs/evidence/delivery/`.
-- No usable Git baseline commit or public deployment exists in the uploaded snapshot.
+- Initial Git baseline commit `263bb0b` is pushed to the public repository; a local `public-demo` branch has been created. No public website deployment has yet been verified.

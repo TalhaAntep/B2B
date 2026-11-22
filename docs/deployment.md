@@ -1,47 +1,56 @@
-# Deployment readiness and plan
+# Deployment plan — public static demo
 
-## Current release state
+## Current state
 
-- No public deployment has been performed and no public URL exists.
-- The local API and frontend are available at `http://127.0.0.1:5080/` and `http://127.0.0.1:5173/`. The API was checked during this audit and reported `ReadOnly`; settings saves and asset management are disabled.
-- The local API uses Windows Integrated Security and a local SQL Server LocalDB database. That database is not reachable from a public hosting service and must never be exposed or copied to a public host.
-- The API's current CORS origins are localhost. The Vite development proxy reads the local admin token server-side; that development-only proxy is not part of the production static frontend.
-- The API uses a single local bearer token rather than reviewed multi-user identity and authorization. Do not publish this token or put it in browser code.
-- Public writes, test-write flags, real tenant data, the SQL backup, and application-owned upload data must remain disabled/excluded.
+- GitHub repository: `https://github.com/TalhaAntep/B2B` (Public).
+- Initial source commit `263bb0b` is on `main` and was pushed to `origin/main`. A local `public-demo` branch has been created for the static demo; it must be pushed after its changes are reviewed and committed.
+- No public website URL is live yet. The expected GitHub Pages project URL after a successful deployment is `https://talhaantep.github.io/B2B/`; verify it in a browser before describing it as deployed.
+- The public demo uses only the Vue static frontend and the checked-in parameter catalog. It creates 98 synthetic, unset values in the browser. It does not call the ASP.NET API or SQL Server.
+- `Store5_Settings_Test`, `Store5_Analysis`, `source/store5.bak`, local configuration, bearer tokens, and all real dealer values must remain excluded from the Pages artifact.
 
-## Free-tier feasibility (checked 2026-11-22)
+## Public demo architecture
 
-| Component | Candidate | Verified free limits / fit | Assessment |
-|---|---|---|---|
-| Vue static frontend | Cloudflare Pages Free | 500 builds/month, one concurrent build, 20-minute build timeout; deployments are retained 30 days, with the 100 most recent always retained. See [Cloudflare Pages limits](https://developers.cloudflare.com/pages/platform/limits/). | Suitable for the static Vue build if the API/auth architecture is made production-safe. |
-| ASP.NET Core API | Azure Container Apps Consumption | Per subscription/month, the first 180,000 vCPU-seconds, 360,000 GiB-seconds and 2 million external HTTP requests are free. Other Azure resources/networking can add charges. See [Container Apps billing](https://learn.microsoft.com/azure/container-apps/billing). | A plausible low-traffic API host; validate container build, scaling, logs, networking and billing behavior. A free allowance is not a zero-cost guarantee. |
-| SQL-compatible storage | Azure SQL Database Free Tier | Up to 10 General Purpose serverless databases per subscription; each has 100,000 vCore-seconds, 32 GB data and 32 GB backup storage per month. The free tier has no SLA; auto-pause-at-limit avoids automatic paid overage but makes the DB unavailable until the next month. Existing databases cannot be restored/converted into this offer. See [Azure SQL free tier](https://learn.microsoft.com/en-us/azure/azure-sql/database/free-offer) and [FAQ](https://learn.microsoft.com/en-us/azure/azure-sql/database/free-offer-faq). | This is actual Azure SQL Database, based on the SQL Server engine; it is a viable SQL-compatible candidate, not yet proven against this app's exact schema, migration, and query behavior. Use a new synthetic database only. |
-| Alternative API host | Render Free Web Service | Sleeps after 15 minutes without inbound traffic; cold start may take about a minute; filesystem is ephemeral; free web services have no persistent disk. Render's free relational offering is PostgreSQL and expires after 30 days, so it is not a SQL Server replacement. See [Render free services](https://render.com/docs/free). | Not a suitable end-to-end storage choice for this SQL Server-targeted app. Could host an API only if it connects to another approved SQL Server-compatible service and its sleep/outbound limits are acceptable. |
+| Component | Deployment | Purpose |
+|---|---|---|
+| Vue 3 + TypeScript | GitHub Pages | Static project showcase built from `frontend/`. |
+| Synthetic data | Browser memory | `createPublicDemoItems()` maps all 98 catalog controls to `value: null`, `editable: false`. |
+| ASP.NET Core API | Not deployed | Local-only service; no API host is required for the public demo. |
+| SQL Server | Not deployed | No database connection or database credentials exist in the public demo build. |
+| Settings writes | Disabled | UI changes remain browser-only drafts; the Save action is unavailable. |
+| Asset persistence | Disabled | File selection is only a local preview; no upload/delete request is made. |
 
-PostgreSQL or SQLite must not be substituted for SQL Server without an explicitly approved data-access redesign and compatibility testing. No SQL Server service is configured in a hosting account today.
+The Vite build uses `VITE_PUBLIC_DEMO=true` to select the static demo branch and the repository subpath base `/B2B/`. `frontend/src/App.vue` returns synthetic data before reaching API calls. The public branch does not require any GitHub repository secrets.
 
-## Recommended deployment sequence
+## Publish steps
 
-1. **Project Manager selects hosting and approves cost controls.** Confirm Azure account/subscription eligibility, region, billing method, monthly budgets/alerts, and Azure SQL free-limit behavior. Creating resources has not been authorized in this task.
-2. **Prepare synthetic-only SQL.** Create a new Azure SQL Database using the free-tier offer and a newly authored synthetic seed. Never restore `source/store5.bak`, `Store5_Settings_Test`, or `Store5_Analysis`; the SQL free offer cannot be applied to a restored existing DB. Validate schema and API queries in a private staging environment.
-3. **Close the authentication gap.** Replace the local single shared bearer-token pattern with an approved multi-user OIDC identity flow (for example, Microsoft Entra ID) and server-side authorization. Do not embed bearer credentials in the static bundle. Add a same-origin API/BFF route or an explicitly reviewed API token exchange; configure exact-origin CORS only if cross-origin calls remain.
-4. **Make the hosting artifact.** Build the Vue app as a static site for Cloudflare Pages. Containerize the .NET 10 API for Azure Container Apps and bind to the host-provided port. Keep write routes unavailable in deployment; the public demo must be synthetic-data and read-only.
-5. **Handle assets deliberately.** The current application-owned upload store uses local filesystem storage. Do not use it on an ephemeral container filesystem. Either disable uploads in the public demo or design and review durable object storage before enabling them; never claim old-portal compatibility for app-only assets.
-6. **Stage and verify privately.** Configure secrets through provider secret stores/managed identity, TLS, logging redaction, request limits, health checks, backups, and free-usage monitoring. Run frontend/backend tests and read-only API acceptance checks against synthetic data. Confirm all response values are synthetic and that save routes are absent/disabled.
-7. **Human release approval.** Review security, tenant boundaries, accessibility, labels, SQL compatibility, cost safeguards and the public demo content. Only then publish and add a URL after it is externally reachable and verified.
+1. Review the public repository for secrets or unintended data before every push. Keep it Public only if all committed code and evidence are approved for public viewing.
+2. Work on `public-demo`; do not change `main` for this static demo task.
+3. Run frontend tests and both normal and `VITE_PUBLIC_DEMO=true` production builds locally. Confirm the public demo has no API requests and that the Save/upload actions are unavailable.
+4. Commit the reviewed changes and push `public-demo` to `origin`.
+5. In GitHub repository Settings → Pages, choose **GitHub Actions** as the deployment source.
+6. Open Actions and verify `Deploy public synthetic demo` passes.
+7. Open `https://talhaantep.github.io/B2B/` in a private browser window. Verify all 98 settings load, EN/TR works, search works, edits remain drafts, no Save/upload action is exposed, and the browser network panel shows no `/api` requests.
+8. Only after those checks pass, record the public URL in the README and final delivery report.
+
+## Security and data boundaries
+
+- The GitHub Pages artifact contains static frontend assets only. It does not contain the ASP.NET API binaries, local appsettings, `.env` files, connection strings, bearer tokens, `source/store5.bak`, SQL data files, or SQL backups.
+- The static public demo has no connection to `Store5_Settings_Test` or `Store5_Analysis`. Never restore a database backup into GitHub Pages or commit real customer values.
+- `canSaveSettings` and `canManageApplicationAssets` remain `false` in public demo mode. Browser drafts are not sent to a server and disappear when the page is reset/reloaded.
+- The GitHub Actions workflow grants only `contents: read`, `pages: write`, and `id-token: write`; it has no application secrets.
+- Public source publication is intentional. Never commit tokens, private keys, personal data, customer data, or the excluded legacy-evidence bundle. If a secret is ever committed, making the repository private or deleting the latest file is not enough: revoke/rotate the secret and consider the full Git history exposed.
+
+## Separate future phase: full-stack hosted application
+
+The GitHub Pages demo does **not** satisfy a live SQL-backed production deployment. A separate full-stack project would require a SQL Server-compatible managed database populated only with synthetic data, a hosted ASP.NET Core API, per-user identity and authorization (not the current single local admin token), exact-origin access controls, HTTPS, secret management, rate limits, logging redaction, durable asset storage or disabled uploads, and a cost/availability review. No Azure subscription is available in the currently checked university directory; Azure is not mandatory for the static demo. Do not provision paid services or deploy any database as part of this Pages task.
 
 ## Current blockers
 
-- No hosting provider/account, Azure subscription, hosted SQL database, synthetic seed, or approved region is configured.
-- Public authentication and production same-origin/API integration are not implemented or reviewed. Current local Vite token proxy cannot be copied into a static frontend deployment.
-- Exact Azure SQL compatibility has not been tested; some mappings and legacy portal effects remain unresolved.
-- No public URL exists. Local evidence is available as seven synthetic Mock-mode screenshots and MP4/WebM demo recordings in `docs/evidence/delivery/`; these do not represent a public deployment or live SQL customer data.
-- The uploaded snapshot has no usable Git baseline commit: `HEAD` points to `refs/heads/master`, but the master ref and Git index are absent. Review the staged-file list and excluded private files before creating the first local commit.
+- Static demo code and workflow are prepared on the local `public-demo` branch but have not yet been committed/pushed in the current stage.
+- GitHub Pages has not yet been enabled with the GitHub Actions source.
+- No public site URL has been verified.
+- Full-stack ASP.NET/SQL hosting remains out of scope and has not been configured.
 
-## Safety requirements
+## Current checks
 
-- Never deploy `Store5_Analysis`, `Store5_Settings_Test`, another real dealer's data, `source/store5.bak`, credentials, tokens, or private config.
-- Keep `B2BSTORE_SQL_WRITE_TEST_MODE` and `B2BSTORE_SETTINGS_WRITE_MODE` unset on hosted services. The hosted API must remain read-only.
-- Keep account creation, paid resources, external deployment, and source publication subject to Project Manager approval.
-- The Azure and Render limits above are provider documentation snapshots checked on 2026-11-22; re-check immediately before provisioning.
-
+The existing local delivery checks remain: frontend `npm test` **35/35**, frontend production build passed, and .NET Release solution build passed with zero warnings and zero errors. After the static demo changes are applied, repeat frontend tests and build in the user's Windows environment with `VITE_PUBLIC_DEMO=true`; do not rerun SQL integration tests or enable write flags for this static demo.

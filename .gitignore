@@ -48,3 +48,6 @@
 TestResults/
 .vs/
 .idea/
+
+# Disposable debug capture; not part of the delivery evidence set
+docs/evidence/delivery/debug-pending.png
