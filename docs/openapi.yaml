@@ -1,0 +1,249 @@
+openapi: 3.0.3
+info:
+  title: B2B STORE Technical Settings API
+  version: 0.1.0
+  description: Settings reads are standard. The fixed-catalog PUT route is conditionally registered only in explicit local Development test mode; Production remains read-only.
+servers:
+  - url: http://127.0.0.1:5080
+paths:
+  /health:
+    get:
+      security: []
+      responses:
+        '200':
+          description: Application health only.
+  /api/settings/catalog:
+    get:
+      security:
+        - bearerAuth: []
+      responses:
+        '200':
+          description: Allowlisted parameter catalog with evidence status.
+  /api/settings:
+    get:
+      security:
+        - bearerAuth: []
+      responses:
+        '200':
+          description: Settings for the server-configured mode and MemberCode context.
+        '503':
+          description: Missing local SQL configuration or database unavailable.
+    put:
+      description: Available only in authenticated Development + SQL mode when B2BSTORE_SQL_WRITE_TEST_MODE=true. Accepts only fixed allowlisted control IDs; SQL table and column names are never supplied by the client. The route is absent in normal and Production mode. Persistent testing requires a verified external backup and restoration of the captured original values.
+      security:
+        - bearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [changes]
+              properties:
+                changes:
+                  type: array
+                  minItems: 1
+                  items:
+                    type: object
+                    required: [parameterId, expectedValue]
+                    properties:
+                      parameterId:
+                        type: string
+                        description: Must be in the fixed server-side allowlist.
+                      expectedValue:
+                        nullable: true
+                        oneOf:
+                          - type: string
+                          - type: boolean
+                        description: Current API value used for optimistic concurrency.
+                      value:
+                        nullable: true
+                        oneOf:
+                          - type: string
+                          - type: boolean
+                        description: Typed setting value; SQL bigint values remain decimal strings.
+                      bitOperations:
+                        type: array
+                        items:
+                          type: object
+                          required: [optionValue, enabled]
+                          properties:
+                            optionValue:
+                              type: string
+                            enabled:
+                              type: boolean
+      responses:
+        '200':
+          description: Fixed allowlisted changes committed and verified by read-back.
+        '400':
+          description: Invalid value or source option.
+        '401':
+          description: Bearer authentication required.
+        '404':
+          description: Route is unavailable outside explicit local test mode.
+        '409':
+          description: Setting changed concurrently; no overwrite performed.
+  /api/settings/test/rollback-only:
+    post:
+      description: Available only when ASPNETCORE_ENVIRONMENT=Development, B2BSTORE_MODE=SqlServer, and B2BSTORE_SQL_WRITE_TEST_MODE=true. Requires bearer authentication. Updates only SiteStatus and/or ParameterOrder inside a serializable transaction and always rolls back; there is no commit path.
+      security:
+        - bearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              minProperties: 1
+              properties:
+                siteStatus:
+                  type: object
+                  required: [expectedValue, newValue]
+                  properties:
+                    expectedValue:
+                      type: integer
+                      nullable: true
+                      description: Expected current value for concurrency control.
+                    newValue:
+                      type: integer
+                      enum: [0, 1]
+                      description: 1 is Active; 0 is Inactive.
+                parameterOrder:
+                  type: object
+                  required: [expectedValue, operations]
+                  properties:
+                    expectedValue:
+                      type: string
+                      nullable: true
+                      pattern: '^-?[0-9]+$'
+                      description: Current SQL bigint as a decimal string, or null.
+                    operations:
+                      type: array
+                      minItems: 1
+                      items:
+                        type: object
+                        required: [optionValue, enabled]
+                        properties:
+                          optionValue:
+                            type: string
+                            description: Catalog-listed power-of-two decimal string, never a JSON number.
+                          enabled:
+                            type: boolean
+      responses:
+        '200':
+          description: Values before the transaction, after read-back inside it, and after confirmed rollback. Bigint values are decimal strings.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  siteStatusBefore:
+                    type: integer
+                    nullable: true
+                  siteStatusInsideTransaction:
+                    type: integer
+                    nullable: true
+                  siteStatusAfterRollback:
+                    type: integer
+                    nullable: true
+                  parameterOrderBefore:
+                    type: string
+                    nullable: true
+                  parameterOrderInsideTransaction:
+                    type: string
+                    nullable: true
+                  parameterOrderAfterRollback:
+                    type: string
+                    nullable: true
+                  rolledBack:
+                    type: boolean
+        '400':
+          description: Invalid values or option masks.
+        '401':
+          description: Missing or invalid bearer token.
+        '403':
+          description: Database, SQL instance, or member is outside the fixed test scope.
+        '404':
+          description: Rollback-only route is not enabled for this process.
+        '409':
+          description: Ambiguous row, concurrency conflict, or rollback/read-back verification failure.
+        '503':
+          description: Missing configuration or database unavailable.
+  /api/settings/test/persistent-save:
+    post:
+      description: Development-only persistent test save for the exact Store5_Settings_Test database and store5 row. Requires bearer authentication and the explicit process flag. Uses the same fixed 81-field allowlist as PUT /api/settings. All values are parameterized and concurrency checked. SiteStatus is limited to 0/1. Bitmask settings accept catalog-listed operations and are computed server-side with bigint-safe preservation. No arbitrary table, column, or setting key is accepted. Use only after an external verified backup and restore original values after the controlled test.
+      security:
+        - bearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              minProperties: 1
+              properties:
+                siteStatus:
+                  type: object
+                  required: [expectedValue, newValue]
+                  properties:
+                    expectedValue:
+                      type: integer
+                      nullable: true
+                    newValue:
+                      type: integer
+                      enum: [0, 1]
+                parameterOrder:
+                  type: object
+                  required: [expectedValue, operations]
+                  properties:
+                    expectedValue:
+                      type: string
+                      nullable: true
+                      pattern: '^-?[0-9]+$'
+                    operations:
+                      type: array
+                      minItems: 1
+                      items:
+                        type: object
+                        required: [optionValue, enabled]
+                        properties:
+                          optionValue:
+                            type: string
+                          enabled:
+                            type: boolean
+      responses:
+        '200':
+          description: Committed values read back and verified after commit. ParameterOrder is a decimal string.
+          content:
+            application/json:
+              schema:
+                type: object
+                required: [siteStatus, parameterOrder, committed]
+                properties:
+                  siteStatus:
+                    type: integer
+                    nullable: true
+                  parameterOrder:
+                    type: string
+                    nullable: true
+                  committed:
+                    type: boolean
+        '400':
+          description: Invalid or unsupported values.
+        '401':
+          description: Missing or invalid bearer token.
+        '403':
+          description: Database, SQL instance, or member is outside fixed test scope.
+        '404':
+          description: Persistent test route is unavailable outside explicit local test mode.
+        '409':
+          description: Ambiguous row, concurrency conflict, or read-back verification failure.
+        '503':
+          description: Database unavailable or save could not be verified.
+components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: local admin token
+

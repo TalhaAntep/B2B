@@ -1,0 +1,4715 @@
+{
+  "source": "DealerSystemSetting HTML inventory v2 + DealerSettings schema shared in conversation",
+  "scope": "Control-to-DealerSettings mapping candidates; no customer values, ViewState, credentials, tokens, or secret setting values included.",
+  "important_caveat": "No server-side code-behind was provided. Therefore every mapping is a candidate, not a confirmed persistence mapping. Do not use this file alone to implement writes.",
+  "counts": {
+    "semantic_control_mapping_candidate": 93,
+    "unresolved_control_has_no_clear_column": 2,
+    "unresolved_no_schema_match": 3
+  },
+  "groups": [
+    {
+      "panel": "User",
+      "section": "General",
+      "controlCount": 1,
+      "controls": [
+        {
+          "panel": "User",
+          "section": "General",
+          "label": "Site State",
+          "controlName": "ctl00$PageContent$ddlSiteStatus",
+          "controlId": "ctl00_PageContent_ddlSiteStatus",
+          "element": "select",
+          "type": "select",
+          "multiple": false,
+          "options": [
+            {
+              "value": "1",
+              "label": "Active"
+            },
+            {
+              "value": "0",
+              "label": "Inactive"
+            }
+          ],
+          "databaseColumnCandidate": "SiteStatus",
+          "mappingStatus": "semantic_control_mapping_candidate",
+          "verificationNote": "Candidate only: ASP.NET page HTML and DealerSettings schema name/type reviewed; server-side code-behind or a non-mutating save-path trace is still needed for confirmation."
+        }
+      ]
+    },
+    {
+      "panel": "User",
+      "section": "Visual Settings",
+      "controlCount": 7,
+      "controls": [
+        {
+          "panel": "User",
+          "section": "Visual Settings",
+          "label": "Layout",
+          "controlName": "ctl00$PageContent$ddlLayout",
+          "controlId": "ctl00_PageContent_ddlLayout",
+          "element": "select",
+          "type": "select",
+          "multiple": false,
+          "options": [
+            {
+              "value": "1",
+              "label": "Align the Add to Cart button to the right in the product list"
+            },
+            {
+              "value": "0",
+              "label": "Align the Add to Cart button to the left in the product list"
+            }
+          ],
+          "databaseColumnCandidate": "Layout",
+          "mappingStatus": "semantic_control_mapping_candidate",
+          "verificationNote": "Candidate only: ASP.NET page HTML and DealerSettings schema name/type reviewed; server-side code-behind or a non-mutating save-path trace is still needed for confirmation."
+        },
+        {
+          "panel": "User",
+          "section": "Visual Settings",
+          "label": "Product Image Aspect Ratio",
+          "controlName": "ctl00$PageContent$txtProductImageAspectRatio",
+          "controlId": "ctl00_PageContent_txtProductImageAspectRatio",
+          "element": "input",
+          "type": "text",
+          "databaseColumnCandidate": "ProductImageAspectRatio",
+          "mappingStatus": "semantic_control_mapping_candidate",
+          "verificationNote": "Candidate only: ASP.NET page HTML and DealerSettings schema name/type reviewed; server-side code-behind or a non-mutating save-path trace is still needed for confirmation."
+        },
+        {
+          "panel": "User",
+          "section": "Visual Settings",
+          "label": "Logo (Dark)",
+          "controlName": "ctl00$PageContent$imgLogo$imageUpload",
+          "controlId": "ctl00_PageContent_imgLogo_imageUpload",
+          "element": "input",
+          "type": "file",
+          "multiple": false,
+          "databaseColumnCandidate": "Logo",
+          "mappingStatus": "semantic_control_mapping_candidate",
+          "verificationNote": "Candidate only: ASP.NET page HTML and DealerSettings schema name/type reviewed; server-side code-behind or a non-mutating save-path trace is still needed for confirmation."
+        },
+        {
+          "panel": "User",
+          "section": "Visual Settings",
+          "label": "Logo (Light)",
+          "controlName": "ctl00$PageContent$imgLogo2$imageUpload",
+          "controlId": "ctl00_PageContent_imgLogo2_imageUpload",
+          "element": "input",
+          "type": "file",
+          "multiple": false,
+          "databaseColumnCandidate": "Logo2",
+          "mappingStatus": "semantic_control_mapping_candidate",
+          "verificationNote": "Candidate only: ASP.NET page HTML and DealerSettings schema name/type reviewed; server-side code-behind or a non-mutating save-path trace is still needed for confirmation."
+        },
+        {
+          "panel": "User",
+          "section": "Visual Settings",
+          "label": "Logo (Log In)",
+          "controlName": "ctl00$PageContent$imgLogoLogin$imageUpload",
+          "controlId": "ctl00_PageContent_imgLogoLogin_imageUpload",
+          "element": "input",
+          "type": "file",
+          "multiple": false,
+          "databaseColumnCandidate": "LogoLogin",
+          "mappingStatus": "semantic_control_mapping_candidate",
+          "verificationNote": "Candidate only: ASP.NET page HTML and DealerSettings schema name/type reviewed; server-side code-behind or a non-mutating save-path trace is still needed for confirmation."
+        },
+        {
+          "panel": "User",
+          "section": "Visual Settings",
+          "label": "Favicon",
+          "controlName": "ctl00$PageContent$imgFavicon$imageUpload",
+          "controlId": "ctl00_PageContent_imgFavicon_imageUpload",
+          "element": "input",
+          "type": "file",
+          "multiple": false,
+          "databaseColumnCandidate": "Favicon",
+          "mappingStatus": "semantic_control_mapping_candidate",
+          "verificationNote": "Candidate only: ASP.NET page HTML and DealerSettings schema name/type reviewed; server-side code-behind or a non-mutating save-path trace is still needed for confirmation."
+        },
+        {
+          "panel": "User",
+          "section": "Visual Settings",
+          "label": "Default Image in Non-Image Products",
+          "controlName": "ctl00$PageContent$imgNoImage$imageUpload",
+          "controlId": "ctl00_PageContent_imgNoImage_imageUpload",
+          "element": "input",
+          "type": "file",
+          "multiple": false,
+          "databaseColumnCandidate": "NoImageImage",
+          "mappingStatus": "semantic_control_mapping_candidate",
+          "verificationNote": "Candidate only: ASP.NET page HTML and DealerSettings schema name/type reviewed; server-side code-behind or a non-mutating save-path trace is still needed for confirmation."
+        }
+      ]
+    },
+    {
+      "panel": "User",
+      "section": "Color Settings",
+      "controlCount": 2,
+      "controls": [
+        {
+          "panel": "User",
+          "section": "Color Settings",
+          "label": "Layout Color",
+          "controlName": "ctl00$PageContent$txtLayoutColor",
+          "controlId": "ctl00_PageContent_txtLayoutColor",
+          "element": "input",
+          "type": "text",
+          "databaseColumnCandidate": "LayoutColor",
+          "mappingStatus": "semantic_control_mapping_candidate",
+          "verificationNote": "Candidate only: ASP.NET page HTML and DealerSettings schema name/type reviewed; server-side code-behind or a non-mutating save-path trace is still needed for confirmation."
+        },
+        {
+          "panel": "User",
+          "section": "Color Settings",
+          "label": "Layout Color 2",
+          "controlName": "ctl00$PageContent$txtLayoutColor2",
+          "controlId": "ctl00_PageContent_txtLayoutColor2",
+          "element": "input",
+          "type": "text",
+          "databaseColumnCandidate": "LayoutColor2",
+          "mappingStatus": "semantic_control_mapping_candidate",
+          "verificationNote": "Candidate only: ASP.NET page HTML and DealerSettings schema name/type reviewed; server-side code-behind or a non-mutating save-path trace is still needed for confirmation."
+        }
+      ]
+    },
+    {
+      "panel": "User",
+      "section": "Google Analytics / Tag Manager Settings",
+      "controlCount": 3,
+      "controls": [
+        {
+          "panel": "User",
+          "section": "Google Analytics / Tag Manager Settings",
+          "label": "Meta Tags",
+          "controlName": "ctl00$PageContent$txtGoogleAnalysticScript",
+          "controlId": "ctl00_PageContent_txtGoogleAnalysticScript",
+          "element": "textarea",
+          "type": "textarea",
+          "databaseColumnCandidate": "GoogleAnalysticScript",
+          "mappingStatus": "semantic_control_mapping_candidate",
+          "verificationNote": "Candidate only: ASP.NET page HTML and DealerSettings schema name/type reviewed; server-side code-behind or a non-mutating save-path trace is still needed for confirmation."
+        },
+        {
+          "panel": "User",
+          "section": "Google Analytics / Tag Manager Settings",
+          "label": "Script Codes",
+          "controlName": "ctl00$PageContent$txtGoogleAnalysticProfileID",
+          "controlId": "ctl00_PageContent_txtGoogleAnalysticProfileID",
+          "element": "textarea",
+          "type": "textarea",
+          "databaseColumnCandidate": "GoogleAnalysticProfileID",
+          "mappingStatus": "semantic_control_mapping_candidate",
+          "verificationNote": "Candidate only: ASP.NET page HTML and DealerSettings schema name/type reviewed; server-side code-behind or a non-mutating save-path trace is still needed for confirmation."
+        },
+        {
+          "panel": "User",
+          "section": "Google Analytics / Tag Manager Settings",
+          "label": "NoScript Codes",
+          "controlName": "ctl00$PageContent$txtGoogleAdWordsReMarketingCode",
+          "controlId": "ctl00_PageContent_txtGoogleAdWordsReMarketingCode",
+          "element": "textarea",
+          "type": "textarea",
+          "databaseColumnCandidate": "GoogleAdWordsReMarketingCode",
+          "mappingStatus": "semantic_control_mapping_candidate",
+          "verificationNote": "Candidate only: ASP.NET page HTML and DealerSettings schema name/type reviewed; server-side code-behind or a non-mutating save-path trace is still needed for confirmation."
+        }
+      ]
+    },
+    {
+      "panel": "Admin",
+      "section": "Design Settings",
+      "controlCount": 10,
+      "controls": [
+        {
+          "panel": "Admin",
+          "section": "Design Settings",
+          "label": "Category Menu",
+          "controlName": "ctl00$PageContent$ddlCategoryMenu",
+          "controlId": "ctl00_PageContent_ddlCategoryMenu",
+          "element": "select",
+          "type": "select",
+          "multiple": false,
+          "options": [
+            {
+              "value": "1",
+              "label": "Menu Impression"
+            },
+            {
+              "value": "2",
+              "label": "Homepage in Picture Presantation"
+            },
+            {
+              "value": "3",
+              "label": "Without Pictures Impressions"
+            },
+            {
+              "value": "4",
+              "label": "All The Page Picture Impressions"
+            },
+            {
+              "value": "0",
+              "label": "Do Not Show"
+            }
+          ],
+          "databaseColumnCandidate": "CategoryMenuVisible",
+          "mappingStatus": "semantic_control_mapping_candidate",
+          "verificationNote": "Candidate only: ASP.NET page HTML and DealerSettings schema name/type reviewed; server-side code-behind or a non-mutating save-path trace is still needed for confirmation."
+        },
+        {
+          "panel": "Admin",
+          "section": "Design Settings",
+          "label": "Design Parameters",
+          "controlName": "ctl00$PageContent$ddlParameterDesign",
+          "controlId": "ctl00_PageContent_ddlParameterDesign",
+          "element": "select",
+          "type": "select",
+          "multiple": true,
+          "options": [
+            {
+              "value": "1",
+              "label": "Show Product Image Directly"
+            },
+            {
+              "value": "2",
+              "label": "Product Default View Block View"
+            },
+            {
+              "value": "4",
+              "label": "Product Default View Long Block View"
+            },
+            {
+              "value": "8",
+              "label": "Iconic Menu Displaying"
+            },
+            {
+              "value": "16",
+              "label": "Colored Icon Menu Displayin"
+            },
+            {
+              "value": "32",
+              "label": "Normal Menu Displaying"
+            },
+            {
+              "value": "64",
+              "label": "Show Picture in Category Menu"
+            },
+            {
+              "value": "128",
+              "label": "Oval View"
+            },
+            {
+              "value": "256",
+              "label": "Show Left Category Menu on Products"
+            },
+            {
+              "value": "512",
+              "label": "Fullscreen"
+            },
+            {
+              "value": "1024",
+              "label": "Deals of the Day Single Banner"
+            },
+            {
+              "value": "2048",
+              "label": "Show 'Brand Menu' at Top"
+            },
+            {
+              "value": "4096",
+              "label": "Show large image when product image is clicked"
+            },
+            {
+              "value": "8192",
+              "label": "Special design on mobile"
+            },
+            {
+              "value": "16384",
+              "label": "Show top menu"
+            },
+            {
+              "value": "32768",
+              "label": "Fixed B2B Menu"
+            },
+            {
+              "value": "65536",
+              "label": "Show Left Category Menu V2"
+            },
+            {
+              "value": "131072",
+              "label": "Show  \"Header\" Menu"
+            },
+            {
+              "value": "262144",
+              "label": "Show Home Products As Banner"
+            },
+            {
+              "value": "524288",
+              "label": "\"Category Menu\"  Show Left"
+            },
+            {
+              "value": "1048576",
+              "label": "\"Category Menu\"  Show On Top"
+            },
+            {
+              "value": "2097152",
+              "label": "Don't Show  \"B2B Menu\""
+            },
+            {
+              "value": "4194304",
+              "label": "Show \"B2B Login\""
+            },
+            {
+              "value": "8388608",
+              "label": "Don't Show \"Dealer Menu\""
+            },
+            {
+              "value": "16777216",
+              "label": "\"New Membership\" Pop Up"
+            },
+            {
+              "value": "33554432",
+              "label": "Show \"Header Menu in Login\""
+            },
+            {
+              "value": "67108864",
+              "label": "Show \"Footer Menu in Login\""
+            },
+            {
+              "value": "134217728",
+              "label": "Menu should be closed by default on mobile"
+            },
+            {
+              "value": "268435456",
+              "label": "Header menü koyu arka plan"
+            },
+            {
+              "value": "536870912",
+              "label": "Show category banner on homepage"
+            },
+            {
+              "value": "1073741824",
+              "label": "Show brand banner on homepage"
+            },
+            {
+              "value": "2147483648",
+              "label": "Show Dynamic Search"
+            },
+            {
+              "value": "4294967296",
+              "label": "Display Normal Menu (Dark Background)"
+            },
+            {
+              "value": "8589934592",
+              "label": "Desktop menu design on mobile"
+            },
+            {
+              "value": "17179869184",
+              "label": "Show Category Menu at Top V2"
+            },
+            {
+              "value": "34359738368",
+              "label": "Dont Show Second Menu"
+            },
+            {
+              "value": "68719476736",
+              "label": "Show Detail Search"
+            },
+            {
+              "value": "137438953472",
+              "label": "Show Filter"
+            },
+            {
+              "value": "274877906944",
+              "label": "Show all filters regardless of category"
+            },
+            {
+              "value": "549755813888",
+              "label": "Show only categories linked to product"
+            },
+            {
+              "value": "1099511627776",
+              "label": "Energetic Intro"
+            },
+            {
+              "value": "2199023255552",
+              "label": "Default Product View: Multi View"
+            },
+            {
+              "value": "4398046511104",
+              "label": "Remove line limit on product name in block view"
+            },
+            {
+              "value": "8796093022208",
+              "label": "Do not show title in homepage products"
+            },
+            {
+              "value": "17592186044416",
+              "label": "Anasayfa kategori menüsünde alt kategorilerin hepsi birlikte görünsün"
+            },
+            {
+              "value": "35184372088832",
+              "label": "Ürün Varsayılan Görünümü Tablo Görünümü"
+            },
+            {
+              "value": "70368744177664",
+              "label": "Dinamik arama üstte göster"
+            },
+            {
+              "value": "140737488355328",
+              "label": "Hesabım menüsüne tıkladığında sabit b2b menü açılmasın"
+            },
+            {
+              "value": "281474976710656",
+              "label": "Akordiyon Kategori"
+            },
+            {
+              "value": "562949953421312",
+              "label": "İndirim kapatma switchi göster"
+            },
+            {
+              "value": "1125899906842624",
+              "label": "Sesle arama göster"
+            },
+            {
+              "value": "2251799813685248",
+              "label": "Kategori üst menü koyu arka plan"
+            },
+            {
+              "value": "4503599627370496",
+              "label": "Mobilde tekli ürün görünümü"
+            },
+            {
+              "value": "9007199254740992",
+              "label": "Sağ tık ve kopyalama devre dışı"
+            },
+            {
+              "value": "18014398509481984",
+              "label": "Stok kapatma switchi göster"
+            },
+            {
+              "value": "36028797018963968",
+              "label": "Kategori menü üstte gösterimde alt menü geniş gelsin"
+            },
+            {
+              "value": "72057594037927936",
+              "label": "Site arama motorlarında taranmasın"
+            },
+            {
+              "value": "144115188075855872",
+              "label": "Tek dil kullanan site url'lerinde dil kodu görünmesin"
+            }
+          ],
+          "databaseColumnCandidate": "ParameterDesign",
+          "mappingStatus": "semantic_control_mapping_candidate",
+          "verificationNote": "Candidate only: ASP.NET page HTML and DealerSettings schema name/type reviewed; server-side code-behind or a non-mutating save-path trace is still needed for confirmation."
+        },
+        {
+          "panel": "Admin",
+          "section": "Design Settings",
+          "label": "Theme Parameter",
+          "controlName": "ctl00$PageContent$ddParameterThema",
+          "controlId": "ctl00_PageContent_ddParameterThema",
+          "element": "select",
+          "type": "select",
+          "multiple": false,
+          "options": [
+            {
+              "value": "0",
+              "label": "Standart Design"
+            },
+            {
+              "value": "-1",
+              "label": "Automotive Design"
+            },
+            {
+              "value": "1",
+              "label": "Design 1"
+            },
+            {
+              "value": "2",
+              "label": "Design 2"
+            },
+            {
+              "value": "3",
+              "label": "Design 3"
+            },
+            {
+              "value": "4",
+              "label": "Design 4"
+            },
+            {
+              "value": "5",
+              "label": "Design 5"
+            },
+            {
+              "value": "6",
+              "label": "Design 6"
+            },
+            {
+              "value": "7",
+              "label": "Design 7"
+            },
+            {
+              "value": "8",
+              "label": "Design 8"
+            },
+            {
+              "value": "9",
+              "label": "Design 9"
+            },
+            {
+              "value": "10",
+              "label": "Design 10"
+            },
+            {
+              "value": "11",
+              "label": "Design 11"
+            },
+            {
+              "value": "12",
+              "label": "Design 12"
+            },
+            {
+              "value": "13",
+              "label": "Design 13"
+            },
+            {
+              "value": "14",
+              "label": "Design 14"
+            },
+            {
+              "value": "15",
+              "label": "Design 15"
+            },
+            {
+              "value": "16",
+              "label": "Design 16"
+            },
+            {
+              "value": "17",
+              "label": "Design 17"
+            },
+            {
+              "value": "18",
+              "label": "Design 18"
+            },
+            {
+              "value": "19",
+              "label": "Design 19"
+            },
+            {
+              "value": "20",
+              "label": "Design 20"
+            },
+            {
+              "value": "21",
+              "label": "Design 21"
+            },
+            {
+              "value": "22",
+              "label": "Design 22"
+            },
+            {
+              "value": "23",
+              "label": "Design 23"
+            },
+            {
+              "value": "24",
+              "label": "Design 24"
+            },
+            {
+              "value": "25",
+              "label": "Design 25"
+            },
+            {
+              "value": "26",
+              "label": "Design 26"
+            },
+            {
+              "value": "27",
+              "label": "Design 27"
+            },
+            {
+              "value": "28",
+              "label": "Design 28"
+            },
+            {
+              "value": "29",
+              "label": "Design 29"
+            },
+            {
+              "value": "30",
+              "label": "Design 30"
+            }
+          ],
+          "databaseColumnCandidate": "ParameterTheme",
+          "mappingStatus": "semantic_control_mapping_candidate",
+          "verificationNote": "Candidate only: ASP.NET page HTML and DealerSettings schema name/type reviewed; server-side code-behind or a non-mutating save-path trace is still needed for confirmation."
+        },
+        {
+          "panel": "Admin",
+          "section": "Design Settings",
+          "label": "Don't Show Menu At Dealers",
+          "controlName": "ctl00$PageContent$ddlDontShowMenuAtDealers",
+          "controlId": "ctl00_PageContent_ddlDontShowMenuAtDealers",
+          "element": "select",
+          "type": "select",
+          "multiple": false,
+          "options": [
+            {
+              "value": "0",
+              "label": "Hide"
+            },
+            {
+              "value": "1",
+              "label": "Show"
+            }
+          ],
+          "databaseColumnCandidate": "DontShowMenuAtDealers",
+          "mappingStatus": "semantic_control_mapping_candidate",
+          "verificationNote": "Candidate only: ASP.NET page HTML and DealerSettings schema name/type reviewed; server-side code-behind or a non-mutating save-path trace is still needed for confirmation."
+        },
+        {
+          "panel": "Admin",
+          "section": "Design Settings",
+          "label": "Filter Show",
+          "controlName": "ctl00$PageContent$ddlFilterSort",
+          "controlId": "ctl00_PageContent_ddlFilterSort",
+          "element": "select",
+          "type": "select",
+          "multiple": false,
+          "options": [
+            {
+              "value": "0",
+              "label": "Hide"
+            },
+            {
+              "value": "1",
+              "label": "Show"
+            }
+          ],
+          "databaseColumnCandidate": "SortFilterShow",
+          "mappingStatus": "semantic_control_mapping_candidate",
+          "verificationNote": "Candidate only: ASP.NET page HTML and DealerSettings schema name/type reviewed; server-side code-behind or a non-mutating save-path trace is still needed for confirmation."
+        },
+        {
+          "panel": "Admin",
+          "section": "Design Settings",
+          "label": "Filter Display",
+          "controlName": "ctl00$PageContent$ddUseFiltering",
+          "controlId": "ctl00_PageContent_ddUseFiltering",
+          "element": "select",
+          "type": "select",
+          "multiple": true,
+          "options": [
+            {
+              "value": "2",
+              "label": "Brand Filter"
+            },
+            {
+              "value": "4",
+              "label": "Product Features"
+            },
+            {
+              "value": "8",
+              "label": "Variation Filter"
+            },
+            {
+              "value": "16",
+              "label": "Kategori filtresi"
+            }
+          ],
+          "databaseColumnCandidate": "UseFiltering",
+          "mappingStatus": "semantic_control_mapping_candidate",
+          "verificationNote": "Candidate only: ASP.NET page HTML and DealerSettings schema name/type reviewed; server-side code-behind or a non-mutating save-path trace is still needed for confirmation."
+        },
+        {
+          "panel": "Admin",
+          "section": "Design Settings",
+          "label": "Product Sorting",
+          "controlName": "ctl00$PageContent$ddlProductSort",
+          "controlId": "ctl00_PageContent_ddlProductSort",
+          "element": "select",
+          "type": "select",
+          "multiple": false,
+          "options": [
+            {
+              "value": "0",
+              "label": "Normal"
+            },
+            {
+              "value": "1",
+              "label": "Product Number"
+            },
+            {
+              "value": "2",
+              "label": "Product Name"
+            },
+            {
+              "value": "3",
+              "label": "Product  Code"
+            },
+            {
+              "value": "8",
+              "label": "Product Code: Z → A"
+            },
+            {
+              "value": "4",
+              "label": "Stock"
+            },
+            {
+              "value": "5",
+              "label": "Brand"
+            },
+            {
+              "value": "6",
+              "label": "Special Sorting"
+            },
+            {
+              "value": "7",
+              "label": "Campaign"
+            }
+          ],
+          "databaseColumnCandidate": "ProductSort",
+          "mappingStatus": "semantic_control_mapping_candidate",
+          "verificationNote": "Candidate only: ASP.NET page HTML and DealerSettings schema name/type reviewed; server-side code-behind or a non-mutating save-path trace is still needed for confirmation."
+        },
+        {
+          "panel": "Admin",
+          "section": "Design Settings",
+          "label": "Dealer Limit Tracking",
+          "controlName": "ctl00$PageContent$ddlCariLimitTracing",
+          "controlId": "ctl00_PageContent_ddlCariLimitTracing",
+          "element": "select",
+          "type": "select",
+          "multiple": false,
+          "options": [
+            {
+              "value": "1",
+              "label": "Do It"
+            },
+            {
+              "value": "0",
+              "label": "Do Not"
+            }
+          ],
+          "databaseColumnCandidate": "LimitTracing",
+          "mappingStatus": "semantic_control_mapping_candidate",
+          "verificationNote": "Candidate only: ASP.NET page HTML and DealerSettings schema name/type reviewed; server-side code-behind or a non-mutating save-path trace is still needed for confirmation."
+        },
+        {
+          "panel": "Admin",
+          "section": "Design Settings",
+          "label": "Current Limit Warning",
+          "controlName": "ctl00$PageContent$ddlCariLimitTracingInfo",
+          "controlId": "ctl00_PageContent_ddlCariLimitTracingInfo",
+          "element": "select",
+          "type": "select",
+          "multiple": false,
+          "options": [
+            {
+              "value": "1",
+              "label": "Show"
+            },
+            {
+              "value": "0",
+              "label": "Hide"
+            }
+          ],
+          "databaseColumnCandidate": "LimitTracingInfo",
+          "mappingStatus": "semantic_control_mapping_candidate",
+          "verificationNote": "Candidate only: ASP.NET page HTML and DealerSettings schema name/type reviewed; server-side code-behind or a non-mutating save-path trace is still needed for confirmation."
+        },
+        {
+          "panel": "Admin",
+          "section": "Design Settings",
+          "label": "Automatic Definition",
+          "controlName": "ctl00$PageContent$ddlSchedule",
+          "controlId": "ctl00_PageContent_ddlSchedule",
+          "element": "select",
+          "type": "select",
+          "multiple": true,
+          "options": [
+            {
+              "value": "1",
+              "label": "I will choose new products manually"
+            }
+          ],
+          "databaseColumnCandidate": "Schedule",
+          "mappingStatus": "semantic_control_mapping_candidate",
+          "verificationNote": "Candidate only: ASP.NET page HTML and DealerSettings schema name/type reviewed; server-side code-behind or a non-mutating save-path trace is still needed for confirmation."
+        }
+      ]
+    },
+    {
+      "panel": "Admin",
+      "section": "Product Display Settings",
+      "controlCount": 13,
+      "controls": [
+        {
+          "panel": "Admin",
+          "section": "Product Display Settings",
+          "label": "Dont Show Price",
+          "controlName": "ctl00$PageContent$ddlDontShowPrice",
+          "controlId": "ctl00_PageContent_ddlDontShowPrice",
+          "element": "select",
+          "type": "select",
+          "multiple": false,
+          "options": [
+            {
+              "value": "0",
+              "label": "Out Of Use"
+            },
+            {
+              "value": "1",
+              "label": "Dont Show Prices In B2C Without Login"
+            },
+            {
+              "value": "2",
+              "label": "Dont Show Prices In B2B"
+            },
+            {
+              "value": "4",
+              "label": "Dont Show Products If Price is Zero"
+            },
+            {
+              "value": "5",
+              "label": "Show only the market price on B2C without login"
+            }
+          ],
+          "databaseColumnCandidate": "DoNotShowPrice",
+          "mappingStatus": "semantic_control_mapping_candidate",
+          "verificationNote": "Candidate only: ASP.NET page HTML and DealerSettings schema name/type reviewed; server-side code-behind or a non-mutating save-path trace is still needed for confirmation."
+        },
+        {
+          "panel": "Admin",
+          "section": "Product Display Settings",
+          "label": "Stock Tracking",
+          "controlName": "ctl00$PageContent$ddlHasStock",
+          "controlId": "ctl00_PageContent_ddlHasStock",
+          "element": "select",
+          "type": "select",
+          "multiple": false,
+          "options": [
+            {
+              "value": "0",
+              "label": "Do not follow inventory.Show all Products in stock as exist"
+            },
+            {
+              "value": "1",
+              "label": "Follow Stock. Allowing orders on non-stock products"
+            },
+            {
+              "value": "2",
+              "label": "Follow Stock. Allow ordering on items out of stock"
+            },
+            {
+              "value": "3",
+              "label": "Follow Stock. If the item added to the cart is less than the amount in stock, ask for confirmation by warning."
+            },
+            {
+              "value": "4",
+              "label": "Disable the parameter in the settings.\nActivate the Inventory Tracking/Do not Track parameter on the product card"
+            },
+            {
+              "value": "5",
+              "label": "Can be ordered up to the amount in stock"
+            }
+          ],
+          "databaseColumnCandidate": "HasStockVisible",
+          "mappingStatus": "semantic_control_mapping_candidate",
+          "verificationNote": "Candidate only: ASP.NET page HTML and DealerSettings schema name/type reviewed; server-side code-behind or a non-mutating save-path trace is still needed for confirmation."
+        },
+        {
+          "panel": "Admin",
+          "section": "Product Display Settings",
+          "label": "Stock Presentation Type",
+          "controlName": "ctl00$PageContent$ddlProductTableStockType",
+          "controlId": "ctl00_PageContent_ddlProductTableStockType",
+          "element": "select",
+          "type": "select",
+          "multiple": false,
+          "options": [
+            {
+              "value": "0",
+              "label": "Amount Multiples"
+            },
+            {
+              "value": "1",
+              "label": "Stock Exist/Stock Doesn't Exist"
+            },
+            {
+              "value": "2",
+              "label": "Piece ( Numeric )"
+            },
+            {
+              "value": "3",
+              "label": "Do Not Show"
+            },
+            {
+              "value": "5",
+              "label": "Show Up To 4 Items"
+            },
+            {
+              "value": "4",
+              "label": "Show Up To 20 Items"
+            },
+            {
+              "value": "6",
+              "label": "Show Up To 100 Items"
+            },
+            {
+              "value": "7",
+              "label": "With / Without (Icon)"
+            }
+          ],
+          "databaseColumnCandidate": "ProductTableStockType",
+          "mappingStatus": "semantic_control_mapping_candidate",
+          "verificationNote": "Candidate only: ASP.NET page HTML and DealerSettings schema name/type reviewed; server-side code-behind or a non-mutating save-path trace is still needed for confirmation."
+        },
+        {
+          "panel": "Admin",
+          "section": "Product Display Settings",
+          "label": "Stock Display Parameter",
+          "controlName": "ctl00$PageContent$ddlParameterStock",
+          "controlId": "ctl00_PageContent_ddlParameterStock",
+          "element": "select",
+          "type": "select",
+          "multiple": true,
+          "options": [
+            {
+              "value": "1",
+              "label": "Show Warehouses"
+            },
+            {
+              "value": "2",
+              "label": "Show warehouses with the mouse over the stock value"
+            },
+            {
+              "value": "4",
+              "label": "Dont let customers see the  warehouse, let only customer representatives see"
+            },
+            {
+              "value": "8",
+              "label": "Customers Can See All Stocks"
+            },
+            {
+              "value": "16",
+              "label": "Show Depots Even Without Stock"
+            },
+            {
+              "value": "64",
+              "label": "If Stock is 0,Show: Ask for Stock"
+            },
+            {
+              "value": "128",
+              "label": "Do not show stock without login"
+            },
+            {
+              "value": "256",
+              "label": "Customer representative should not see all stocks"
+            },
+            {
+              "value": "512",
+              "label": "Show “Ask for details” for stock-independent products"
+            },
+            {
+              "value": "1024",
+              "label": "Depolar sepete ekleye tıklayınca gelsin"
+            }
+          ],
+          "databaseColumnCandidate": "ParameterStock",
+          "mappingStatus": "semantic_control_mapping_candidate",
+          "verificationNote": "Candidate only: ASP.NET page HTML and DealerSettings schema name/type reviewed; server-side code-behind or a non-mutating save-path trace is still needed for confirmation."
+        },
+        {
+          "panel": "Admin",
+          "section": "Product Display Settings",
+          "label": "Tax Excluded Products Show",
+          "controlName": "ctl00$PageContent$ddlTaxInRatio",
+          "controlId": "ctl00_PageContent_ddlTaxInRatio",
+          "element": "select",
+          "type": "select",
+          "multiple": false,
+          "options": [
+            {
+              "value": "0",
+              "label": "Show All Prices Exclude Tax"
+            },
+            {
+              "value": "1",
+              "label": "Show All Prices Include Tax"
+            },
+            {
+              "value": "2",
+              "label": "Show List Price Exlude Tax, Show Other Prices Include Tax"
+            },
+            {
+              "value": "3",
+              "label": "Show All Prices in B2C Excluding VAT"
+            }
+          ],
+          "databaseColumnCandidate": "TaxInRatio",
+          "mappingStatus": "semantic_control_mapping_candidate",
+          "verificationNote": "Candidate only: ASP.NET page HTML and DealerSettings schema name/type reviewed; server-side code-behind or a non-mutating save-path trace is still needed for confirmation."
+        },
+        {
+          "panel": "Admin",
+          "section": "Product Display Settings",
+          "label": "B2B & B2C Partners",
+          "controlName": "ctl00$PageContent$ddlCommonSystem",
+          "controlId": "ctl00_PageContent_ddlCommonSystem",
+          "element": "select",
+          "type": "select",
+          "multiple": false,
+          "options": [
+            {
+              "value": "1",
+              "label": "No"
+            },
+            {
+              "value": "0",
+              "label": "Yes"
+            }
+          ],
+          "databaseColumnCandidate": "ProductCompany",
+          "mappingStatus": "semantic_control_mapping_candidate",
+          "verificationNote": "Candidate only: ASP.NET page HTML and DealerSettings schema name/type reviewed; server-side code-behind or a non-mutating save-path trace is still needed for confirmation."
+        },
+        {
+          "panel": "Admin",
+          "section": "Product Display Settings",
+          "label": "Product Detail Parameter",
+          "controlName": "ctl00$PageContent$ddlProductDetailParameter",
+          "controlId": "ctl00_PageContent_ddlProductDetailParameter",
+          "element": "select",
+          "type": "select",
+          "multiple": true,
+          "options": [
+            {
+              "value": "1",
+              "label": "Show Product Weight"
+            },
+            {
+              "value": "2",
+              "label": "Show Volume"
+            },
+            {
+              "value": "4",
+              "label": "Don't Show Brand"
+            },
+            {
+              "value": "8",
+              "label": "Don't Show Rate"
+            },
+            {
+              "value": "16",
+              "label": "Don't Show Normal Price"
+            },
+            {
+              "value": "32",
+              "label": "Don't Show Pop Up Price"
+            },
+            {
+              "value": "64",
+              "label": "Don't Show Actual Price"
+            },
+            {
+              "value": "128",
+              "label": "Dont Show Price"
+            },
+            {
+              "value": "256",
+              "label": "Don't Show Unit"
+            },
+            {
+              "value": "512",
+              "label": "Don't Show Image"
+            },
+            {
+              "value": "1024",
+              "label": "Don't Show Expected Stock"
+            },
+            {
+              "value": "2048",
+              "label": "Don't Show Number Of Orders Starting To Ship"
+            },
+            {
+              "value": "4096",
+              "label": "Don't Show Market Price"
+            },
+            {
+              "value": "8192",
+              "label": "Don't Show Packing Type"
+            },
+            {
+              "value": "16384",
+              "label": "Don't Show OEM"
+            },
+            {
+              "value": "32768",
+              "label": "Don't Show Equivalent Code"
+            },
+            {
+              "value": "65536",
+              "label": "Don't Show Product Code"
+            },
+            {
+              "value": "131072",
+              "label": "Don't Show Product Short Code"
+            },
+            {
+              "value": "262144",
+              "label": "Don't Show Product Short Descriprion"
+            },
+            {
+              "value": "524288",
+              "label": "Don't Show Variation"
+            },
+            {
+              "value": "1048576",
+              "label": "Don't Show VAT Ratio"
+            },
+            {
+              "value": "2097152",
+              "label": "Don't Show Commission Rate"
+            },
+            {
+              "value": "4194304",
+              "label": "Don't Show Discount"
+            },
+            {
+              "value": "8388608",
+              "label": "Don't Show Manufacturer Code"
+            },
+            {
+              "value": "16777216",
+              "label": "Show Minimum Order"
+            },
+            {
+              "value": "33554432",
+              "label": "Don't Show Product SmallImage"
+            },
+            {
+              "value": "67108864",
+              "label": "Don't Show Product Stock Page"
+            },
+            {
+              "value": "134217728",
+              "label": "Sepete ekle gösterme"
+            },
+            {
+              "value": "268435456",
+              "label": "Don't Using Pagination"
+            },
+            {
+              "value": "536870912",
+              "label": "Don't Show Compatible Tools"
+            },
+            {
+              "value": "1073741824",
+              "label": "Show Production Date"
+            },
+            {
+              "value": "2147483648",
+              "label": "Show previous next product"
+            },
+            {
+              "value": "4294967296",
+              "label": "Don't Show VAT Excluded / Including Price"
+            },
+            {
+              "value": "8589934592",
+              "label": "Don't Show Season"
+            },
+            {
+              "value": "17179869184",
+              "label": "Show Tire Tag"
+            },
+            {
+              "value": "34359738368",
+              "label": "Show Installment Information"
+            },
+            {
+              "value": "68719476736",
+              "label": "Show Alternative Products"
+            },
+            {
+              "value": "137438953472",
+              "label": "Show Related Products"
+            },
+            {
+              "value": "274877906944",
+              "label": "Show Order History"
+            },
+            {
+              "value": "549755813888",
+              "label": "Show Comments"
+            },
+            {
+              "value": "1099511627776",
+              "label": "Icon 1"
+            },
+            {
+              "value": "2199023255552",
+              "label": "Icon 2"
+            },
+            {
+              "value": "4398046511104",
+              "label": "Icon 3"
+            },
+            {
+              "value": "8796093022208",
+              "label": "Icon 4"
+            },
+            {
+              "value": "17592186044416",
+              "label": "Icon 5"
+            },
+            {
+              "value": "35184372088832",
+              "label": "Icon 6"
+            },
+            {
+              "value": "70368744177664",
+              "label": "Smart Search Option"
+            },
+            {
+              "value": "140737488355328",
+              "label": "Show Product Request"
+            },
+            {
+              "value": "281474976710656",
+              "label": "Don't Show Stock"
+            },
+            {
+              "value": "562949953421312",
+              "label": "Show Products Of The Same Brand"
+            },
+            {
+              "value": "1125899906842624",
+              "label": "Show Add To Cart By Unit"
+            },
+            {
+              "value": "2251799813685248",
+              "label": "Show Origin"
+            },
+            {
+              "value": "4503599627370496",
+              "label": "Show \"Buy Now\" Button"
+            },
+            {
+              "value": "18014398509481984",
+              "label": "Show Purchase Price"
+            },
+            {
+              "value": "36028797018963968",
+              "label": "Additional Field 1"
+            },
+            {
+              "value": "72057594037927936",
+              "label": "Additional Field 2"
+            },
+            {
+              "value": "144115188075855872",
+              "label": "Additional Field 3"
+            },
+            {
+              "value": "288230376151711744",
+              "label": "Additional Field 4"
+            },
+            {
+              "value": "576460752303423488",
+              "label": "Additional Field 5"
+            },
+            {
+              "value": "1152921504606846976",
+              "label": "Additional Field 6"
+            },
+            {
+              "value": "2305843009213693952",
+              "label": "Show note for incoming stock"
+            },
+            {
+              "value": "4611686018427387904",
+              "label": "Allow representative discount authority"
+            }
+          ],
+          "databaseColumnCandidate": "ParameterProductDetail",
+          "mappingStatus": "semantic_control_mapping_candidate",
+          "verificationNote": "Candidate only: ASP.NET page HTML and DealerSettings schema name/type reviewed; server-side code-behind or a non-mutating save-path trace is still needed for confirmation."
+        },
+        {
+          "panel": "Admin",
+          "section": "Product Display Settings",
+          "label": "Product Detail Parameter 2",
+          "controlName": "ctl00$PageContent$ddlProductDetailParameter2",
+          "controlId": "ctl00_PageContent_ddlProductDetailParameter2",
+          "element": "select",
+          "type": "select",
+          "multiple": true,
+          "options": [
+            {
+              "value": "1",
+              "label": "Sabit fiyat göster"
+            },
+            {
+              "value": "2",
+              "label": "Don't show \"detail button\""
+            },
+            {
+              "value": "4",
+              "label": "Hide custom icons"
+            },
+            {
+              "value": "8",
+              "label": "Don't Show quantity entry"
+            },
+            {
+              "value": "16",
+              "label": "Compare Show"
+            },
+            {
+              "value": "32",
+              "label": "Show Price in Variation"
+            },
+            {
+              "value": "64",
+              "label": "If there is no stock, the add to cart field is not displayed, the stock description is displayed."
+            },
+            {
+              "value": "128",
+              "label": "Don't use zoom"
+            },
+            {
+              "value": "256",
+              "label": "Show credit card price"
+            },
+            {
+              "value": "512",
+              "label": "Product detail images flat view"
+            },
+            {
+              "value": "1024",
+              "label": "Show Price Code"
+            },
+            {
+              "value": "2048",
+              "label": "Show Remittance Price"
+            },
+            {
+              "value": "4096",
+              "label": "Get Product Detail Images Open"
+            },
+            {
+              "value": "8192",
+              "label": "Show Barcode Number"
+            },
+            {
+              "value": "16384",
+              "label": "Show Video"
+            },
+            {
+              "value": "32768",
+              "label": "Show market price popup"
+            },
+            {
+              "value": "65536",
+              "label": "Show price popup"
+            },
+            {
+              "value": "131072",
+              "label": "Products export"
+            },
+            {
+              "value": "262144",
+              "label": "Dont show brand image"
+            },
+            {
+              "value": "524288",
+              "label": "Fetch related products by filter"
+            },
+            {
+              "value": "1048576",
+              "label": "Fetch related products by product group (ProductRelatedCode)"
+            },
+            {
+              "value": "2097152",
+              "label": "Do not show filter on product detail page"
+            },
+            {
+              "value": "4194304",
+              "label": "Show variation images in product search"
+            },
+            {
+              "value": "8388608",
+              "label": "Show order via WhatsApp"
+            },
+            {
+              "value": "16777216",
+              "label": "Reverse values in variation table"
+            },
+            {
+              "value": "33554432",
+              "label": "Show Extra Field 1 in variation table"
+            },
+            {
+              "value": "67108864",
+              "label": "Show Extra Field 2 in variation table"
+            },
+            {
+              "value": "134217728",
+              "label": "Show price in variation table"
+            },
+            {
+              "value": "268435456",
+              "label": "<%$Resources:GlobalLanguage, ShowStockWhenSessionClosed  %>(İptal)"
+            },
+            {
+              "value": "536870912",
+              "label": "Hide special price field for representatives"
+            },
+            {
+              "value": "1073741824",
+              "label": "Show payment method prices in popup"
+            },
+            {
+              "value": "2147483648",
+              "label": "Add related products to cart in bulk by filter"
+            },
+            {
+              "value": "4294967296",
+              "label": "Uyumlu araçları açık olarak göster"
+            },
+            {
+              "value": "8589934592",
+              "label": "Yeni sekmede aç göster"
+            },
+            {
+              "value": "17179869184",
+              "label": "Ürüne tıklayınca ürün detaya gitmesin"
+            },
+            {
+              "value": "34359738368",
+              "label": "Ürün sıralaması seçimini gösterme"
+            },
+            {
+              "value": "68719476736",
+              "label": "Ürün detayda kampanyalı ürünleri göster"
+            },
+            {
+              "value": "137438953472",
+              "label": "Ürün detayda sosyal medyada paylaş göster"
+            },
+            {
+              "value": "274877906944",
+              "label": "Palet göster"
+            },
+            {
+              "value": "549755813888",
+              "label": "Varyasyonda resim göster"
+            },
+            {
+              "value": "1099511627776",
+              "label": "Ürün notu göster"
+            },
+            {
+              "value": "2199023255552",
+              "label": "Ürünlerde sepete ekleye tıklayınca ürün detaya gitsin"
+            },
+            {
+              "value": "4398046511104",
+              "label": "Kredi kartı taksitli fiyatı göster"
+            },
+            {
+              "value": "8796093022208",
+              "label": "Paket içi kdv hariç/dahil adet fiyatı göster"
+            },
+            {
+              "value": "17592186044416",
+              "label": "Kdv dahil/hariç fiyatı kdv oranına göre renkli göster"
+            },
+            {
+              "value": "35184372088832",
+              "label": "Kredi kartı ile sonradan ödeme fiyatı göster"
+            },
+            {
+              "value": "70368744177664",
+              "label": "Paket içi adet fiyatı göster"
+            },
+            {
+              "value": "140737488355328",
+              "label": "Kredi kartı ile sonradan ödeme fiyatı 2 göster"
+            },
+            {
+              "value": "281474976710656",
+              "label": "Çift aramada ön/arka lastik göster"
+            },
+            {
+              "value": "562949953421312",
+              "label": "Gerçek stok göster"
+            },
+            {
+              "value": "1125899906842624",
+              "label": "Rezerve stok göster"
+            },
+            {
+              "value": "2251799813685248",
+              "label": "Cari fiyatı göster"
+            },
+            {
+              "value": "4503599627370496",
+              "label": "İndirimli fiyatta normal fiyatın üstünü çiz"
+            },
+            {
+              "value": "9007199254740992",
+              "label": "Açılır pencerede sabit ödeme metodlarının fiyatlarını göster"
+            },
+            {
+              "value": "18014398509481984",
+              "label": "Sipariş mailinde piyasa fiyatı göster"
+            },
+            {
+              "value": "36028797018963968",
+              "label": "Patlak resim göster"
+            }
+          ],
+          "databaseColumnCandidate": "ParameterProductDetail2",
+          "mappingStatus": "semantic_control_mapping_candidate",
+          "verificationNote": "Candidate only: ASP.NET page HTML and DealerSettings schema name/type reviewed; server-side code-behind or a non-mutating save-path trace is still needed for confirmation."
+        },
+        {
+          "panel": "Admin",
+          "section": "Product Display Settings",
+          "label": "Ürün Detay Parametresi (B2C - Oturum Kapalı)",
+          "controlName": "ctl00$PageContent$ddlParameterProductDetailNotLogin",
+          "controlId": "ctl00_PageContent_ddlParameterProductDetailNotLogin",
+          "element": "select",
+          "type": "select",
+          "multiple": true,
+          "options": [
+            {
+              "value": "1",
+              "label": "Show Product Weight"
+            },
+            {
+              "value": "2",
+              "label": "Show Volume"
+            },
+            {
+              "value": "4",
+              "label": "Don't Show Brand"
+            },
+            {
+              "value": "8",
+              "label": "Don't Show Rate"
+            },
+            {
+              "value": "16",
+              "label": "Don't Show Normal Price"
+            },
+            {
+              "value": "32",
+              "label": "Don't Show Pop Up Price"
+            },
+            {
+              "value": "64",
+              "label": "Don't Show Actual Price"
+            },
+            {
+              "value": "128",
+              "label": "Dont Show Price"
+            },
+            {
+              "value": "256",
+              "label": "Don't Show Unit"
+            },
+            {
+              "value": "512",
+              "label": "Don't Show Image"
+            },
+            {
+              "value": "1024",
+              "label": "Don't Show Expected Stock"
+            },
+            {
+              "value": "2048",
+              "label": "Don't Show Number Of Orders Starting To Ship"
+            },
+            {
+              "value": "4096",
+              "label": "Don't Show Market Price"
+            },
+            {
+              "value": "8192",
+              "label": "Don't Show Packing Type"
+            },
+            {
+              "value": "16384",
+              "label": "Don't Show OEM"
+            },
+            {
+              "value": "32768",
+              "label": "Don't Show Equivalent Code"
+            },
+            {
+              "value": "65536",
+              "label": "Don't Show Product Code"
+            },
+            {
+              "value": "131072",
+              "label": "Don't Show Product Short Code"
+            },
+            {
+              "value": "262144",
+              "label": "Don't Show Product Short Descriprion"
+            },
+            {
+              "value": "524288",
+              "label": "Don't Show Variation"
+            },
+            {
+              "value": "1048576",
+              "label": "Don't Show VAT Ratio"
+            },
+            {
+              "value": "2097152",
+              "label": "Don't Show Commission Rate"
+            },
+            {
+              "value": "4194304",
+              "label": "Don't Show Discount"
+            },
+            {
+              "value": "8388608",
+              "label": "Don't Show Manufacturer Code"
+            },
+            {
+              "value": "16777216",
+              "label": "Show Minimum Order"
+            },
+            {
+              "value": "33554432",
+              "label": "Don't Show Product SmallImage"
+            },
+            {
+              "value": "67108864",
+              "label": "Don't Show Product Stock Page"
+            },
+            {
+              "value": "134217728",
+              "label": "Sepete ekle gösterme"
+            },
+            {
+              "value": "268435456",
+              "label": "Don't Using Pagination"
+            },
+            {
+              "value": "536870912",
+              "label": "Don't Show Compatible Tools"
+            },
+            {
+              "value": "1073741824",
+              "label": "Show Production Date"
+            },
+            {
+              "value": "2147483648",
+              "label": "Show previous next product"
+            },
+            {
+              "value": "4294967296",
+              "label": "Don't Show VAT Excluded / Including Price"
+            },
+            {
+              "value": "8589934592",
+              "label": "Don't Show Season"
+            },
+            {
+              "value": "17179869184",
+              "label": "Show Tire Tag"
+            },
+            {
+              "value": "34359738368",
+              "label": "Show Installment Information"
+            },
+            {
+              "value": "68719476736",
+              "label": "Show Alternative Products"
+            },
+            {
+              "value": "137438953472",
+              "label": "Show Related Products"
+            },
+            {
+              "value": "274877906944",
+              "label": "Show Order History"
+            },
+            {
+              "value": "549755813888",
+              "label": "Show Comments"
+            },
+            {
+              "value": "1099511627776",
+              "label": "Icon 1"
+            },
+            {
+              "value": "2199023255552",
+              "label": "Icon 2"
+            },
+            {
+              "value": "4398046511104",
+              "label": "Icon 3"
+            },
+            {
+              "value": "8796093022208",
+              "label": "Icon 4"
+            },
+            {
+              "value": "17592186044416",
+              "label": "Icon 5"
+            },
+            {
+              "value": "35184372088832",
+              "label": "Icon 6"
+            },
+            {
+              "value": "70368744177664",
+              "label": "Smart Search Option"
+            },
+            {
+              "value": "140737488355328",
+              "label": "Show Product Request"
+            },
+            {
+              "value": "281474976710656",
+              "label": "Don't Show Stock"
+            },
+            {
+              "value": "562949953421312",
+              "label": "Show Products Of The Same Brand"
+            },
+            {
+              "value": "1125899906842624",
+              "label": "Show Add To Cart By Unit"
+            },
+            {
+              "value": "2251799813685248",
+              "label": "Show Origin"
+            },
+            {
+              "value": "4503599627370496",
+              "label": "Show \"Buy Now\" Button"
+            },
+            {
+              "value": "18014398509481984",
+              "label": "Show Purchase Price"
+            },
+            {
+              "value": "36028797018963968",
+              "label": "Additional Field 1"
+            },
+            {
+              "value": "72057594037927936",
+              "label": "Additional Field 2"
+            },
+            {
+              "value": "144115188075855872",
+              "label": "Additional Field 3"
+            },
+            {
+              "value": "288230376151711744",
+              "label": "Additional Field 4"
+            },
+            {
+              "value": "576460752303423488",
+              "label": "Additional Field 5"
+            },
+            {
+              "value": "1152921504606846976",
+              "label": "Additional Field 6"
+            },
+            {
+              "value": "2305843009213693952",
+              "label": "Show note for incoming stock"
+            },
+            {
+              "value": "4611686018427387904",
+              "label": "Allow representative discount authority"
+            }
+          ],
+          "databaseColumnCandidate": "ParameterProductDetailNotLogin",
+          "mappingStatus": "semantic_control_mapping_candidate",
+          "verificationNote": "Candidate only: ASP.NET page HTML and DealerSettings schema name/type reviewed; server-side code-behind or a non-mutating save-path trace is still needed for confirmation."
+        },
+        {
+          "panel": "Admin",
+          "section": "Product Display Settings",
+          "label": "Ürün Detay Parametresi 2 (B2C - Oturum Kapalı)",
+          "controlName": "ctl00$PageContent$ddlParameterProductDetailNotLogin2",
+          "controlId": "ctl00_PageContent_ddlParameterProductDetailNotLogin2",
+          "element": "select",
+          "type": "select",
+          "multiple": true,
+          "options": [
+            {
+              "value": "1",
+              "label": "Sabit fiyat göster"
+            },
+            {
+              "value": "2",
+              "label": "Don't show \"detail button\""
+            },
+            {
+              "value": "4",
+              "label": "Hide custom icons"
+            },
+            {
+              "value": "8",
+              "label": "Don't Show quantity entry"
+            },
+            {
+              "value": "16",
+              "label": "Compare Show"
+            },
+            {
+              "value": "32",
+              "label": "Show Price in Variation"
+            },
+            {
+              "value": "64",
+              "label": "If there is no stock, the add to cart field is not displayed, the stock description is displayed."
+            },
+            {
+              "value": "128",
+              "label": "Don't use zoom"
+            },
+            {
+              "value": "256",
+              "label": "Show credit card price"
+            },
+            {
+              "value": "512",
+              "label": "Product detail images flat view"
+            },
+            {
+              "value": "1024",
+              "label": "Show Price Code"
+            },
+            {
+              "value": "2048",
+              "label": "Show Remittance Price"
+            },
+            {
+              "value": "4096",
+              "label": "Get Product Detail Images Open"
+            },
+            {
+              "value": "8192",
+              "label": "Show Barcode Number"
+            },
+            {
+              "value": "16384",
+              "label": "Show Video"
+            },
+            {
+              "value": "32768",
+              "label": "Show market price popup"
+            },
+            {
+              "value": "65536",
+              "label": "Show price popup"
+            },
+            {
+              "value": "131072",
+              "label": "Products export"
+            },
+            {
+              "value": "262144",
+              "label": "Dont show brand image"
+            },
+            {
+              "value": "524288",
+              "label": "Fetch related products by filter"
+            },
+            {
+              "value": "1048576",
+              "label": "Fetch related products by product group (ProductRelatedCode)"
+            },
+            {
+              "value": "2097152",
+              "label": "Do not show filter on product detail page"
+            },
+            {
+              "value": "4194304",
+              "label": "Show variation images in product search"
+            },
+            {
+              "value": "8388608",
+              "label": "Show order via WhatsApp"
+            },
+            {
+              "value": "16777216",
+              "label": "Reverse values in variation table"
+            },
+            {
+              "value": "33554432",
+              "label": "Show Extra Field 1 in variation table"
+            },
+            {
+              "value": "67108864",
+              "label": "Show Extra Field 2 in variation table"
+            },
+            {
+              "value": "134217728",
+              "label": "Show price in variation table"
+            },
+            {
+              "value": "268435456",
+              "label": "<%$Resources:GlobalLanguage, ShowStockWhenSessionClosed  %>(İptal)"
+            },
+            {
+              "value": "536870912",
+              "label": "Hide special price field for representatives"
+            },
+            {
+              "value": "1073741824",
+              "label": "Show payment method prices in popup"
+            },
+            {
+              "value": "2147483648",
+              "label": "Add related products to cart in bulk by filter"
+            },
+            {
+              "value": "4294967296",
+              "label": "Uyumlu araçları açık olarak göster"
+            },
+            {
+              "value": "8589934592",
+              "label": "Yeni sekmede aç göster"
+            },
+            {
+              "value": "17179869184",
+              "label": "Ürüne tıklayınca ürün detaya gitmesin"
+            },
+            {
+              "value": "34359738368",
+              "label": "Ürün sıralaması seçimini gösterme"
+            },
+            {
+              "value": "68719476736",
+              "label": "Ürün detayda kampanyalı ürünleri göster"
+            },
+            {
+              "value": "137438953472",
+              "label": "Ürün detayda sosyal medyada paylaş göster"
+            },
+            {
+              "value": "274877906944",
+              "label": "Palet göster"
+            },
+            {
+              "value": "549755813888",
+              "label": "Varyasyonda resim göster"
+            },
+            {
+              "value": "1099511627776",
+              "label": "Ürün notu göster"
+            },
+            {
+              "value": "2199023255552",
+              "label": "Ürünlerde sepete ekleye tıklayınca ürün detaya gitsin"
+            },
+            {
+              "value": "4398046511104",
+              "label": "Kredi kartı taksitli fiyatı göster"
+            },
+            {
+              "value": "8796093022208",
+              "label": "Paket içi kdv hariç/dahil adet fiyatı göster"
+            },
+            {
+              "value": "17592186044416",
+              "label": "Kdv dahil/hariç fiyatı kdv oranına göre renkli göster"
+            },
+            {
+              "value": "35184372088832",
+              "label": "Kredi kartı ile sonradan ödeme fiyatı göster"
+            },
+            {
+              "value": "70368744177664",
+              "label": "Paket içi adet fiyatı göster"
+            },
+            {
+              "value": "140737488355328",
+              "label": "Kredi kartı ile sonradan ödeme fiyatı 2 göster"
+            },
+            {
+              "value": "281474976710656",
+              "label": "Çift aramada ön/arka lastik göster"
+            },
+            {
+              "value": "562949953421312",
+              "label": "Gerçek stok göster"
+            },
+            {
+              "value": "1125899906842624",
+              "label": "Rezerve stok göster"
+            }
+          ],
+          "databaseColumnCandidate": null,
+          "mappingStatus": "unresolved_control_has_no_clear_column",
+          "verificationNote": "Candidate only: ASP.NET page HTML and DealerSettings schema name/type reviewed; server-side code-behind or a non-mutating save-path trace is still needed for confirmation."
+        },
+        {
+          "panel": "Admin",
+          "section": "Product Display Settings",
+          "label": "Product Search Parameter",
+          "controlName": "ctl00$PageContent$ddlProductSearchParameter",
+          "controlId": "ctl00_PageContent_ddlProductSearchParameter",
+          "element": "select",
+          "type": "select",
+          "multiple": true,
+          "options": [
+            {
+              "value": "1",
+              "label": "Show vehicle brand section in search"
+            },
+            {
+              "value": "2",
+              "label": "Let The Customer Representative See All Prices"
+            },
+            {
+              "value": "4",
+              "label": "Let the Customer Representative See the Purchase Price"
+            },
+            {
+              "value": "8",
+              "label": "Find only products that match exactly"
+            },
+            {
+              "value": "16",
+              "label": "Use quick search"
+            },
+            {
+              "value": "32",
+              "label": "In brand-model search, perform search only if all selections are made"
+            },
+            {
+              "value": "64",
+              "label": "Disable product code in product search"
+            },
+            {
+              "value": "128",
+              "label": "Show dual search"
+            },
+            {
+              "value": "256",
+              "label": "Search by category name should not be automatic"
+            },
+            {
+              "value": "512",
+              "label": "No product filter limit"
+            },
+            {
+              "value": "1024",
+              "label": "Ürün aramada ürün adı devre dışı bırakılsın"
+            },
+            {
+              "value": "2048",
+              "label": "Ürün aramada marka adı devre dışı bırakılsın"
+            },
+            {
+              "value": "4096",
+              "label": "Sadece tam eşleşen ürünleri bul (boşlukları silerek arar)"
+            },
+            {
+              "value": "8192",
+              "label": "Şasi no ile arama göster"
+            },
+            {
+              "value": "16384",
+              "label": "Kategori aramasında sıralama kategori ürünlerine göre özel sıralamaya göre olsun"
+            },
+            {
+              "value": "32768",
+              "label": "İlk listelemede ürünler gelmesin"
+            },
+            {
+              "value": "65536",
+              "label": "Çift aramada grup sıralaması aktif olsun"
+            },
+            {
+              "value": "131072",
+              "label": "Hızlı aramada tam eşleşme devre dışı kalsın"
+            },
+            {
+              "value": "262144",
+              "label": "Ürün aramada cari bazlı arama limiti kullan"
+            },
+            {
+              "value": "524288",
+              "label": "Ürün aramada kategori urlsi devre dışı bırakılsın"
+            },
+            {
+              "value": "1048576",
+              "label": "Ürün kodunda tam eşleşme devre dışı"
+            }
+          ],
+          "databaseColumnCandidate": "ParameterProductSearch",
+          "mappingStatus": "semantic_control_mapping_candidate",
+          "verificationNote": "Candidate only: ASP.NET page HTML and DealerSettings schema name/type reviewed; server-side code-behind or a non-mutating save-path trace is still needed for confirmation."
+        },
+        {
+          "panel": "Admin",
+          "section": "Product Display Settings",
+          "label": "Show Export Button",
+          "controlName": "ctl00$PageContent$ddlExportProductList",
+          "controlId": "ctl00_PageContent_ddlExportProductList",
+          "element": "select",
+          "type": "select",
+          "multiple": true,
+          "options": [
+            {
+              "value": "1",
+              "label": "Show Products Export Button"
+            },
+            {
+              "value": "2",
+              "label": "Show Export Cart To PDF Button"
+            },
+            {
+              "value": "4",
+              "label": "Show Export Current Transactions To Excel Button"
+            },
+            {
+              "value": "8",
+              "label": "Show Cart Export Button"
+            },
+            {
+              "value": "16",
+              "label": "Show export to Excel button in order tracking"
+            },
+            {
+              "value": "32",
+              "label": "Show export to Excel button in balance order"
+            },
+            {
+              "value": "64",
+              "label": "Show export to PDF button in current transactions"
+            },
+            {
+              "value": "128",
+              "label": "Excel aktarımda ürün görseli göster"
+            },
+            {
+              "value": "256",
+              "label": "Bakiye siparişi PDF'e aktar butonu göster"
+            }
+          ],
+          "databaseColumnCandidate": "ExportProductList",
+          "mappingStatus": "semantic_control_mapping_candidate",
+          "verificationNote": "Candidate only: ASP.NET page HTML and DealerSettings schema name/type reviewed; server-side code-behind or a non-mutating save-path trace is still needed for confirmation."
+        },
+        {
+          "panel": "Admin",
+          "section": "Product Display Settings",
+          "label": "Parametric Modules",
+          "controlName": "ctl00$PageContent$ddlParameterModules",
+          "controlId": "ctl00_PageContent_ddlParameterModules",
+          "element": "select",
+          "type": "select",
+          "multiple": true,
+          "options": [],
+          "databaseColumnCandidate": "ParameterModules",
+          "mappingStatus": "semantic_control_mapping_candidate",
+          "verificationNote": "Candidate only: ASP.NET page HTML and DealerSettings schema name/type reviewed; server-side code-behind or a non-mutating save-path trace is still needed for confirmation."
+        }
+      ]
+    },
+    {
+      "panel": "Admin",
+      "section": "Cart Settings",
+      "controlCount": 5,
+      "controls": [
+        {
+          "panel": "Admin",
+          "section": "Cart Settings",
+          "label": "Total Minimum Cart",
+          "controlName": "ctl00$PageContent$txtMinCartCount",
+          "controlId": "ctl00_PageContent_txtMinCartCount",
+          "element": "input",
+          "type": "text",
+          "databaseColumnCandidate": "MinCartCount",
+          "mappingStatus": "semantic_control_mapping_candidate",
+          "verificationNote": "Candidate only: ASP.NET page HTML and DealerSettings schema name/type reviewed; server-side code-behind or a non-mutating save-path trace is still needed for confirmation."
+        },
+        {
+          "panel": "Admin",
+          "section": "Cart Settings",
+          "label": "Payment Detail Show",
+          "controlName": "ctl00$PageContent$ddlPaymentDetailShow",
+          "controlId": "ctl00_PageContent_ddlPaymentDetailShow",
+          "element": "select",
+          "type": "select",
+          "multiple": false,
+          "options": [
+            {
+              "value": "0",
+              "label": "Do Not Show"
+            },
+            {
+              "value": "1",
+              "label": "Show"
+            }
+          ],
+          "databaseColumnCandidate": "PaymentDetailShow",
+          "mappingStatus": "semantic_control_mapping_candidate",
+          "verificationNote": "Candidate only: ASP.NET page HTML and DealerSettings schema name/type reviewed; server-side code-behind or a non-mutating save-path trace is still needed for confirmation."
+        },
+        {
+          "panel": "Admin",
+          "section": "Cart Settings",
+          "label": "Show  Product Variation Code In Cart",
+          "controlName": "ctl00$PageContent$ddlCartProductVariationCodeShow",
+          "controlId": "ctl00_PageContent_ddlCartProductVariationCodeShow",
+          "element": "select",
+          "type": "select",
+          "multiple": false,
+          "options": [
+            {
+              "value": "0",
+              "label": "Do Not Show"
+            },
+            {
+              "value": "1",
+              "label": "Show"
+            }
+          ],
+          "databaseColumnCandidate": "CartProductVariationCodeShow",
+          "mappingStatus": "semantic_control_mapping_candidate",
+          "verificationNote": "Candidate only: ASP.NET page HTML and DealerSettings schema name/type reviewed; server-side code-behind or a non-mutating save-path trace is still needed for confirmation."
+        },
+        {
+          "panel": "Admin",
+          "section": "Cart Settings",
+          "label": "Min Cart Price",
+          "controlName": "ctl00$PageContent$txtMinCartTotal",
+          "controlId": "ctl00_PageContent_txtMinCartTotal",
+          "element": "input",
+          "type": "text",
+          "databaseColumnCandidate": "MinCartTotal",
+          "mappingStatus": "semantic_control_mapping_candidate",
+          "verificationNote": "Candidate only: ASP.NET page HTML and DealerSettings schema name/type reviewed; server-side code-behind or a non-mutating save-path trace is still needed for confirmation."
+        },
+        {
+          "panel": "Admin",
+          "section": "Cart Settings",
+          "label": "Maximum Product Order Quantity",
+          "controlName": "ctl00$PageContent$txtMaximumOrderQuantity",
+          "controlId": "ctl00_PageContent_txtMaximumOrderQuantity",
+          "element": "input",
+          "type": "text",
+          "databaseColumnCandidate": "MaximumOrderQuantity",
+          "mappingStatus": "semantic_control_mapping_candidate",
+          "verificationNote": "Candidate only: ASP.NET page HTML and DealerSettings schema name/type reviewed; server-side code-behind or a non-mutating save-path trace is still needed for confirmation."
+        }
+      ]
+    },
+    {
+      "panel": "Admin",
+      "section": "General Settings",
+      "controlCount": 31,
+      "controls": [
+        {
+          "panel": "Admin",
+          "section": "General Settings",
+          "label": "Delivery Date Get",
+          "controlName": "ctl00$PageContent$chkDeliveryDateShow",
+          "controlId": "ctl00_PageContent_chkDeliveryDateShow",
+          "element": "input",
+          "type": "checkbox",
+          "valueAttribute": null,
+          "databaseColumnCandidate": "DeliveryDateShow",
+          "mappingStatus": "semantic_control_mapping_candidate",
+          "verificationNote": "Candidate only: ASP.NET page HTML and DealerSettings schema name/type reviewed; server-side code-behind or a non-mutating save-path trace is still needed for confirmation."
+        },
+        {
+          "panel": "Admin",
+          "section": "General Settings",
+          "label": "Minimum Inventory Quantity",
+          "controlName": "ctl00$PageContent$txtMinStockFilter",
+          "controlId": "ctl00_PageContent_txtMinStockFilter",
+          "element": "input",
+          "type": "text",
+          "databaseColumnCandidate": "MinStockFilter",
+          "mappingStatus": "semantic_control_mapping_candidate",
+          "verificationNote": "Candidate only: ASP.NET page HTML and DealerSettings schema name/type reviewed; server-side code-behind or a non-mutating save-path trace is still needed for confirmation."
+        },
+        {
+          "panel": "Admin",
+          "section": "General Settings",
+          "label": "Discount Type",
+          "controlName": "ctl00$PageContent$ddlDiscountType",
+          "controlId": "ctl00_PageContent_ddlDiscountType",
+          "element": "select",
+          "type": "select",
+          "multiple": false,
+          "options": [
+            {
+              "value": "'A'",
+              "label": "Normal"
+            },
+            {
+              "value": "'P'",
+              "label": "By Product"
+            },
+            {
+              "value": "'C'",
+              "label": "By Firm"
+            }
+          ],
+          "databaseColumnCandidate": "DiscountType",
+          "mappingStatus": "semantic_control_mapping_candidate",
+          "verificationNote": "Candidate only: ASP.NET page HTML and DealerSettings schema name/type reviewed; server-side code-behind or a non-mutating save-path trace is still needed for confirmation."
+        },
+        {
+          "panel": "Admin",
+          "section": "General Settings",
+          "label": "Login Screen  ( Login Page )",
+          "controlName": "ctl00$PageContent$chkCustomerCodeForLogin",
+          "controlId": "ctl00_PageContent_chkCustomerCodeForLogin",
+          "element": "input",
+          "type": "checkbox",
+          "valueAttribute": null,
+          "databaseColumnCandidate": "UseCustomerCodeForLogin",
+          "mappingStatus": "semantic_control_mapping_candidate",
+          "verificationNote": "Candidate only: ASP.NET page HTML and DealerSettings schema name/type reviewed; server-side code-behind or a non-mutating save-path trace is still needed for confirmation."
+        },
+        {
+          "panel": "Admin",
+          "section": "General Settings",
+          "label": "Bank Installments Impressions",
+          "controlName": "ctl00$PageContent$ddlBankTableType",
+          "controlId": "ctl00_PageContent_ddlBankTableType",
+          "element": "select",
+          "type": "select",
+          "multiple": false,
+          "options": [
+            {
+              "value": "1",
+              "label": "Normal Showing"
+            },
+            {
+              "value": "0",
+              "label": "Spreadsheets Views"
+            }
+          ],
+          "databaseColumnCandidate": "BankTableType",
+          "mappingStatus": "semantic_control_mapping_candidate",
+          "verificationNote": "Candidate only: ASP.NET page HTML and DealerSettings schema name/type reviewed; server-side code-behind or a non-mutating save-path trace is still needed for confirmation."
+        },
+        {
+          "panel": "Admin",
+          "section": "General Settings",
+          "label": "Login With Expiry",
+          "controlName": "ctl00$PageContent$chkLoginWithExpiry",
+          "controlId": "ctl00_PageContent_chkLoginWithExpiry",
+          "element": "input",
+          "type": "checkbox",
+          "valueAttribute": null,
+          "databaseColumnCandidate": "LoginWithExpiry",
+          "mappingStatus": "semantic_control_mapping_candidate",
+          "verificationNote": "Candidate only: ASP.NET page HTML and DealerSettings schema name/type reviewed; server-side code-behind or a non-mutating save-path trace is still needed for confirmation."
+        },
+        {
+          "panel": "Admin",
+          "section": "General Settings",
+          "label": "Use Currency Type",
+          "controlName": "ctl00$PageContent$ddlCurrencyType",
+          "controlId": "ctl00_PageContent_ddlCurrencyType",
+          "element": "select",
+          "type": "select",
+          "multiple": false,
+          "options": [
+            {
+              "value": "0",
+              "label": "Manuel"
+            },
+            {
+              "value": "1",
+              "label": "Automatic"
+            }
+          ],
+          "databaseColumnCandidate": "UseCurrencyType",
+          "mappingStatus": "semantic_control_mapping_candidate",
+          "verificationNote": "Candidate only: ASP.NET page HTML and DealerSettings schema name/type reviewed; server-side code-behind or a non-mutating save-path trace is still needed for confirmation."
+        },
+        {
+          "panel": "Admin",
+          "section": "General Settings",
+          "label": "Current Maturity Date",
+          "controlName": "ctl00$PageContent$ddlExpiryDate",
+          "controlId": "ctl00_PageContent_ddlExpiryDate",
+          "element": "select",
+          "type": "select",
+          "multiple": false,
+          "options": [
+            {
+              "value": "1",
+              "label": "Show"
+            },
+            {
+              "value": "0",
+              "label": "Do Not Show"
+            }
+          ],
+          "databaseColumnCandidate": "ExpiryDate",
+          "mappingStatus": "semantic_control_mapping_candidate",
+          "verificationNote": "Candidate only: ASP.NET page HTML and DealerSettings schema name/type reviewed; server-side code-behind or a non-mutating save-path trace is still needed for confirmation."
+        },
+        {
+          "panel": "Admin",
+          "section": "General Settings",
+          "label": "Current As Well Total Balance",
+          "controlName": "ctl00$PageContent$ddlAccountActivityGenralCuurencyTableShow",
+          "controlId": "ctl00_PageContent_ddlAccountActivityGenralCuurencyTableShow",
+          "element": "select",
+          "type": "select",
+          "multiple": false,
+          "options": [
+            {
+              "value": "1",
+              "label": "Show"
+            },
+            {
+              "value": "0",
+              "label": "Do Not Show"
+            }
+          ],
+          "databaseColumnCandidate": "AccountActivityGenralCuurencyTableShow",
+          "mappingStatus": "semantic_control_mapping_candidate",
+          "verificationNote": "Candidate only: ASP.NET page HTML and DealerSettings schema name/type reviewed; server-side code-behind or a non-mutating save-path trace is still needed for confirmation."
+        },
+        {
+          "panel": "Admin",
+          "section": "General Settings",
+          "label": "E-PayCommission",
+          "controlName": "ctl00$PageContent$ddlCommissionType",
+          "controlId": "ctl00_PageContent_ddlCommissionType",
+          "element": "select",
+          "type": "select",
+          "multiple": false,
+          "options": [
+            {
+              "value": "0",
+              "label": "Please Select"
+            },
+            {
+              "value": "1",
+              "label": "When the order is placed, the commission difference should be reflected in the items."
+            },
+            {
+              "value": "3",
+              "label": "Normal Showing"
+            }
+          ],
+          "databaseColumnCandidate": "CommissionType",
+          "mappingStatus": "semantic_control_mapping_candidate",
+          "verificationNote": "Candidate only: ASP.NET page HTML and DealerSettings schema name/type reviewed; server-side code-behind or a non-mutating save-path trace is still needed for confirmation."
+        },
+        {
+          "panel": "Admin",
+          "section": "General Settings",
+          "label": "Discount Authorization for Customer Representative",
+          "controlName": "ctl00$PageContent$ddlSpecialDiscount",
+          "controlId": "ctl00_PageContent_ddlSpecialDiscount",
+          "element": "select",
+          "type": "select",
+          "multiple": false,
+          "options": [
+            {
+              "value": "0",
+              "label": "Do Not Show"
+            },
+            {
+              "value": "3",
+              "label": "Set Discount Authority On Customer Representative Basis"
+            },
+            {
+              "value": "1",
+              "label": "1"
+            },
+            {
+              "value": "2",
+              "label": "2"
+            }
+          ],
+          "databaseColumnCandidate": "SpecialDiscount",
+          "mappingStatus": "semantic_control_mapping_candidate",
+          "verificationNote": "Candidate only: ASP.NET page HTML and DealerSettings schema name/type reviewed; server-side code-behind or a non-mutating save-path trace is still needed for confirmation."
+        },
+        {
+          "panel": "Admin",
+          "section": "General Settings",
+          "label": "Registration Form Link",
+          "controlName": "ctl00$PageContent$txtRegisterFormUrl",
+          "controlId": "ctl00_PageContent_txtRegisterFormUrl",
+          "element": "input",
+          "type": "text",
+          "databaseColumnCandidate": "RegisterFormUrl",
+          "mappingStatus": "semantic_control_mapping_candidate",
+          "verificationNote": "Candidate only: ASP.NET page HTML and DealerSettings schema name/type reviewed; server-side code-behind or a non-mutating save-path trace is still needed for confirmation."
+        },
+        {
+          "panel": "Admin",
+          "section": "General Settings",
+          "label": "Main Page",
+          "controlName": "ctl00$PageContent$ddlHomeStyle",
+          "controlId": "ctl00_PageContent_ddlHomeStyle",
+          "element": "select",
+          "type": "select",
+          "multiple": false,
+          "options": [
+            {
+              "value": "0",
+              "label": "Default"
+            },
+            {
+              "value": "1",
+              "label": "Products"
+            },
+            {
+              "value": "2",
+              "label": "E-PAyment"
+            }
+          ],
+          "databaseColumnCandidate": "HomeStyle",
+          "mappingStatus": "semantic_control_mapping_candidate",
+          "verificationNote": "Candidate only: ASP.NET page HTML and DealerSettings schema name/type reviewed; server-side code-behind or a non-mutating save-path trace is still needed for confirmation."
+        },
+        {
+          "panel": "Admin",
+          "section": "General Settings",
+          "label": "Current Account Payment",
+          "controlName": "ctl00$PageContent$ddlPaymentForAccountActivityShow",
+          "controlId": "ctl00_PageContent_ddlPaymentForAccountActivityShow",
+          "element": "select",
+          "type": "select",
+          "multiple": false,
+          "options": [
+            {
+              "value": "1",
+              "label": "Show"
+            },
+            {
+              "value": "0",
+              "label": "Hide"
+            }
+          ],
+          "databaseColumnCandidate": "PaymentForAccountActivityShow",
+          "mappingStatus": "semantic_control_mapping_candidate",
+          "verificationNote": "Candidate only: ASP.NET page HTML and DealerSettings schema name/type reviewed; server-side code-behind or a non-mutating save-path trace is still needed for confirmation."
+        },
+        {
+          "panel": "Admin",
+          "section": "General Settings",
+          "label": "Dealer Phone",
+          "controlName": "ctl00$PageContent$txtBayiTelefon",
+          "controlId": "ctl00_PageContent_txtBayiTelefon",
+          "element": "input",
+          "type": "text",
+          "databaseColumnCandidate": "DealerPhoneNumber",
+          "mappingStatus": "semantic_control_mapping_candidate",
+          "verificationNote": "Candidate only: ASP.NET page HTML and DealerSettings schema name/type reviewed; server-side code-behind or a non-mutating save-path trace is still needed for confirmation."
+        },
+        {
+          "panel": "Admin",
+          "section": "General Settings",
+          "label": "Dealer Adress",
+          "controlName": "ctl00$PageContent$txtBayiAdres",
+          "controlId": "ctl00_PageContent_txtBayiAdres",
+          "element": "textarea",
+          "type": "textarea",
+          "databaseColumnCandidate": "DealerAdress",
+          "mappingStatus": "semantic_control_mapping_candidate",
+          "verificationNote": "Candidate only: ASP.NET page HTML and DealerSettings schema name/type reviewed; server-side code-behind or a non-mutating save-path trace is still needed for confirmation."
+        },
+        {
+          "panel": "Admin",
+          "section": "General Settings",
+          "label": "Search By Brand",
+          "controlName": "ctl00$PageContent$ddlSearchMarka",
+          "controlId": "ctl00_PageContent_ddlSearchMarka",
+          "element": "select",
+          "type": "select",
+          "multiple": false,
+          "options": [
+            {
+              "value": "0",
+              "label": "Do Not Use"
+            },
+            {
+              "value": "1",
+              "label": "Use"
+            }
+          ],
+          "databaseColumnCandidate": "SearchShowBrand",
+          "mappingStatus": "semantic_control_mapping_candidate",
+          "verificationNote": "Candidate only: ASP.NET page HTML and DealerSettings schema name/type reviewed; server-side code-behind or a non-mutating save-path trace is still needed for confirmation."
+        },
+        {
+          "panel": "Admin",
+          "section": "General Settings",
+          "label": "Advanced Search",
+          "controlName": "ctl00$PageContent$ddlSearchDetail",
+          "controlId": "ctl00_PageContent_ddlSearchDetail",
+          "element": "select",
+          "type": "select",
+          "multiple": false,
+          "options": [
+            {
+              "value": "0",
+              "label": "Hide"
+            },
+            {
+              "value": "1",
+              "label": "Show"
+            }
+          ],
+          "databaseColumnCandidate": "SearchShowDetail",
+          "mappingStatus": "semantic_control_mapping_candidate",
+          "verificationNote": "Candidate only: ASP.NET page HTML and DealerSettings schema name/type reviewed; server-side code-behind or a non-mutating save-path trace is still needed for confirmation."
+        },
+        {
+          "panel": "Admin",
+          "section": "General Settings",
+          "label": "Using the Quick Search Listings",
+          "controlName": "ctl00$PageContent$chkDontUseLcnAutoComplate",
+          "controlId": "ctl00_PageContent_chkDontUseLcnAutoComplate",
+          "element": "input",
+          "type": "checkbox",
+          "valueAttribute": null,
+          "databaseColumnCandidate": "DontUseLcnAutoComplate",
+          "mappingStatus": "semantic_control_mapping_candidate",
+          "verificationNote": "Candidate only: ASP.NET page HTML and DealerSettings schema name/type reviewed; server-side code-behind or a non-mutating save-path trace is still needed for confirmation."
+        },
+        {
+          "panel": "Admin",
+          "section": "General Settings",
+          "label": "Desktop Application",
+          "controlName": "ctl00$PageContent$ddlUseDesktopApi",
+          "controlId": "ctl00_PageContent_ddlUseDesktopApi",
+          "element": "select",
+          "type": "select",
+          "multiple": false,
+          "options": [
+            {
+              "value": "0",
+              "label": "Do Not Use"
+            },
+            {
+              "value": "1",
+              "label": "Use"
+            }
+          ],
+          "databaseColumnCandidate": "UseDesktopApi",
+          "mappingStatus": "semantic_control_mapping_candidate",
+          "verificationNote": "Candidate only: ASP.NET page HTML and DealerSettings schema name/type reviewed; server-side code-behind or a non-mutating save-path trace is still needed for confirmation."
+        },
+        {
+          "panel": "Admin",
+          "section": "General Settings",
+          "label": "Current Account Details",
+          "controlName": "ctl00$PageContent$ddlRowDescriptionShow",
+          "controlId": "ctl00_PageContent_ddlRowDescriptionShow",
+          "element": "select",
+          "type": "select",
+          "multiple": false,
+          "options": [
+            {
+              "value": "0",
+              "label": "Do Not Use"
+            },
+            {
+              "value": "1",
+              "label": "Use"
+            }
+          ],
+          "databaseColumnCandidate": "RowDescriptionShow",
+          "mappingStatus": "semantic_control_mapping_candidate",
+          "verificationNote": "Candidate only: ASP.NET page HTML and DealerSettings schema name/type reviewed; server-side code-behind or a non-mutating save-path trace is still needed for confirmation."
+        },
+        {
+          "panel": "Admin",
+          "section": "General Settings",
+          "label": "Product Currency",
+          "controlName": "ctl00$PageContent$ddlProductCurrency",
+          "controlId": "ctl00_PageContent_ddlProductCurrency",
+          "element": "select",
+          "type": "select",
+          "multiple": false,
+          "options": [
+            {
+              "value": "-1",
+              "label": "Show by Current Price Type"
+            },
+            {
+              "value": "0",
+              "label": "No Change"
+            },
+            {
+              "value": "2",
+              "label": "$"
+            },
+            {
+              "value": "8",
+              "label": "¥"
+            },
+            {
+              "value": "3",
+              "label": "€"
+            },
+            {
+              "value": "11",
+              "label": "AUD"
+            },
+            {
+              "value": "13",
+              "label": "BGN"
+            },
+            {
+              "value": "7",
+              "label": "CHD"
+            },
+            {
+              "value": "6",
+              "label": "DKK"
+            },
+            {
+              "value": "4",
+              "label": "GBP"
+            },
+            {
+              "value": "12",
+              "label": "IRR"
+            },
+            {
+              "value": "10",
+              "label": "KWD"
+            },
+            {
+              "value": "14",
+              "label": "lei"
+            },
+            {
+              "value": "9",
+              "label": "SAR"
+            },
+            {
+              "value": "5",
+              "label": "SEK"
+            },
+            {
+              "value": "1",
+              "label": "TL"
+            }
+          ],
+          "databaseColumnCandidate": "CurrencyProduct",
+          "mappingStatus": "semantic_control_mapping_candidate",
+          "verificationNote": "Candidate only: ASP.NET page HTML and DealerSettings schema name/type reviewed; server-side code-behind or a non-mutating save-path trace is still needed for confirmation."
+        },
+        {
+          "panel": "Admin",
+          "section": "General Settings",
+          "label": "Pos Currency",
+          "controlName": "ctl00$PageContent$ddlPosCurrency",
+          "controlId": "ctl00_PageContent_ddlPosCurrency",
+          "element": "select",
+          "type": "select",
+          "multiple": false,
+          "options": [
+            {
+              "value": "-1",
+              "label": "Show by Current Price Type"
+            },
+            {
+              "value": "0",
+              "label": "No Change"
+            },
+            {
+              "value": "2",
+              "label": "$"
+            },
+            {
+              "value": "8",
+              "label": "¥"
+            },
+            {
+              "value": "3",
+              "label": "€"
+            },
+            {
+              "value": "11",
+              "label": "AUD"
+            },
+            {
+              "value": "13",
+              "label": "BGN"
+            },
+            {
+              "value": "7",
+              "label": "CHD"
+            },
+            {
+              "value": "6",
+              "label": "DKK"
+            },
+            {
+              "value": "4",
+              "label": "GBP"
+            },
+            {
+              "value": "12",
+              "label": "IRR"
+            },
+            {
+              "value": "10",
+              "label": "KWD"
+            },
+            {
+              "value": "14",
+              "label": "lei"
+            },
+            {
+              "value": "9",
+              "label": "SAR"
+            },
+            {
+              "value": "5",
+              "label": "SEK"
+            },
+            {
+              "value": "1",
+              "label": "TL"
+            }
+          ],
+          "databaseColumnCandidate": "CurrencyPos",
+          "mappingStatus": "semantic_control_mapping_candidate",
+          "verificationNote": "Candidate only: ASP.NET page HTML and DealerSettings schema name/type reviewed; server-side code-behind or a non-mutating save-path trace is still needed for confirmation."
+        },
+        {
+          "panel": "Admin",
+          "section": "General Settings",
+          "label": "Integration     Parameter",
+          "controlName": "ctl00$PageContent$ddlParameterIntegration",
+          "controlId": "ctl00_PageContent_ddlParameterIntegration",
+          "element": "select",
+          "type": "select",
+          "multiple": true,
+          "options": [
+            {
+              "value": "1",
+              "label": "Discount Will Be Defined Manually."
+            },
+            {
+              "value": "2",
+              "label": "Customer Group Will Be Determined Manually."
+            },
+            {
+              "value": "4",
+              "label": "In order transfer, send the sub-dealer order as the main dealer"
+            },
+            {
+              "value": "8",
+              "label": "Automatically update tags during company transfer"
+            }
+          ],
+          "databaseColumnCandidate": "ParameterIntegration",
+          "mappingStatus": "semantic_control_mapping_candidate",
+          "verificationNote": "Candidate only: ASP.NET page HTML and DealerSettings schema name/type reviewed; server-side code-behind or a non-mutating save-path trace is still needed for confirmation."
+        },
+        {
+          "panel": "Admin",
+          "section": "General Settings",
+          "label": "Show details add button is clicked",
+          "controlName": "ctl00$PageContent$chkAddCartAction",
+          "controlId": "ctl00_PageContent_chkAddCartAction",
+          "element": "input",
+          "type": "checkbox",
+          "valueAttribute": null,
+          "databaseColumnCandidate": "AddCartAction",
+          "mappingStatus": "semantic_control_mapping_candidate",
+          "verificationNote": "Candidate only: ASP.NET page HTML and DealerSettings schema name/type reviewed; server-side code-behind or a non-mutating save-path trace is still needed for confirmation."
+        },
+        {
+          "panel": "Admin",
+          "section": "General Settings",
+          "label": "Do Not Send Mail To Customer",
+          "controlName": "ctl00$PageContent$chkDoNotSendMailToCustomer",
+          "controlId": "ctl00_PageContent_chkDoNotSendMailToCustomer",
+          "element": "input",
+          "type": "checkbox",
+          "valueAttribute": null,
+          "databaseColumnCandidate": "DoNotSendMailToCustomer",
+          "mappingStatus": "semantic_control_mapping_candidate",
+          "verificationNote": "Candidate only: ASP.NET page HTML and DealerSettings schema name/type reviewed; server-side code-behind or a non-mutating save-path trace is still needed for confirmation."
+        },
+        {
+          "panel": "Admin",
+          "section": "General Settings",
+          "label": "Send Delivery Address If Different",
+          "controlName": "ctl00$PageContent$ddlSendDeliveryAddressIfDifferent",
+          "controlId": "ctl00_PageContent_ddlSendDeliveryAddressIfDifferent",
+          "element": "select",
+          "type": "select",
+          "multiple": false,
+          "options": [
+            {
+              "value": "0",
+              "label": "No"
+            },
+            {
+              "value": "1",
+              "label": "Yes"
+            }
+          ],
+          "databaseColumnCandidate": "SendDeliveryAddressIfDifferent",
+          "mappingStatus": "semantic_control_mapping_candidate",
+          "verificationNote": "Candidate only: ASP.NET page HTML and DealerSettings schema name/type reviewed; server-side code-behind or a non-mutating save-path trace is still needed for confirmation."
+        },
+        {
+          "panel": "Admin",
+          "section": "General Settings",
+          "label": "Currency Price Type",
+          "controlName": "ctl00$PageContent$ddlCurrencyPriceType",
+          "controlId": "ctl00_PageContent_ddlCurrencyPriceType",
+          "element": "select",
+          "type": "select",
+          "multiple": false,
+          "options": [
+            {
+              "value": "1",
+              "label": "Banknote Selling"
+            },
+            {
+              "value": "2",
+              "label": "Forex Selling"
+            }
+          ],
+          "databaseColumnCandidate": "CurrencyPriceType",
+          "mappingStatus": "semantic_control_mapping_candidate",
+          "verificationNote": "Candidate only: ASP.NET page HTML and DealerSettings schema name/type reviewed; server-side code-behind or a non-mutating save-path trace is still needed for confirmation."
+        },
+        {
+          "panel": "Admin",
+          "section": "General Settings",
+          "label": "All Products",
+          "controlName": "ctl00$PageContent$ddlAllProductsShow",
+          "controlId": "ctl00_PageContent_ddlAllProductsShow",
+          "element": "select",
+          "type": "select",
+          "multiple": false,
+          "options": [
+            {
+              "value": "1",
+              "label": "Show"
+            },
+            {
+              "value": "0",
+              "label": "Hide"
+            }
+          ],
+          "databaseColumnCandidate": "AllProductsShow",
+          "mappingStatus": "semantic_control_mapping_candidate",
+          "verificationNote": "Candidate only: ASP.NET page HTML and DealerSettings schema name/type reviewed; server-side code-behind or a non-mutating save-path trace is still needed for confirmation."
+        },
+        {
+          "panel": "Admin",
+          "section": "General Settings",
+          "label": "Different Payment Link",
+          "controlName": "ctl00$PageContent$txtPaymentLink",
+          "controlId": "ctl00_PageContent_txtPaymentLink",
+          "element": "input",
+          "type": "text",
+          "databaseColumnCandidate": "PaymentLink",
+          "mappingStatus": "semantic_control_mapping_candidate",
+          "verificationNote": "Candidate only: ASP.NET page HTML and DealerSettings schema name/type reviewed; server-side code-behind or a non-mutating save-path trace is still needed for confirmation."
+        },
+        {
+          "panel": "Admin",
+          "section": "General Settings",
+          "label": "Payment Parameters",
+          "controlName": "ctl00$PageContent$ddlPaymentParameter",
+          "controlId": "ctl00_PageContent_ddlPaymentParameter",
+          "element": "select",
+          "type": "select",
+          "multiple": true,
+          "options": [
+            {
+              "value": "1",
+              "label": "Request contract approval at payment"
+            },
+            {
+              "value": "2",
+              "label": "E-Payment With Commission"
+            },
+            {
+              "value": "4",
+              "label": "E-Payment Commission-Selective"
+            },
+            {
+              "value": "8",
+              "label": "Overdue Customers Cnnot Pay In Installments"
+            },
+            {
+              "value": "32",
+              "label": "Currency selection for online payment"
+            },
+            {
+              "value": "64",
+              "label": "Use POS currency in payment"
+            },
+            {
+              "value": "128",
+              "label": "Showing installments if there is an overdue debt in online payment"
+            },
+            {
+              "value": "256",
+              "label": "Don't Show Pos discount rate in online payment"
+            },
+            {
+              "value": "512",
+              "label": "Online ödemede vadesi geçen göster"
+            },
+            {
+              "value": "1024",
+              "label": "Ödeme tiplerinde indirim gösterme"
+            },
+            {
+              "value": "2048",
+              "label": "Kredi kartı ödemelerini tek çekim ve taksit olarak ayır"
+            },
+            {
+              "value": "4096",
+              "label": "BankBinV2 yapısı aktif et"
+            },
+            {
+              "value": "8192",
+              "label": "Ödeme detayda komisyon göster"
+            },
+            {
+              "value": "16384",
+              "label": "Ödeme detayda hesaba geçen net tutar göster"
+            },
+            {
+              "value": "32768",
+              "label": "Firma Bazlı Ödeme Grubu Kullansın"
+            }
+          ],
+          "databaseColumnCandidate": "ParameterPayment",
+          "mappingStatus": "semantic_control_mapping_candidate",
+          "verificationNote": "Candidate only: ASP.NET page HTML and DealerSettings schema name/type reviewed; server-side code-behind or a non-mutating save-path trace is still needed for confirmation."
+        }
+      ]
+    },
+    {
+      "panel": "Admin",
+      "section": "Application Form Settings",
+      "controlCount": 2,
+      "controls": [
+        {
+          "panel": "Admin",
+          "section": "Application Form Settings",
+          "label": "Application Form Settings",
+          "controlName": "ctl00$PageContent$ddlParameterLogin",
+          "controlId": "ctl00_PageContent_ddlParameterLogin",
+          "element": "select",
+          "type": "select",
+          "multiple": true,
+          "options": [
+            {
+              "value": "1",
+              "label": "First Name"
+            },
+            {
+              "value": "2",
+              "label": "Last Name"
+            },
+            {
+              "value": "4",
+              "label": "Company"
+            },
+            {
+              "value": "8",
+              "label": "Phone"
+            },
+            {
+              "value": "16",
+              "label": "Tax Office"
+            },
+            {
+              "value": "32",
+              "label": "Tax No"
+            },
+            {
+              "value": "64",
+              "label": "City"
+            },
+            {
+              "value": "128",
+              "label": "Country"
+            },
+            {
+              "value": "256",
+              "label": "Address"
+            },
+            {
+              "value": "512",
+              "label": "Email"
+            },
+            {
+              "value": "1024",
+              "label": "Dealer Website"
+            },
+            {
+              "value": "2048",
+              "label": "TC Citizen No"
+            },
+            {
+              "value": "4096",
+              "label": "Contract Approval on Application"
+            },
+            {
+              "value": "8192",
+              "label": "New membership text"
+            },
+            {
+              "value": "16384",
+              "label": "Hide membership button"
+            },
+            {
+              "value": "32768",
+              "label": "Show Non Membership Shopping"
+            },
+            {
+              "value": "65536",
+              "label": "Hide menu settings when creating sub-dealer"
+            },
+            {
+              "value": "131072",
+              "label": "Postal code"
+            },
+            {
+              "value": "262144",
+              "label": "Description"
+            },
+            {
+              "value": "524288",
+              "label": "Password"
+            },
+            {
+              "value": "1048576",
+              "label": "Individual"
+            },
+            {
+              "value": "2097152",
+              "label": "Adres eklemede teslimat ve fatura adresi seçimi göster"
+            },
+            {
+              "value": "4194304",
+              "label": "Dosya yükle göster"
+            },
+            {
+              "value": "8388608",
+              "label": "Mobil telefon"
+            },
+            {
+              "value": "16777216",
+              "label": "Üye olan firmanın promosyon kullanımı aktif olsun"
+            },
+            {
+              "value": "33554432",
+              "label": "Üye olan firmanın stok gösterimi kapalı olsun"
+            },
+            {
+              "value": "67108864",
+              "label": "Üyelikte aktivasyon linki oluştur"
+            },
+            {
+              "value": "134217728",
+              "label": "Üye olan firmanın sipariş tamamlama butonu kapalı olsun"
+            },
+            {
+              "value": "268435456",
+              "label": "Üye olan firmanın fiyatı kapalı olsun"
+            },
+            {
+              "value": "536870912",
+              "label": "Üye olan firmanın piyasa fiyatı kapalı olsun"
+            }
+          ],
+          "databaseColumnCandidate": "ParameterLogin",
+          "mappingStatus": "semantic_control_mapping_candidate",
+          "verificationNote": "Candidate only: ASP.NET page HTML and DealerSettings schema name/type reviewed; server-side code-behind or a non-mutating save-path trace is still needed for confirmation."
+        },
+        {
+          "panel": "Admin",
+          "section": "Application Form Settings",
+          "label": "Application Form Menu Display",
+          "controlName": "ctl00$PageContent$ddlParameterLoginMenu",
+          "controlId": "ctl00_PageContent_ddlParameterLoginMenu",
+          "element": "select",
+          "type": "select",
+          "multiple": true,
+          "options": [
+            {
+              "value": "1",
+              "label": "First Name"
+            },
+            {
+              "value": "2",
+              "label": "Last Name"
+            },
+            {
+              "value": "4",
+              "label": "Company"
+            },
+            {
+              "value": "8",
+              "label": "Phone"
+            },
+            {
+              "value": "16",
+              "label": "Tax Office"
+            },
+            {
+              "value": "32",
+              "label": "Tax No"
+            },
+            {
+              "value": "64",
+              "label": "City"
+            },
+            {
+              "value": "128",
+              "label": "Country"
+            },
+            {
+              "value": "256",
+              "label": "Address"
+            },
+            {
+              "value": "512",
+              "label": "Email"
+            },
+            {
+              "value": "1024",
+              "label": "Dealer Website"
+            },
+            {
+              "value": "2048",
+              "label": "TC Citizen No"
+            },
+            {
+              "value": "4096",
+              "label": "Contract Approval on Application"
+            },
+            {
+              "value": "8192",
+              "label": "Tax Approval Code"
+            },
+            {
+              "value": "16384",
+              "label": "Hide membership button"
+            },
+            {
+              "value": "32768",
+              "label": "Individual/Corporate selection"
+            },
+            {
+              "value": "65536",
+              "label": "Phone Number"
+            },
+            {
+              "value": "131072",
+              "label": "Address"
+            },
+            {
+              "value": "262144",
+              "label": "Description"
+            }
+          ],
+          "databaseColumnCandidate": "ParameterLoginMenu",
+          "mappingStatus": "semantic_control_mapping_candidate",
+          "verificationNote": "Candidate only: ASP.NET page HTML and DealerSettings schema name/type reviewed; server-side code-behind or a non-mutating save-path trace is still needed for confirmation."
+        }
+      ]
+    },
+    {
+      "panel": "Admin",
+      "section": "Admin",
+      "controlCount": 24,
+      "controls": [
+        {
+          "panel": "Admin",
+          "section": "Admin",
+          "label": "Admin  Parameter",
+          "controlName": "ctl00$PageContent$ddlParameterAdmin",
+          "controlId": "ctl00_PageContent_ddlParameterAdmin",
+          "element": "select",
+          "type": "select",
+          "multiple": true,
+          "options": [
+            {
+              "value": "1",
+              "label": "Show Purpose Module in Technical Settings"
+            },
+            {
+              "value": "2",
+              "label": "Show VAT Exempt in Price Type"
+            },
+            {
+              "value": "4",
+              "label": "Show Installment Limit in Pos Management"
+            },
+            {
+              "value": "8",
+              "label": "Company Based Hiding"
+            },
+            {
+              "value": "16",
+              "label": "Show Company Based Installment Rates in Pos Management"
+            },
+            {
+              "value": "32",
+              "label": "Show Order Export Button"
+            },
+            {
+              "value": "64",
+              "label": "Show Order Pending Export Button"
+            },
+            {
+              "value": "128",
+              "label": "Show Transfer To PDF Button In Order Detail"
+            },
+            {
+              "value": "256",
+              "label": "Clicking Current In Cart To Show Account Balance"
+            },
+            {
+              "value": "512",
+              "label": "Show Transfer To PDF Button In Account Activity"
+            },
+            {
+              "value": "1024",
+              "label": "Regional Warehouse Display"
+            },
+            {
+              "value": "2048",
+              "label": "Technical Settings:\nIn SQL Data Structure Parameter\n\"SQL Data Structure\" option appears"
+            },
+            {
+              "value": "4096",
+              "label": "Xml Export:\nMakes the \"Update Time\" option appear."
+            },
+            {
+              "value": "8192",
+              "label": "Displaying Service Orders in Order Adding and Product Order Reports"
+            },
+            {
+              "value": "16384",
+              "label": "Customer Representative Selection (Users)"
+            },
+            {
+              "value": "32768",
+              "label": "Customer Representative Selection (Customer Representatives)"
+            },
+            {
+              "value": "65536",
+              "label": "Add Company:\nChoice of Company Parameters to Display."
+            },
+            {
+              "value": "131072",
+              "label": "Payment Parameter\nOverdue Customers Can not Pay In Installments"
+            },
+            {
+              "value": "262144",
+              "label": "Parameter Sub Dealer"
+            },
+            {
+              "value": "524288",
+              "label": "Brand hiding by company"
+            },
+            {
+              "value": "1048576",
+              "label": "Hide Product"
+            },
+            {
+              "value": "2097152",
+              "label": "Show as \"Available\" if Stock is 0"
+            },
+            {
+              "value": "4194304",
+              "label": "Hide warehouse"
+            },
+            {
+              "value": "8388608",
+              "label": "Company: Show currency in account tracking"
+            },
+            {
+              "value": "16777216",
+              "label": "Show Category in Cart"
+            },
+            {
+              "value": "33554432",
+              "label": "Export as JSON"
+            },
+            {
+              "value": "67108864",
+              "label": "Show Account Limit"
+            },
+            {
+              "value": "134217728",
+              "label": "Show payment entry"
+            },
+            {
+              "value": "268435456",
+              "label": "Send agent code on order"
+            },
+            {
+              "value": "536870912",
+              "label": "Showing Campaigns on a Product Basis"
+            },
+            {
+              "value": "1073741824",
+              "label": "Use product discount 2 in cross discount"
+            },
+            {
+              "value": "2147483648",
+              "label": "Brand discount structure by company"
+            },
+            {
+              "value": "4294967296",
+              "label": "Return button in order detail"
+            },
+            {
+              "value": "8589934592",
+              "label": "Let Customer Representative See Only Current Warehouses"
+            },
+            {
+              "value": "17179869184",
+              "label": "Add to cart by warehouse"
+            },
+            {
+              "value": "34359738368",
+              "label": "Show add to cart based on warehouse"
+            },
+            {
+              "value": "68719476736",
+              "label": "Advanced cross discount (based on payment type)"
+            },
+            {
+              "value": "137438953472",
+              "label": "Show banner popup based on customer"
+            },
+            {
+              "value": "274877906944",
+              "label": "Update Campaign Price in Integration"
+            },
+            {
+              "value": "549755813888",
+              "label": "Only customer representative can see additional field 2"
+            },
+            {
+              "value": "1099511627776",
+              "label": "B4B single price type default product display"
+            },
+            {
+              "value": "2199023255552",
+              "label": "B4B multi price type default product display"
+            },
+            {
+              "value": "4398046511104",
+              "label": "Platform > Products > Show related products"
+            },
+            {
+              "value": "8796093022208",
+              "label": "Show discount type in technical settings"
+            },
+            {
+              "value": "17592186044416",
+              "label": "Show all customers' order history to representatives"
+            },
+            {
+              "value": "35184372088832",
+              "label": "Installment restriction based on due date"
+            },
+            {
+              "value": "70368744177664",
+              "label": "Block orders if there is overdue debt"
+            },
+            {
+              "value": "140737488355328",
+              "label": "Separate login as dealer and member login"
+            },
+            {
+              "value": "281474976710656",
+              "label": "Show invoice image (GIB)"
+            },
+            {
+              "value": "562949953421312",
+              "label": "Show DBS transactions in account movements"
+            },
+            {
+              "value": "1125899906842624",
+              "label": "Show account balance in online payment"
+            },
+            {
+              "value": "2251799813685248",
+              "label": "Add to account movements automatically when order is confirmed"
+            },
+            {
+              "value": "4503599627370496",
+              "label": "Use pre-order"
+            },
+            {
+              "value": "9007199254740992",
+              "label": "Disable complete order"
+            },
+            {
+              "value": "18014398509481984",
+              "label": "Show product search in cart"
+            },
+            {
+              "value": "36028797018963968",
+              "label": "Standard warehouse splitting"
+            },
+            {
+              "value": "72057594037927936",
+              "label": "Advanced warehouse splitting"
+            },
+            {
+              "value": "144115188075855872",
+              "label": "Show region-based banner image"
+            },
+            {
+              "value": "288230376151711744",
+              "label": "Use SEO tags in product detail"
+            },
+            {
+              "value": "576460752303423488",
+              "label": "Disable representative login"
+            },
+            {
+              "value": "1152921504606846976",
+              "label": "Always enable online payment for representative"
+            },
+            {
+              "value": "2305843009213693952",
+              "label": "Invoice design for Europe"
+            },
+            {
+              "value": "4611686018427387904",
+              "label": "Platform: Show start and end date in periodic order"
+            }
+          ],
+          "databaseColumnCandidate": "ParameterAdmin",
+          "mappingStatus": "semantic_control_mapping_candidate",
+          "verificationNote": "Candidate only: ASP.NET page HTML and DealerSettings schema name/type reviewed; server-side code-behind or a non-mutating save-path trace is still needed for confirmation."
+        },
+        {
+          "panel": "Admin",
+          "section": "Admin",
+          "label": "Cart Parameter",
+          "controlName": "ctl00$PageContent$ddlOrderParameter",
+          "controlId": "ctl00_PageContent_ddlOrderParameter",
+          "element": "select",
+          "type": "select",
+          "multiple": true,
+          "options": [
+            {
+              "value": "1",
+              "label": "Request Contract Approval"
+            },
+            {
+              "value": "2",
+              "label": "Request Delivery Address Selection"
+            },
+            {
+              "value": "4",
+              "label": "Request Cargo Selection"
+            },
+            {
+              "value": "8",
+              "label": "Request Invoice Address Selection"
+            },
+            {
+              "value": "16",
+              "label": "Do not show list price in order"
+            },
+            {
+              "value": "32",
+              "label": "Show Coupon"
+            },
+            {
+              "value": "64",
+              "label": "Don't Show Delivery Date on Balance Order"
+            },
+            {
+              "value": "128",
+              "label": "Additional Field-2 Is Shown In The Order"
+            },
+            {
+              "value": "256",
+              "label": "Show Product Short Description In The Order"
+            },
+            {
+              "value": "512",
+              "label": "Do Not Show Discounts In Cart"
+            },
+            {
+              "value": "1024",
+              "label": "Dont Show Add New Adress"
+            },
+            {
+              "value": "2048",
+              "label": "Use Container"
+            },
+            {
+              "value": "4096",
+              "label": "Show promotion products in cart"
+            },
+            {
+              "value": "8192",
+              "label": "Group cart products by category"
+            },
+            {
+              "value": "16384",
+              "label": "Show only discounted prices in order mail"
+            },
+            {
+              "value": "32768",
+              "label": "Show cash on delivery within payment options"
+            },
+            {
+              "value": "65536",
+              "label": "Show prices including VAT in cart"
+            },
+            {
+              "value": "131072",
+              "label": "Show account balance in email"
+            },
+            {
+              "value": "262144",
+              "label": "Use Google Analytics In Order"
+            },
+            {
+              "value": "524288",
+              "label": "Don't Send Maturity Difference"
+            },
+            {
+              "value": "1048576",
+              "label": "Show who added to cart"
+            },
+            {
+              "value": "2097152",
+              "label": "Dealer Limit Tracking"
+            },
+            {
+              "value": "4194304",
+              "label": "Current Limit Warning"
+            },
+            {
+              "value": "8388608",
+              "label": "Include pending orders in limit tracking"
+            },
+            {
+              "value": "16777216",
+              "label": "Separate billing and delivery addresses"
+            },
+            {
+              "value": "33554432",
+              "label": "Show price in balance order"
+            },
+            {
+              "value": "67108864",
+              "label": "Use brand-based discount"
+            },
+            {
+              "value": "134217728",
+              "label": "Check DBS and limit when printing e-invoice"
+            },
+            {
+              "value": "268435456",
+              "label": "Added to cart?Check it out"
+            },
+            {
+              "value": "536870912",
+              "label": "Check balance order when adding to cart"
+            },
+            {
+              "value": "1073741824",
+              "label": "Product totals in the cart including VAT"
+            },
+            {
+              "value": "2147483648",
+              "label": "Do not show due date"
+            },
+            {
+              "value": "4294967296",
+              "label": "Show currency total in cart"
+            },
+            {
+              "value": "8589934592",
+              "label": "Count total quantities by product type in cart"
+            },
+            {
+              "value": "17179869184",
+              "label": "Do not show description in account movements"
+            },
+            {
+              "value": "34359738368",
+              "label": "Show order completer in order email"
+            },
+            {
+              "value": "68719476736",
+              "label": "Show exchange rates in order email"
+            },
+            {
+              "value": "137438953472",
+              "label": "Live Cart Update by Brand or Payment Type"
+            },
+            {
+              "value": "274877906944",
+              "label": "Show sent orders in order"
+            },
+            {
+              "value": "549755813888",
+              "label": "Box-based order / Show box quantity"
+            },
+            {
+              "value": "1099511627776",
+              "label": "Add to cart by variation group"
+            },
+            {
+              "value": "2199023255552",
+              "label": "Show marketplace code in cart"
+            },
+            {
+              "value": "4398046511104",
+              "label": "Show prices including VAT in dealer order detail"
+            },
+            {
+              "value": "8796093022208",
+              "label": "Cari hesaplarda ciro göster"
+            },
+            {
+              "value": "17592186044416",
+              "label": "Sepette ana ürünleri göster"
+            },
+            {
+              "value": "35184372088832",
+              "label": "Sepette iade sözleşmesi iste"
+            },
+            {
+              "value": "70368744177664",
+              "label": "Bakiye siparişte iptal talebi göster"
+            },
+            {
+              "value": "140737488355328",
+              "label": "Sipariş detayda kalan göster"
+            },
+            {
+              "value": "281474976710656",
+              "label": "Sepette kredi kartı ödemelerini tek çekim ve taksit olarak ayır"
+            },
+            {
+              "value": "562949953421312",
+              "label": "Siparişte Firma Etiket Yorumu Görünsün"
+            },
+            {
+              "value": "1125899906842624",
+              "label": "Show Internal Note Field For Representative"
+            },
+            {
+              "value": "2251799813685248",
+              "label": "Eski Temsilci Satış Raporu Sekmelerini Göster"
+            },
+            {
+              "value": "4503599627370496",
+              "label": "Cari hareketlerde işlem tipleri göster"
+            },
+            {
+              "value": "9007199254740992",
+              "label": "Cari hareketlerde gerçekleşen vade göster"
+            },
+            {
+              "value": "18014398509481984",
+              "label": "Desi bazlı kargo kullan"
+            },
+            {
+              "value": "36028797018963968",
+              "label": "Sepeti sıfırla göster"
+            },
+            {
+              "value": "72057594037927936",
+              "label": "Sepet ürünlerini kendi kurlarıyla göster"
+            },
+            {
+              "value": "144115188075855872",
+              "label": "Müşteri Temsilcisi indirim girdiğinde cari indirimini yok saysın"
+            }
+          ],
+          "databaseColumnCandidate": "ParameterOrder",
+          "mappingStatus": "semantic_control_mapping_candidate",
+          "verificationNote": "Candidate only: ASP.NET page HTML and DealerSettings schema name/type reviewed; server-side code-behind or a non-mutating save-path trace is still needed for confirmation."
+        },
+        {
+          "panel": "Admin",
+          "section": "Admin",
+          "label": "Account Parameter",
+          "controlName": "ctl00$PageContent$ddlParameterAccount",
+          "controlId": "ctl00_PageContent_ddlParameterAccount",
+          "element": "select",
+          "type": "select",
+          "multiple": true,
+          "options": [
+            {
+              "value": "1",
+              "label": "Don't Show Limit"
+            },
+            {
+              "value": "2",
+              "label": "Don't Show Total Balance Order"
+            },
+            {
+              "value": "4",
+              "label": "Don't Show Total debt"
+            },
+            {
+              "value": "8",
+              "label": "Don't Show Total Receivable"
+            },
+            {
+              "value": "16",
+              "label": "Don't Show Limit Remaining Balance"
+            },
+            {
+              "value": "32",
+              "label": "Don't Show Other Balance"
+            },
+            {
+              "value": "64",
+              "label": "Don't Show Total Order in Account Balance"
+            },
+            {
+              "value": "128",
+              "label": "Do not show overdue"
+            },
+            {
+              "value": "256",
+              "label": "Show Account Number by Price Type"
+            },
+            {
+              "value": "512",
+              "label": "Üst menüde bakiye gösterme"
+            }
+          ],
+          "databaseColumnCandidate": "ParameterAccount",
+          "mappingStatus": "semantic_control_mapping_candidate",
+          "verificationNote": "Candidate only: ASP.NET page HTML and DealerSettings schema name/type reviewed; server-side code-behind or a non-mutating save-path trace is still needed for confirmation."
+        },
+        {
+          "panel": "Admin",
+          "section": "Admin",
+          "label": "Main Products",
+          "controlName": "ctl00$PageContent$ddMainProducts",
+          "controlId": "ctl00_PageContent_ddMainProducts",
+          "element": "select",
+          "type": "select",
+          "multiple": true,
+          "options": [
+            {
+              "value": "64",
+              "label": "Main Page"
+            },
+            {
+              "value": "128",
+              "label": "Sale"
+            },
+            {
+              "value": "256",
+              "label": "Most Saled"
+            },
+            {
+              "value": "512",
+              "label": "New Product"
+            },
+            {
+              "value": "1024",
+              "label": "Most Viewed"
+            },
+            {
+              "value": "2048",
+              "label": "Product Of The Day"
+            },
+            {
+              "value": "4096",
+              "label": "Product Of The Week"
+            },
+            {
+              "value": "8192",
+              "label": "Product Of The Month"
+            },
+            {
+              "value": "1",
+              "label": "Part 1"
+            },
+            {
+              "value": "2",
+              "label": "Part 2"
+            },
+            {
+              "value": "4",
+              "label": "Part 3"
+            },
+            {
+              "value": "8",
+              "label": "Part 4"
+            },
+            {
+              "value": "16",
+              "label": "Part 5"
+            },
+            {
+              "value": "32",
+              "label": "Part 6"
+            },
+            {
+              "value": "16384",
+              "label": "Brands"
+            }
+          ],
+          "databaseColumnCandidate": "MainProducts",
+          "mappingStatus": "semantic_control_mapping_candidate",
+          "verificationNote": "Candidate only: ASP.NET page HTML and DealerSettings schema name/type reviewed; server-side code-behind or a non-mutating save-path trace is still needed for confirmation."
+        },
+        {
+          "panel": "Admin",
+          "section": "Admin",
+          "label": "Integrated",
+          "controlName": "ctl00$PageContent$ddlintegrated",
+          "controlId": "ctl00_PageContent_ddlintegrated",
+          "element": "select",
+          "type": "select",
+          "multiple": false,
+          "options": [
+            {
+              "value": "0",
+              "label": "False"
+            },
+            {
+              "value": "1",
+              "label": "True"
+            }
+          ],
+          "databaseColumnCandidate": "Integrated",
+          "mappingStatus": "semantic_control_mapping_candidate",
+          "verificationNote": "Candidate only: ASP.NET page HTML and DealerSettings schema name/type reviewed; server-side code-behind or a non-mutating save-path trace is still needed for confirmation."
+        },
+        {
+          "panel": "Admin",
+          "section": "Admin",
+          "label": "Discount Type",
+          "controlName": "ctl00$PageContent$ddldiscountTypeInvoice",
+          "controlId": "ctl00_PageContent_ddldiscountTypeInvoice",
+          "element": "select",
+          "type": "select",
+          "multiple": false,
+          "options": [
+            {
+              "value": "0",
+              "label": "Sum"
+            },
+            {
+              "value": "1",
+              "label": "Ratio"
+            }
+          ],
+          "databaseColumnCandidate": "DiscountTypeInvoice",
+          "mappingStatus": "semantic_control_mapping_candidate",
+          "verificationNote": "Candidate only: ASP.NET page HTML and DealerSettings schema name/type reviewed; server-side code-behind or a non-mutating save-path trace is still needed for confirmation."
+        },
+        {
+          "panel": "Admin",
+          "section": "Admin",
+          "label": "Add New Shipping Address",
+          "controlName": "ctl00$PageContent$DDLDeliveryAddress",
+          "controlId": "ctl00_PageContent_DDLDeliveryAddress",
+          "element": "select",
+          "type": "select",
+          "multiple": false,
+          "options": [
+            {
+              "value": "0",
+              "label": "Hide"
+            },
+            {
+              "value": "1",
+              "label": "Show"
+            }
+          ],
+          "databaseColumnCandidate": "DeliveryAddress",
+          "mappingStatus": "semantic_control_mapping_candidate",
+          "verificationNote": "Candidate only: ASP.NET page HTML and DealerSettings schema name/type reviewed; server-side code-behind or a non-mutating save-path trace is still needed for confirmation."
+        },
+        {
+          "panel": "Admin",
+          "section": "Admin",
+          "label": "Bonus",
+          "controlName": "ctl00$PageContent$ddlBonusShow",
+          "controlId": "ctl00_PageContent_ddlBonusShow",
+          "element": "select",
+          "type": "select",
+          "multiple": false,
+          "options": [
+            {
+              "value": "0",
+              "label": "Hide"
+            },
+            {
+              "value": "1",
+              "label": "Show"
+            }
+          ],
+          "databaseColumnCandidate": "BonusShow",
+          "mappingStatus": "semantic_control_mapping_candidate",
+          "verificationNote": "Candidate only: ASP.NET page HTML and DealerSettings schema name/type reviewed; server-side code-behind or a non-mutating save-path trace is still needed for confirmation."
+        },
+        {
+          "panel": "Admin",
+          "section": "Admin",
+          "label": "Site Map",
+          "controlName": "ctl00$PageContent$ddlSiteMap",
+          "controlId": "ctl00_PageContent_ddlSiteMap",
+          "element": "select",
+          "type": "select",
+          "multiple": false,
+          "options": [
+            {
+              "value": "0",
+              "label": "Hide"
+            },
+            {
+              "value": "1",
+              "label": "Show"
+            }
+          ],
+          "databaseColumnCandidate": "SiteMap",
+          "mappingStatus": "semantic_control_mapping_candidate",
+          "verificationNote": "Candidate only: ASP.NET page HTML and DealerSettings schema name/type reviewed; server-side code-behind or a non-mutating save-path trace is still needed for confirmation."
+        },
+        {
+          "panel": "Admin",
+          "section": "Admin",
+          "label": "Dealer Sub-Dealer Property",
+          "controlName": "ctl00$PageContent$ddSubDealerShow",
+          "controlId": "ctl00_PageContent_ddSubDealerShow",
+          "element": "select",
+          "type": "select",
+          "multiple": false,
+          "options": [
+            {
+              "value": "0",
+              "label": "Hide"
+            },
+            {
+              "value": "1",
+              "label": "Show"
+            }
+          ],
+          "databaseColumnCandidate": "SubDealerShow",
+          "mappingStatus": "semantic_control_mapping_candidate",
+          "verificationNote": "Candidate only: ASP.NET page HTML and DealerSettings schema name/type reviewed; server-side code-behind or a non-mutating save-path trace is still needed for confirmation."
+        },
+        {
+          "panel": "Admin",
+          "section": "Admin",
+          "label": "Adding Address You Added Company Information",
+          "controlName": "ctl00$PageContent$chkBillingAdress",
+          "controlId": "ctl00_PageContent_chkBillingAdress",
+          "element": "input",
+          "type": "checkbox",
+          "valueAttribute": null,
+          "databaseColumnCandidate": "BillingAdressControl",
+          "mappingStatus": "semantic_control_mapping_candidate",
+          "verificationNote": "Candidate only: ASP.NET page HTML and DealerSettings schema name/type reviewed; server-side code-behind or a non-mutating save-path trace is still needed for confirmation."
+        },
+        {
+          "panel": "Admin",
+          "section": "Admin",
+          "label": "Dealer Name",
+          "controlName": "ctl00$PageContent$TxtDealerName",
+          "controlId": "ctl00_PageContent_TxtDealerName",
+          "element": "input",
+          "type": "text",
+          "databaseColumnCandidate": "DealerName",
+          "mappingStatus": "semantic_control_mapping_candidate",
+          "verificationNote": "Candidate only: ASP.NET page HTML and DealerSettings schema name/type reviewed; server-side code-behind or a non-mutating save-path trace is still needed for confirmation."
+        },
+        {
+          "panel": "Admin",
+          "section": "Admin",
+          "label": "Recaptcha Code",
+          "controlName": "ctl00$PageContent$txtBayiYetkiliKisi",
+          "controlId": "ctl00_PageContent_txtBayiYetkiliKisi",
+          "element": "input",
+          "type": "text",
+          "databaseColumnCandidate": "DealerAutHorizePersonel",
+          "mappingStatus": "semantic_control_mapping_candidate",
+          "verificationNote": "Candidate only: ASP.NET page HTML and DealerSettings schema name/type reviewed; server-side code-behind or a non-mutating save-path trace is still needed for confirmation."
+        },
+        {
+          "panel": "Admin",
+          "section": "Admin",
+          "label": "Dealer Website",
+          "controlName": "ctl00$PageContent$txtBayiWebAdres",
+          "controlId": "ctl00_PageContent_txtBayiWebAdres",
+          "element": "input",
+          "type": "text",
+          "databaseColumnCandidate": "DealerWebAdress",
+          "mappingStatus": "semantic_control_mapping_candidate",
+          "verificationNote": "Candidate only: ASP.NET page HTML and DealerSettings schema name/type reviewed; server-side code-behind or a non-mutating save-path trace is still needed for confirmation."
+        },
+        {
+          "panel": "Admin",
+          "section": "Admin",
+          "label": "E Invoice No",
+          "controlName": "ctl00$PageContent$txtEInvoiceNo",
+          "controlId": "ctl00_PageContent_txtEInvoiceNo",
+          "element": "input",
+          "type": "text",
+          "databaseColumnCandidate": "EInvoiceNo",
+          "mappingStatus": "semantic_control_mapping_candidate",
+          "verificationNote": "Candidate only: ASP.NET page HTML and DealerSettings schema name/type reviewed; server-side code-behind or a non-mutating save-path trace is still needed for confirmation."
+        },
+        {
+          "panel": "Admin",
+          "section": "Admin",
+          "label": "Use Encryption",
+          "controlName": "ctl00$PageContent$ddlUseMd5Encryption",
+          "controlId": "ctl00_PageContent_ddlUseMd5Encryption",
+          "element": "select",
+          "type": "select",
+          "multiple": false,
+          "options": [
+            {
+              "value": "0",
+              "label": "Normal"
+            },
+            {
+              "value": "1",
+              "label": "MD5"
+            }
+          ],
+          "databaseColumnCandidate": "UseMd5Encryption",
+          "mappingStatus": "semantic_control_mapping_candidate",
+          "verificationNote": "Candidate only: ASP.NET page HTML and DealerSettings schema name/type reviewed; server-side code-behind or a non-mutating save-path trace is still needed for confirmation."
+        },
+        {
+          "panel": "Admin",
+          "section": "Admin",
+          "label": "Variations Showing",
+          "controlName": "ctl00$PageContent$ddlVariationShow",
+          "controlId": "ctl00_PageContent_ddlVariationShow",
+          "element": "select",
+          "type": "select",
+          "multiple": false,
+          "options": [
+            {
+              "value": "0",
+              "label": "Please Select"
+            },
+            {
+              "value": "1",
+              "label": "Spreadsheets Views (Used In Variation With 2 Options)"
+            },
+            {
+              "value": "2",
+              "label": "Tablolu gösterim (Çok seçenekli varyasyon)"
+            },
+            {
+              "value": "3",
+              "label": "Drop-down List Display"
+            },
+            {
+              "value": "4",
+              "label": "Multi-selection display (Selected variation total reflected in quantity)"
+            },
+            {
+              "value": "8",
+              "label": "Single-selection display"
+            },
+            {
+              "value": "16",
+              "label": "Stock Based Boxed Display"
+            }
+          ],
+          "databaseColumnCandidate": "VariationShow",
+          "mappingStatus": "semantic_control_mapping_candidate",
+          "verificationNote": "Candidate only: ASP.NET page HTML and DealerSettings schema name/type reviewed; server-side code-behind or a non-mutating save-path trace is still needed for confirmation."
+        },
+        {
+          "panel": "Admin",
+          "section": "Admin",
+          "label": "Menu Display",
+          "controlName": "ctl00$PageContent$ddlParameterMenu",
+          "controlId": "ctl00_PageContent_ddlParameterMenu",
+          "element": "select",
+          "type": "select",
+          "multiple": true,
+          "options": [
+            {
+              "value": "1",
+              "label": "Dont Show Orders"
+            },
+            {
+              "value": "2",
+              "label": "Dont Show Messages"
+            },
+            {
+              "value": "4",
+              "label": "Dont Show Balance Orders"
+            },
+            {
+              "value": "8",
+              "label": "Don't Show Payment Systems"
+            },
+            {
+              "value": "16",
+              "label": "Don't Show Cart Menu"
+            },
+            {
+              "value": "32",
+              "label": "Don't Show Product Stock Page"
+            },
+            {
+              "value": "64",
+              "label": "Don't Show Most Viewed"
+            },
+            {
+              "value": "128",
+              "label": "Don't Show New Products"
+            },
+            {
+              "value": "256",
+              "label": "Don't Show Stock Descriptions"
+            },
+            {
+              "value": "512",
+              "label": "Don't Show Sorting"
+            },
+            {
+              "value": "1024",
+              "label": "Don't Show Out Of Stock Menu"
+            },
+            {
+              "value": "2048",
+              "label": "Don't Show Products Menu"
+            },
+            {
+              "value": "4096",
+              "label": "Don't  Show Account Activity Menu"
+            },
+            {
+              "value": "8192",
+              "label": "Don't  Show Balance Menu"
+            },
+            {
+              "value": "16384",
+              "label": "Don't Show Value Tracking Menu"
+            },
+            {
+              "value": "32768",
+              "label": "Don't  Show Account Numbers Menu"
+            },
+            {
+              "value": "65536",
+              "label": "Don't  Show News Menu"
+            },
+            {
+              "value": "131072",
+              "label": "Don't  Show Fast Order Menu"
+            },
+            {
+              "value": "262144",
+              "label": "Don't Show Online Payment Menu"
+            },
+            {
+              "value": "524288",
+              "label": "Don't Show Credit Card Payment Menu"
+            },
+            {
+              "value": "1048576",
+              "label": "Don't  Show Sub Dealer Menu"
+            },
+            {
+              "value": "2097152",
+              "label": "Don't  Show Offer Menu"
+            },
+            {
+              "value": "4194304",
+              "label": "Don't  Show Offer List Menu"
+            },
+            {
+              "value": "8388608",
+              "label": "Don't Show Currency Menu"
+            },
+            {
+              "value": "16777216",
+              "label": "Don't Show Requests Menu"
+            },
+            {
+              "value": "33554432",
+              "label": "Don't Show Category Selection"
+            },
+            {
+              "value": "67108864",
+              "label": "Don't Show Brand Selection"
+            },
+            {
+              "value": "134217728",
+              "label": "Don't Show Season Selection"
+            },
+            {
+              "value": "268435456",
+              "label": "Don't Show Today's Deals Search"
+            },
+            {
+              "value": "536870912",
+              "label": "Don't Show Bestsellers Search"
+            },
+            {
+              "value": "1073741824",
+              "label": "Don't Show Campaign Search"
+            },
+            {
+              "value": "2147483648",
+              "label": "Don't Show New Products Search"
+            },
+            {
+              "value": "4294967296",
+              "label": "Don't Show The Most Viewed Search"
+            },
+            {
+              "value": "8589934592",
+              "label": "Promosyon butonu göster"
+            },
+            {
+              "value": "17179869184",
+              "label": "Show Invoice Address Option in Add Address"
+            },
+            {
+              "value": "34359738368",
+              "label": "Don't Show Login Menu"
+            },
+            {
+              "value": "68719476736",
+              "label": "Save Searched Word"
+            },
+            {
+              "value": "137438953472",
+              "label": "Show Identity Number When Adding Address"
+            },
+            {
+              "value": "274877906944",
+              "label": "Show campaign button"
+            },
+            {
+              "value": "549755813888",
+              "label": "Yeni ürünler butonu göster"
+            },
+            {
+              "value": "1099511627776",
+              "label": "Show country selection when adding address"
+            },
+            {
+              "value": "2199023255552",
+              "label": "Do not show global search"
+            },
+            {
+              "value": "4398046511104",
+              "label": "Show installment price option"
+            },
+            {
+              "value": "8796093022208",
+              "label": "Show OEM Search"
+            },
+            {
+              "value": "17592186044416",
+              "label": "Request Privacy Agreement confirmation in login"
+            },
+            {
+              "value": "35184372088832",
+              "label": "Show \"WhatsApp Support\""
+            },
+            {
+              "value": "70368744177664",
+              "label": "Show run flat filter"
+            },
+            {
+              "value": "140737488355328",
+              "label": "Don't Show Comments Menu"
+            },
+            {
+              "value": "281474976710656",
+              "label": "Don't show company code"
+            },
+            {
+              "value": "562949953421312",
+              "label": "Product search with barcode"
+            },
+            {
+              "value": "1125899906842624",
+              "label": "Only show in-stock items as selected"
+            },
+            {
+              "value": "2251799813685248",
+              "label": "Show brands menu"
+            },
+            {
+              "value": "4503599627370496",
+              "label": "Show Company Page"
+            },
+            {
+              "value": "9007199254740992",
+              "label": "Show “Delete My Account” menu"
+            },
+            {
+              "value": "18014398509481984",
+              "label": "Show notifications menu"
+            },
+            {
+              "value": "36028797018963968",
+              "label": "Show debt/credit by month"
+            },
+            {
+              "value": "72057594037927936",
+              "label": "Show overdue amounts by month"
+            },
+            {
+              "value": "144115188075855872",
+              "label": "Show add product to cart by barcode"
+            },
+            {
+              "value": "288230376151711744",
+              "label": "Show retail price selection"
+            },
+            {
+              "value": "576460752303423488",
+              "label": "Müşteri seçiminde fiyat tipi görünsün"
+            },
+            {
+              "value": "1152921504606846976",
+              "label": "Haftanın ürünleri menüsünü göster"
+            },
+            {
+              "value": "2305843009213693952",
+              "label": "Adres güncelle butonu gösterme"
+            },
+            {
+              "value": "4611686018427387904",
+              "label": "Akıllı arama gösterme"
+            },
+            {
+              "value": "4611686018427387904",
+              "label": "Akıllı arama gösterme"
+            }
+          ],
+          "databaseColumnCandidate": "ParameterMenu",
+          "mappingStatus": "semantic_control_mapping_candidate",
+          "verificationNote": "Candidate only: ASP.NET page HTML and DealerSettings schema name/type reviewed; server-side code-behind or a non-mutating save-path trace is still needed for confirmation."
+        },
+        {
+          "panel": "Admin",
+          "section": "Admin",
+          "label": "Menu Display 2",
+          "controlName": "ctl00$PageContent$ddlParameterMenu2",
+          "controlId": "ctl00_PageContent_ddlParameterMenu2",
+          "element": "select",
+          "type": "select",
+          "multiple": true,
+          "options": [
+            {
+              "value": "1",
+              "label": "Cariye Özel Ürün Menüsü Göster"
+            }
+          ],
+          "databaseColumnCandidate": null,
+          "mappingStatus": "unresolved_control_has_no_clear_column",
+          "verificationNote": "Candidate only: ASP.NET page HTML and DealerSettings schema name/type reviewed; server-side code-behind or a non-mutating save-path trace is still needed for confirmation."
+        },
+        {
+          "panel": "Admin",
+          "section": "Admin",
+          "label": "Dynamic Search Parameter",
+          "controlName": "ctl00$PageContent$ddlParameterDynamicSearch",
+          "controlId": "ctl00_PageContent_ddlParameterDynamicSearch",
+          "element": "select",
+          "type": "select",
+          "multiple": true,
+          "options": [
+            {
+              "value": "1",
+              "label": "General Search"
+            },
+            {
+              "value": "2",
+              "label": "Brand"
+            },
+            {
+              "value": "4",
+              "label": "Model"
+            }
+          ],
+          "databaseColumnCandidate": "ParameterDynamicSearch",
+          "mappingStatus": "semantic_control_mapping_candidate",
+          "verificationNote": "Candidate only: ASP.NET page HTML and DealerSettings schema name/type reviewed; server-side code-behind or a non-mutating save-path trace is still needed for confirmation."
+        },
+        {
+          "panel": "Admin",
+          "section": "Admin",
+          "label": "Currency type in order integration transfer",
+          "controlName": "ctl00$PageContent$ddIntegrationCurrency",
+          "controlId": "ctl00_PageContent_ddIntegrationCurrency",
+          "element": "select",
+          "type": "select",
+          "multiple": false,
+          "options": [
+            {
+              "value": "0",
+              "label": "Please Select"
+            },
+            {
+              "value": "2",
+              "label": "$"
+            },
+            {
+              "value": "8",
+              "label": "¥"
+            },
+            {
+              "value": "3",
+              "label": "€"
+            },
+            {
+              "value": "11",
+              "label": "AUD"
+            },
+            {
+              "value": "13",
+              "label": "BGN"
+            },
+            {
+              "value": "7",
+              "label": "CHD"
+            },
+            {
+              "value": "6",
+              "label": "DKK"
+            },
+            {
+              "value": "4",
+              "label": "GBP"
+            },
+            {
+              "value": "12",
+              "label": "IRR"
+            },
+            {
+              "value": "10",
+              "label": "KWD"
+            },
+            {
+              "value": "14",
+              "label": "lei"
+            },
+            {
+              "value": "9",
+              "label": "SAR"
+            },
+            {
+              "value": "5",
+              "label": "SEK"
+            },
+            {
+              "value": "1",
+              "label": "TL"
+            }
+          ],
+          "databaseColumnCandidate": "IntegrationCurrencyID",
+          "mappingStatus": "semantic_control_mapping_candidate",
+          "verificationNote": "Candidate only: ASP.NET page HTML and DealerSettings schema name/type reviewed; server-side code-behind or a non-mutating save-path trace is still needed for confirmation."
+        },
+        {
+          "panel": "Admin",
+          "section": "Admin",
+          "label": "Send WhatsApp Order Notification",
+          "controlName": "ctl00$PageContent$chkWhatsAppOrderNotification",
+          "controlId": "ctl00_PageContent_chkWhatsAppOrderNotification",
+          "element": "input",
+          "type": "checkbox",
+          "valueAttribute": null,
+          "databaseColumnCandidate": null,
+          "mappingStatus": "unresolved_no_schema_match",
+          "verificationNote": "Candidate only: ASP.NET page HTML and DealerSettings schema name/type reviewed; server-side code-behind or a non-mutating save-path trace is still needed for confirmation."
+        },
+        {
+          "panel": "Admin",
+          "section": "Admin",
+          "label": "Favorite Icon Position / Left / Right / Top / Bottom",
+          "controlName": "ctl00$PageContent$FavoriteIconPosition",
+          "controlId": "ctl00_PageContent_rbFavoriteIconLeft",
+          "element": "input",
+          "type": "radio",
+          "valueAttribute": "rbFavoriteIconLeft",
+          "radioOptions": [
+            {
+              "value": "rbFavoriteIconLeft"
+            },
+            {
+              "value": "rbFavoriteIconRight"
+            }
+          ],
+          "databaseColumnCandidate": null,
+          "mappingStatus": "unresolved_no_schema_match",
+          "verificationNote": "Candidate only: ASP.NET page HTML and DealerSettings schema name/type reviewed; server-side code-behind or a non-mutating save-path trace is still needed for confirmation."
+        },
+        {
+          "panel": "Admin",
+          "section": "Admin",
+          "label": "Favorite Icon Position / Left / Right / Top / Bottom",
+          "controlName": "ctl00$PageContent$FavoriteIconVerticalPosition",
+          "controlId": "ctl00_PageContent_rbFavoriteIconTop",
+          "element": "input",
+          "type": "radio",
+          "valueAttribute": "rbFavoriteIconTop",
+          "radioOptions": [
+            {
+              "value": "rbFavoriteIconTop"
+            },
+            {
+              "value": "rbFavoriteIconBottom"
+            }
+          ],
+          "databaseColumnCandidate": null,
+          "mappingStatus": "unresolved_no_schema_match",
+          "verificationNote": "Candidate only: ASP.NET page HTML and DealerSettings schema name/type reviewed; server-side code-behind or a non-mutating save-path trace is still needed for confirmation."
+        }
+      ]
+    }
+  ]
+}

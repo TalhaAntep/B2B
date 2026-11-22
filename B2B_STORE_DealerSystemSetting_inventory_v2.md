@@ -1,0 +1,977 @@
+# B2B STORE — Dealer System Settings UI Inventory (v2)
+
+## Source and scope
+
+- Source: authenticated `DealerSystemSetting` HTML response supplied by the user.
+- Capture context displayed `store1 (captured page context only; not a production default)`; this must not be assumed to match the local database backup.
+- This inventory records visible setting controls, their form names/IDs, and select option values/labels.
+- Current selected values, entered text values, hidden fields, `__VIEWSTATE`, event-validation tokens, and credentials are excluded.
+- The page-level Search field and framework hidden inputs are excluded because they are not persisted settings.
+- Five image-upload controls are included in v2.
+
+## Control summary
+
+- Logical settings controls: **98**
+- Select elements: **65** (including **22** multi-select controls; these are a subset, not additional controls)
+- Checkboxes: **8**
+- Text inputs: **14**
+- Textareas: **4**
+- Radio groups: **2**
+- File uploads: **5**
+
+## Implementation observations
+
+- The page is ASP.NET Web Forms. Save uses `__doPostBack` to `lbSaveAndExit`; this does not establish a JSON API.
+- Multi-select controls expose numeric option values that should be treated as flag selections only where the database column and SQL behavior confirm bitwise semantics.
+- Some parameter values exceed 32-bit integer ranges. Use 64-bit values where the database type is `bigint`, and preserve unrelated bits during updates.
+- Control-to-column associations are candidates until backed by source code or explicit SQL/database evidence.
+- The live page capture is tenant-specific; selected values must not be used as defaults for the `store5.bak` database.
+
+## Controls
+
+### User / General (1 controls)
+
+- **Site State** — `ctl00$PageContent$ddlSiteStatus` (`ctl00_PageContent_ddlSiteStatus`; select)
+  - `1` — Active
+  - `0` — Inactive
+
+### User / Visual Settings (7 controls)
+
+- **Layout** — `ctl00$PageContent$ddlLayout` (`ctl00_PageContent_ddlLayout`; select)
+  - `1` — Align the Add to Cart button to the right in the product list
+  - `0` — Align the Add to Cart button to the left in the product list
+- **Product Image Aspect Ratio** — `ctl00$PageContent$txtProductImageAspectRatio` (`ctl00_PageContent_txtProductImageAspectRatio`; text)
+- **Logo (Dark)** — `ctl00$PageContent$imgLogo$imageUpload` (`ctl00_PageContent_imgLogo_imageUpload`; file)
+  - Database column candidate: `Logo` (not yet code-behind verified)
+- **Logo (Light)** — `ctl00$PageContent$imgLogo2$imageUpload` (`ctl00_PageContent_imgLogo2_imageUpload`; file)
+  - Database column candidate: `Logo2` (not yet code-behind verified)
+- **Logo (Log In)** — `ctl00$PageContent$imgLogoLogin$imageUpload` (`ctl00_PageContent_imgLogoLogin_imageUpload`; file)
+  - Database column candidate: `LogoLogin` (not yet code-behind verified)
+- **Favicon** — `ctl00$PageContent$imgFavicon$imageUpload` (`ctl00_PageContent_imgFavicon_imageUpload`; file)
+  - Database column candidate: `Favicon` (not yet code-behind verified)
+- **Default Image in Non-Image Products** — `ctl00$PageContent$imgNoImage$imageUpload` (`ctl00_PageContent_imgNoImage_imageUpload`; file)
+  - Database column candidate: `NoImageImage` (not yet code-behind verified)
+
+### User / Color Settings (2 controls)
+
+- **Layout Color** — `ctl00$PageContent$txtLayoutColor` (`ctl00_PageContent_txtLayoutColor`; text)
+- **Layout Color 2** — `ctl00$PageContent$txtLayoutColor2` (`ctl00_PageContent_txtLayoutColor2`; text)
+
+### User / Google Analytics / Tag Manager Settings (3 controls)
+
+- **Meta Tags** — `ctl00$PageContent$txtGoogleAnalysticScript` (`ctl00_PageContent_txtGoogleAnalysticScript`; textarea)
+- **Script Codes** — `ctl00$PageContent$txtGoogleAnalysticProfileID` (`ctl00_PageContent_txtGoogleAnalysticProfileID`; textarea)
+- **NoScript Codes** — `ctl00$PageContent$txtGoogleAdWordsReMarketingCode` (`ctl00_PageContent_txtGoogleAdWordsReMarketingCode`; textarea)
+
+### Admin / Design Settings (10 controls)
+
+- **Category Menu** — `ctl00$PageContent$ddlCategoryMenu` (`ctl00_PageContent_ddlCategoryMenu`; select)
+  - `1` — Menu Impression
+  - `2` — Homepage in Picture Presantation
+  - `3` — Without Pictures Impressions
+  - `4` — All The Page Picture Impressions
+  - `0` — Do Not Show
+- **Design Parameters** — `ctl00$PageContent$ddlParameterDesign` (`ctl00_PageContent_ddlParameterDesign`; select) [multiple]
+  - `1` — Show Product Image Directly
+  - `2` — Product Default View Block View
+  - `4` — Product Default View Long Block View
+  - `8` — Iconic Menu Displaying
+  - `16` — Colored Icon Menu Displayin
+  - `32` — Normal Menu Displaying
+  - `64` — Show Picture in Category Menu
+  - `128` — Oval View
+  - `256` — Show Left Category Menu on Products
+  - `512` — Fullscreen
+  - `1024` — Deals of the Day Single Banner
+  - `2048` — Show 'Brand Menu' at Top
+  - `4096` — Show large image when product image is clicked
+  - `8192` — Special design on mobile
+  - `16384` — Show top menu
+  - `32768` — Fixed B2B Menu
+  - `65536` — Show Left Category Menu V2
+  - `131072` — Show  "Header" Menu
+  - `262144` — Show Home Products As Banner
+  - `524288` — "Category Menu"  Show Left
+  - `1048576` — "Category Menu"  Show On Top
+  - `2097152` — Don't Show  "B2B Menu"
+  - `4194304` — Show "B2B Login"
+  - `8388608` — Don't Show "Dealer Menu"
+  - `16777216` — "New Membership" Pop Up
+  - `33554432` — Show "Header Menu in Login"
+  - `67108864` — Show "Footer Menu in Login"
+  - `134217728` — Menu should be closed by default on mobile
+  - `268435456` — Header menü koyu arka plan
+  - `536870912` — Show category banner on homepage
+  - `1073741824` — Show brand banner on homepage
+  - `2147483648` — Show Dynamic Search
+  - `4294967296` — Display Normal Menu (Dark Background)
+  - `8589934592` — Desktop menu design on mobile
+  - `17179869184` — Show Category Menu at Top V2
+  - `34359738368` — Dont Show Second Menu
+  - `68719476736` — Show Detail Search
+  - `137438953472` — Show Filter
+  - `274877906944` — Show all filters regardless of category
+  - `549755813888` — Show only categories linked to product
+  - `1099511627776` — Energetic Intro
+  - `2199023255552` — Default Product View: Multi View
+  - `4398046511104` — Remove line limit on product name in block view
+  - `8796093022208` — Do not show title in homepage products
+  - `17592186044416` — Anasayfa kategori menüsünde alt kategorilerin hepsi birlikte görünsün
+  - `35184372088832` — Ürün Varsayılan Görünümü Tablo Görünümü
+  - `70368744177664` — Dinamik arama üstte göster
+  - `140737488355328` — Hesabım menüsüne tıkladığında sabit b2b menü açılmasın
+  - `281474976710656` — Akordiyon Kategori
+  - `562949953421312` — İndirim kapatma switchi göster
+  - `1125899906842624` — Sesle arama göster
+  - `2251799813685248` — Kategori üst menü koyu arka plan
+  - `4503599627370496` — Mobilde tekli ürün görünümü
+  - `9007199254740992` — Sağ tık ve kopyalama devre dışı
+  - `18014398509481984` — Stok kapatma switchi göster
+  - `36028797018963968` — Kategori menü üstte gösterimde alt menü geniş gelsin
+  - `72057594037927936` — Site arama motorlarında taranmasın
+  - `144115188075855872` — Tek dil kullanan site url'lerinde dil kodu görünmesin
+- **Theme Parameter** — `ctl00$PageContent$ddParameterThema` (`ctl00_PageContent_ddParameterThema`; select)
+  - `0` — Standart Design
+  - `-1` — Automotive Design
+  - `1` — Design 1
+  - `2` — Design 2
+  - `3` — Design 3
+  - `4` — Design 4
+  - `5` — Design 5
+  - `6` — Design 6
+  - `7` — Design 7
+  - `8` — Design 8
+  - `9` — Design 9
+  - `10` — Design 10
+  - `11` — Design 11
+  - `12` — Design 12
+  - `13` — Design 13
+  - `14` — Design 14
+  - `15` — Design 15
+  - `16` — Design 16
+  - `17` — Design 17
+  - `18` — Design 18
+  - `19` — Design 19
+  - `20` — Design 20
+  - `21` — Design 21
+  - `22` — Design 22
+  - `23` — Design 23
+  - `24` — Design 24
+  - `25` — Design 25
+  - `26` — Design 26
+  - `27` — Design 27
+  - `28` — Design 28
+  - `29` — Design 29
+  - `30` — Design 30
+- **Don't Show Menu At Dealers** — `ctl00$PageContent$ddlDontShowMenuAtDealers` (`ctl00_PageContent_ddlDontShowMenuAtDealers`; select)
+  - `0` — Hide
+  - `1` — Show
+- **Filter Show** — `ctl00$PageContent$ddlFilterSort` (`ctl00_PageContent_ddlFilterSort`; select)
+  - `0` — Hide
+  - `1` — Show
+- **Filter Display** — `ctl00$PageContent$ddUseFiltering` (`ctl00_PageContent_ddUseFiltering`; select) [multiple]
+  - `2` — Brand Filter
+  - `4` — Product Features
+  - `8` — Variation Filter
+  - `16` — Kategori filtresi
+- **Product Sorting** — `ctl00$PageContent$ddlProductSort` (`ctl00_PageContent_ddlProductSort`; select)
+  - `0` — Normal
+  - `1` — Product Number
+  - `2` — Product Name
+  - `3` — Product  Code
+  - `8` — Product Code: Z → A
+  - `4` — Stock
+  - `5` — Brand
+  - `6` — Special Sorting
+  - `7` — Campaign
+- **Dealer Limit Tracking** — `ctl00$PageContent$ddlCariLimitTracing` (`ctl00_PageContent_ddlCariLimitTracing`; select)
+  - `1` — Do It
+  - `0` — Do Not
+- **Current Limit Warning** — `ctl00$PageContent$ddlCariLimitTracingInfo` (`ctl00_PageContent_ddlCariLimitTracingInfo`; select)
+  - `1` — Show
+  - `0` — Hide
+- **Automatic Definition** — `ctl00$PageContent$ddlSchedule` (`ctl00_PageContent_ddlSchedule`; select) [multiple]
+  - `1` — I will choose new products manually
+
+### Admin / Product Display Settings (13 controls)
+
+- **Dont Show Price** — `ctl00$PageContent$ddlDontShowPrice` (`ctl00_PageContent_ddlDontShowPrice`; select)
+  - `0` — Out Of Use
+  - `1` — Dont Show Prices In B2C Without Login
+  - `2` — Dont Show Prices In B2B
+  - `4` — Dont Show Products If Price is Zero
+  - `5` — Show only the market price on B2C without login
+- **Stock Tracking** — `ctl00$PageContent$ddlHasStock` (`ctl00_PageContent_ddlHasStock`; select)
+  - `0` — Do not follow inventory.Show all Products in stock as exist
+  - `1` — Follow Stock. Allowing orders on non-stock products
+  - `2` — Follow Stock. Allow ordering on items out of stock
+  - `3` — Follow Stock. If the item added to the cart is less than the amount in stock, ask for confirmation by warning.
+  - `4` — Disable the parameter in the settings.
+Activate the Inventory Tracking/Do not Track parameter on the product card
+  - `5` — Can be ordered up to the amount in stock
+- **Stock Presentation Type** — `ctl00$PageContent$ddlProductTableStockType` (`ctl00_PageContent_ddlProductTableStockType`; select)
+  - `0` — Amount Multiples
+  - `1` — Stock Exist/Stock Doesn't Exist
+  - `2` — Piece ( Numeric )
+  - `3` — Do Not Show
+  - `5` — Show Up To 4 Items
+  - `4` — Show Up To 20 Items
+  - `6` — Show Up To 100 Items
+  - `7` — With / Without (Icon)
+- **Stock Display Parameter** — `ctl00$PageContent$ddlParameterStock` (`ctl00_PageContent_ddlParameterStock`; select) [multiple]
+  - `1` — Show Warehouses
+  - `2` — Show warehouses with the mouse over the stock value
+  - `4` — Dont let customers see the  warehouse, let only customer representatives see
+  - `8` — Customers Can See All Stocks
+  - `16` — Show Depots Even Without Stock
+  - `64` — If Stock is 0,Show: Ask for Stock
+  - `128` — Do not show stock without login
+  - `256` — Customer representative should not see all stocks
+  - `512` — Show “Ask for details” for stock-independent products
+  - `1024` — Depolar sepete ekleye tıklayınca gelsin
+- **Tax Excluded Products Show** — `ctl00$PageContent$ddlTaxInRatio` (`ctl00_PageContent_ddlTaxInRatio`; select)
+  - `0` — Show All Prices Exclude Tax
+  - `1` — Show All Prices Include Tax
+  - `2` — Show List Price Exlude Tax, Show Other Prices Include Tax
+  - `3` — Show All Prices in B2C Excluding VAT
+- **B2B & B2C Partners** — `ctl00$PageContent$ddlCommonSystem` (`ctl00_PageContent_ddlCommonSystem`; select)
+  - `1` — No
+  - `0` — Yes
+- **Product Detail Parameter** — `ctl00$PageContent$ddlProductDetailParameter` (`ctl00_PageContent_ddlProductDetailParameter`; select) [multiple]
+  - `1` — Show Product Weight
+  - `2` — Show Volume
+  - `4` — Don't Show Brand
+  - `8` — Don't Show Rate
+  - `16` — Don't Show Normal Price
+  - `32` — Don't Show Pop Up Price
+  - `64` — Don't Show Actual Price
+  - `128` — Dont Show Price
+  - `256` — Don't Show Unit
+  - `512` — Don't Show Image
+  - `1024` — Don't Show Expected Stock
+  - `2048` — Don't Show Number Of Orders Starting To Ship
+  - `4096` — Don't Show Market Price
+  - `8192` — Don't Show Packing Type
+  - `16384` — Don't Show OEM
+  - `32768` — Don't Show Equivalent Code
+  - `65536` — Don't Show Product Code
+  - `131072` — Don't Show Product Short Code
+  - `262144` — Don't Show Product Short Descriprion
+  - `524288` — Don't Show Variation
+  - `1048576` — Don't Show VAT Ratio
+  - `2097152` — Don't Show Commission Rate
+  - `4194304` — Don't Show Discount
+  - `8388608` — Don't Show Manufacturer Code
+  - `16777216` — Show Minimum Order
+  - `33554432` — Don't Show Product SmallImage
+  - `67108864` — Don't Show Product Stock Page
+  - `134217728` — Sepete ekle gösterme
+  - `268435456` — Don't Using Pagination
+  - `536870912` — Don't Show Compatible Tools
+  - `1073741824` — Show Production Date
+  - `2147483648` — Show previous next product
+  - `4294967296` — Don't Show VAT Excluded / Including Price
+  - `8589934592` — Don't Show Season
+  - `17179869184` — Show Tire Tag
+  - `34359738368` — Show Installment Information
+  - `68719476736` — Show Alternative Products
+  - `137438953472` — Show Related Products
+  - `274877906944` — Show Order History
+  - `549755813888` — Show Comments
+  - `1099511627776` — Icon 1
+  - `2199023255552` — Icon 2
+  - `4398046511104` — Icon 3
+  - `8796093022208` — Icon 4
+  - `17592186044416` — Icon 5
+  - `35184372088832` — Icon 6
+  - `70368744177664` — Smart Search Option
+  - `140737488355328` — Show Product Request
+  - `281474976710656` — Don't Show Stock
+  - `562949953421312` — Show Products Of The Same Brand
+  - `1125899906842624` — Show Add To Cart By Unit
+  - `2251799813685248` — Show Origin
+  - `4503599627370496` — Show "Buy Now" Button
+  - `18014398509481984` — Show Purchase Price
+  - `36028797018963968` — Additional Field 1
+  - `72057594037927936` — Additional Field 2
+  - `144115188075855872` — Additional Field 3
+  - `288230376151711744` — Additional Field 4
+  - `576460752303423488` — Additional Field 5
+  - `1152921504606846976` — Additional Field 6
+  - `2305843009213693952` — Show note for incoming stock
+  - `4611686018427387904` — Allow representative discount authority
+- **Product Detail Parameter 2** — `ctl00$PageContent$ddlProductDetailParameter2` (`ctl00_PageContent_ddlProductDetailParameter2`; select) [multiple]
+  - `1` — Sabit fiyat göster
+  - `2` — Don't show "detail button"
+  - `4` — Hide custom icons
+  - `8` — Don't Show quantity entry
+  - `16` — Compare Show
+  - `32` — Show Price in Variation
+  - `64` — If there is no stock, the add to cart field is not displayed, the stock description is displayed.
+  - `128` — Don't use zoom
+  - `256` — Show credit card price
+  - `512` — Product detail images flat view
+  - `1024` — Show Price Code
+  - `2048` — Show Remittance Price
+  - `4096` — Get Product Detail Images Open
+  - `8192` — Show Barcode Number
+  - `16384` — Show Video
+  - `32768` — Show market price popup
+  - `65536` — Show price popup
+  - `131072` — Products export
+  - `262144` — Dont show brand image
+  - `524288` — Fetch related products by filter
+  - `1048576` — Fetch related products by product group (ProductRelatedCode)
+  - `2097152` — Do not show filter on product detail page
+  - `4194304` — Show variation images in product search
+  - `8388608` — Show order via WhatsApp
+  - `16777216` — Reverse values in variation table
+  - `33554432` — Show Extra Field 1 in variation table
+  - `67108864` — Show Extra Field 2 in variation table
+  - `134217728` — Show price in variation table
+  - `268435456` — <%$Resources:GlobalLanguage, ShowStockWhenSessionClosed  %>(İptal)
+  - `536870912` — Hide special price field for representatives
+  - `1073741824` — Show payment method prices in popup
+  - `2147483648` — Add related products to cart in bulk by filter
+  - `4294967296` — Uyumlu araçları açık olarak göster
+  - `8589934592` — Yeni sekmede aç göster
+  - `17179869184` — Ürüne tıklayınca ürün detaya gitmesin
+  - `34359738368` — Ürün sıralaması seçimini gösterme
+  - `68719476736` — Ürün detayda kampanyalı ürünleri göster
+  - `137438953472` — Ürün detayda sosyal medyada paylaş göster
+  - `274877906944` — Palet göster
+  - `549755813888` — Varyasyonda resim göster
+  - `1099511627776` — Ürün notu göster
+  - `2199023255552` — Ürünlerde sepete ekleye tıklayınca ürün detaya gitsin
+  - `4398046511104` — Kredi kartı taksitli fiyatı göster
+  - `8796093022208` — Paket içi kdv hariç/dahil adet fiyatı göster
+  - `17592186044416` — Kdv dahil/hariç fiyatı kdv oranına göre renkli göster
+  - `35184372088832` — Kredi kartı ile sonradan ödeme fiyatı göster
+  - `70368744177664` — Paket içi adet fiyatı göster
+  - `140737488355328` — Kredi kartı ile sonradan ödeme fiyatı 2 göster
+  - `281474976710656` — Çift aramada ön/arka lastik göster
+  - `562949953421312` — Gerçek stok göster
+  - `1125899906842624` — Rezerve stok göster
+  - `2251799813685248` — Cari fiyatı göster
+  - `4503599627370496` — İndirimli fiyatta normal fiyatın üstünü çiz
+  - `9007199254740992` — Açılır pencerede sabit ödeme metodlarının fiyatlarını göster
+  - `18014398509481984` — Sipariş mailinde piyasa fiyatı göster
+  - `36028797018963968` — Patlak resim göster
+- **Ürün Detay Parametresi (B2C - Oturum Kapalı)** — `ctl00$PageContent$ddlParameterProductDetailNotLogin` (`ctl00_PageContent_ddlParameterProductDetailNotLogin`; select) [multiple]
+  - `1` — Show Product Weight
+  - `2` — Show Volume
+  - `4` — Don't Show Brand
+  - `8` — Don't Show Rate
+  - `16` — Don't Show Normal Price
+  - `32` — Don't Show Pop Up Price
+  - `64` — Don't Show Actual Price
+  - `128` — Dont Show Price
+  - `256` — Don't Show Unit
+  - `512` — Don't Show Image
+  - `1024` — Don't Show Expected Stock
+  - `2048` — Don't Show Number Of Orders Starting To Ship
+  - `4096` — Don't Show Market Price
+  - `8192` — Don't Show Packing Type
+  - `16384` — Don't Show OEM
+  - `32768` — Don't Show Equivalent Code
+  - `65536` — Don't Show Product Code
+  - `131072` — Don't Show Product Short Code
+  - `262144` — Don't Show Product Short Descriprion
+  - `524288` — Don't Show Variation
+  - `1048576` — Don't Show VAT Ratio
+  - `2097152` — Don't Show Commission Rate
+  - `4194304` — Don't Show Discount
+  - `8388608` — Don't Show Manufacturer Code
+  - `16777216` — Show Minimum Order
+  - `33554432` — Don't Show Product SmallImage
+  - `67108864` — Don't Show Product Stock Page
+  - `134217728` — Sepete ekle gösterme
+  - `268435456` — Don't Using Pagination
+  - `536870912` — Don't Show Compatible Tools
+  - `1073741824` — Show Production Date
+  - `2147483648` — Show previous next product
+  - `4294967296` — Don't Show VAT Excluded / Including Price
+  - `8589934592` — Don't Show Season
+  - `17179869184` — Show Tire Tag
+  - `34359738368` — Show Installment Information
+  - `68719476736` — Show Alternative Products
+  - `137438953472` — Show Related Products
+  - `274877906944` — Show Order History
+  - `549755813888` — Show Comments
+  - `1099511627776` — Icon 1
+  - `2199023255552` — Icon 2
+  - `4398046511104` — Icon 3
+  - `8796093022208` — Icon 4
+  - `17592186044416` — Icon 5
+  - `35184372088832` — Icon 6
+  - `70368744177664` — Smart Search Option
+  - `140737488355328` — Show Product Request
+  - `281474976710656` — Don't Show Stock
+  - `562949953421312` — Show Products Of The Same Brand
+  - `1125899906842624` — Show Add To Cart By Unit
+  - `2251799813685248` — Show Origin
+  - `4503599627370496` — Show "Buy Now" Button
+  - `18014398509481984` — Show Purchase Price
+  - `36028797018963968` — Additional Field 1
+  - `72057594037927936` — Additional Field 2
+  - `144115188075855872` — Additional Field 3
+  - `288230376151711744` — Additional Field 4
+  - `576460752303423488` — Additional Field 5
+  - `1152921504606846976` — Additional Field 6
+  - `2305843009213693952` — Show note for incoming stock
+  - `4611686018427387904` — Allow representative discount authority
+- **Ürün Detay Parametresi 2 (B2C - Oturum Kapalı)** — `ctl00$PageContent$ddlParameterProductDetailNotLogin2` (`ctl00_PageContent_ddlParameterProductDetailNotLogin2`; select) [multiple]
+  - `1` — Sabit fiyat göster
+  - `2` — Don't show "detail button"
+  - `4` — Hide custom icons
+  - `8` — Don't Show quantity entry
+  - `16` — Compare Show
+  - `32` — Show Price in Variation
+  - `64` — If there is no stock, the add to cart field is not displayed, the stock description is displayed.
+  - `128` — Don't use zoom
+  - `256` — Show credit card price
+  - `512` — Product detail images flat view
+  - `1024` — Show Price Code
+  - `2048` — Show Remittance Price
+  - `4096` — Get Product Detail Images Open
+  - `8192` — Show Barcode Number
+  - `16384` — Show Video
+  - `32768` — Show market price popup
+  - `65536` — Show price popup
+  - `131072` — Products export
+  - `262144` — Dont show brand image
+  - `524288` — Fetch related products by filter
+  - `1048576` — Fetch related products by product group (ProductRelatedCode)
+  - `2097152` — Do not show filter on product detail page
+  - `4194304` — Show variation images in product search
+  - `8388608` — Show order via WhatsApp
+  - `16777216` — Reverse values in variation table
+  - `33554432` — Show Extra Field 1 in variation table
+  - `67108864` — Show Extra Field 2 in variation table
+  - `134217728` — Show price in variation table
+  - `268435456` — <%$Resources:GlobalLanguage, ShowStockWhenSessionClosed  %>(İptal)
+  - `536870912` — Hide special price field for representatives
+  - `1073741824` — Show payment method prices in popup
+  - `2147483648` — Add related products to cart in bulk by filter
+  - `4294967296` — Uyumlu araçları açık olarak göster
+  - `8589934592` — Yeni sekmede aç göster
+  - `17179869184` — Ürüne tıklayınca ürün detaya gitmesin
+  - `34359738368` — Ürün sıralaması seçimini gösterme
+  - `68719476736` — Ürün detayda kampanyalı ürünleri göster
+  - `137438953472` — Ürün detayda sosyal medyada paylaş göster
+  - `274877906944` — Palet göster
+  - `549755813888` — Varyasyonda resim göster
+  - `1099511627776` — Ürün notu göster
+  - `2199023255552` — Ürünlerde sepete ekleye tıklayınca ürün detaya gitsin
+  - `4398046511104` — Kredi kartı taksitli fiyatı göster
+  - `8796093022208` — Paket içi kdv hariç/dahil adet fiyatı göster
+  - `17592186044416` — Kdv dahil/hariç fiyatı kdv oranına göre renkli göster
+  - `35184372088832` — Kredi kartı ile sonradan ödeme fiyatı göster
+  - `70368744177664` — Paket içi adet fiyatı göster
+  - `140737488355328` — Kredi kartı ile sonradan ödeme fiyatı 2 göster
+  - `281474976710656` — Çift aramada ön/arka lastik göster
+  - `562949953421312` — Gerçek stok göster
+  - `1125899906842624` — Rezerve stok göster
+- **Product Search Parameter** — `ctl00$PageContent$ddlProductSearchParameter` (`ctl00_PageContent_ddlProductSearchParameter`; select) [multiple]
+  - `1` — Show vehicle brand section in search
+  - `2` — Let The Customer Representative See All Prices
+  - `4` — Let the Customer Representative See the Purchase Price
+  - `8` — Find only products that match exactly
+  - `16` — Use quick search
+  - `32` — In brand-model search, perform search only if all selections are made
+  - `64` — Disable product code in product search
+  - `128` — Show dual search
+  - `256` — Search by category name should not be automatic
+  - `512` — No product filter limit
+  - `1024` — Ürün aramada ürün adı devre dışı bırakılsın
+  - `2048` — Ürün aramada marka adı devre dışı bırakılsın
+  - `4096` — Sadece tam eşleşen ürünleri bul (boşlukları silerek arar)
+  - `8192` — Şasi no ile arama göster
+  - `16384` — Kategori aramasında sıralama kategori ürünlerine göre özel sıralamaya göre olsun
+  - `32768` — İlk listelemede ürünler gelmesin
+  - `65536` — Çift aramada grup sıralaması aktif olsun
+  - `131072` — Hızlı aramada tam eşleşme devre dışı kalsın
+  - `262144` — Ürün aramada cari bazlı arama limiti kullan
+  - `524288` — Ürün aramada kategori urlsi devre dışı bırakılsın
+  - `1048576` — Ürün kodunda tam eşleşme devre dışı
+- **Show Export Button** — `ctl00$PageContent$ddlExportProductList` (`ctl00_PageContent_ddlExportProductList`; select) [multiple]
+  - `1` — Show Products Export Button
+  - `2` — Show Export Cart To PDF Button
+  - `4` — Show Export Current Transactions To Excel Button
+  - `8` — Show Cart Export Button
+  - `16` — Show export to Excel button in order tracking
+  - `32` — Show export to Excel button in balance order
+  - `64` — Show export to PDF button in current transactions
+  - `128` — Excel aktarımda ürün görseli göster
+  - `256` — Bakiye siparişi PDF'e aktar butonu göster
+- **Parametric Modules** — `ctl00$PageContent$ddlParameterModules` (`ctl00_PageContent_ddlParameterModules`; select) [multiple]
+
+### Admin / Cart Settings (5 controls)
+
+- **Total Minimum Cart** — `ctl00$PageContent$txtMinCartCount` (`ctl00_PageContent_txtMinCartCount`; text)
+- **Payment Detail Show** — `ctl00$PageContent$ddlPaymentDetailShow` (`ctl00_PageContent_ddlPaymentDetailShow`; select)
+  - `0` — Do Not Show
+  - `1` — Show
+- **Show  Product Variation Code In Cart** — `ctl00$PageContent$ddlCartProductVariationCodeShow` (`ctl00_PageContent_ddlCartProductVariationCodeShow`; select)
+  - `0` — Do Not Show
+  - `1` — Show
+- **Min Cart Price** — `ctl00$PageContent$txtMinCartTotal` (`ctl00_PageContent_txtMinCartTotal`; text)
+- **Maximum Product Order Quantity** — `ctl00$PageContent$txtMaximumOrderQuantity` (`ctl00_PageContent_txtMaximumOrderQuantity`; text)
+
+### Admin / General Settings (31 controls)
+
+- **Delivery Date Get** — `ctl00$PageContent$chkDeliveryDateShow` (`ctl00_PageContent_chkDeliveryDateShow`; checkbox)
+- **Minimum Inventory Quantity** — `ctl00$PageContent$txtMinStockFilter` (`ctl00_PageContent_txtMinStockFilter`; text)
+- **Discount Type** — `ctl00$PageContent$ddlDiscountType` (`ctl00_PageContent_ddlDiscountType`; select)
+  - `'A'` — Normal
+  - `'P'` — By Product
+  - `'C'` — By Firm
+- **Login Screen  ( Login Page )** — `ctl00$PageContent$chkCustomerCodeForLogin` (`ctl00_PageContent_chkCustomerCodeForLogin`; checkbox)
+- **Bank Installments Impressions** — `ctl00$PageContent$ddlBankTableType` (`ctl00_PageContent_ddlBankTableType`; select)
+  - `1` — Normal Showing
+  - `0` — Spreadsheets Views
+- **Login With Expiry** — `ctl00$PageContent$chkLoginWithExpiry` (`ctl00_PageContent_chkLoginWithExpiry`; checkbox)
+- **Use Currency Type** — `ctl00$PageContent$ddlCurrencyType` (`ctl00_PageContent_ddlCurrencyType`; select)
+  - `0` — Manuel
+  - `1` — Automatic
+- **Current Maturity Date** — `ctl00$PageContent$ddlExpiryDate` (`ctl00_PageContent_ddlExpiryDate`; select)
+  - `1` — Show
+  - `0` — Do Not Show
+- **Current As Well Total Balance** — `ctl00$PageContent$ddlAccountActivityGenralCuurencyTableShow` (`ctl00_PageContent_ddlAccountActivityGenralCuurencyTableShow`; select)
+  - `1` — Show
+  - `0` — Do Not Show
+- **E-PayCommission** — `ctl00$PageContent$ddlCommissionType` (`ctl00_PageContent_ddlCommissionType`; select)
+  - `0` — Please Select
+  - `1` — When the order is placed, the commission difference should be reflected in the items.
+  - `3` — Normal Showing
+- **Discount Authorization for Customer Representative** — `ctl00$PageContent$ddlSpecialDiscount` (`ctl00_PageContent_ddlSpecialDiscount`; select)
+  - `0` — Do Not Show
+  - `3` — Set Discount Authority On Customer Representative Basis
+  - `1` — 1
+  - `2` — 2
+- **Registration Form Link** — `ctl00$PageContent$txtRegisterFormUrl` (`ctl00_PageContent_txtRegisterFormUrl`; text)
+- **Main Page** — `ctl00$PageContent$ddlHomeStyle` (`ctl00_PageContent_ddlHomeStyle`; select)
+  - `0` — Default
+  - `1` — Products
+  - `2` — E-PAyment
+- **Current Account Payment** — `ctl00$PageContent$ddlPaymentForAccountActivityShow` (`ctl00_PageContent_ddlPaymentForAccountActivityShow`; select)
+  - `1` — Show
+  - `0` — Hide
+- **Dealer Phone** — `ctl00$PageContent$txtBayiTelefon` (`ctl00_PageContent_txtBayiTelefon`; text)
+- **Dealer Adress** — `ctl00$PageContent$txtBayiAdres` (`ctl00_PageContent_txtBayiAdres`; textarea)
+- **Search By Brand** — `ctl00$PageContent$ddlSearchMarka` (`ctl00_PageContent_ddlSearchMarka`; select)
+  - `0` — Do Not Use
+  - `1` — Use
+- **Advanced Search** — `ctl00$PageContent$ddlSearchDetail` (`ctl00_PageContent_ddlSearchDetail`; select)
+  - `0` — Hide
+  - `1` — Show
+- **Using the Quick Search Listings** — `ctl00$PageContent$chkDontUseLcnAutoComplate` (`ctl00_PageContent_chkDontUseLcnAutoComplate`; checkbox)
+- **Desktop Application** — `ctl00$PageContent$ddlUseDesktopApi` (`ctl00_PageContent_ddlUseDesktopApi`; select)
+  - `0` — Do Not Use
+  - `1` — Use
+- **Current Account Details** — `ctl00$PageContent$ddlRowDescriptionShow` (`ctl00_PageContent_ddlRowDescriptionShow`; select)
+  - `0` — Do Not Use
+  - `1` — Use
+- **Product Currency** — `ctl00$PageContent$ddlProductCurrency` (`ctl00_PageContent_ddlProductCurrency`; select)
+  - `-1` — Show by Current Price Type
+  - `0` — No Change
+  - `2` — $
+  - `8` — ¥
+  - `3` — €
+  - `11` — AUD
+  - `13` — BGN
+  - `7` — CHD
+  - `6` — DKK
+  - `4` — GBP
+  - `12` — IRR
+  - `10` — KWD
+  - `14` — lei
+  - `9` — SAR
+  - `5` — SEK
+  - `1` — TL
+- **Pos Currency** — `ctl00$PageContent$ddlPosCurrency` (`ctl00_PageContent_ddlPosCurrency`; select)
+  - `-1` — Show by Current Price Type
+  - `0` — No Change
+  - `2` — $
+  - `8` — ¥
+  - `3` — €
+  - `11` — AUD
+  - `13` — BGN
+  - `7` — CHD
+  - `6` — DKK
+  - `4` — GBP
+  - `12` — IRR
+  - `10` — KWD
+  - `14` — lei
+  - `9` — SAR
+  - `5` — SEK
+  - `1` — TL
+- **Integration     Parameter** — `ctl00$PageContent$ddlParameterIntegration` (`ctl00_PageContent_ddlParameterIntegration`; select) [multiple]
+  - `1` — Discount Will Be Defined Manually.
+  - `2` — Customer Group Will Be Determined Manually.
+  - `4` — In order transfer, send the sub-dealer order as the main dealer
+  - `8` — Automatically update tags during company transfer
+- **Show details add button is clicked** — `ctl00$PageContent$chkAddCartAction` (`ctl00_PageContent_chkAddCartAction`; checkbox)
+- **Do Not Send Mail To Customer** — `ctl00$PageContent$chkDoNotSendMailToCustomer` (`ctl00_PageContent_chkDoNotSendMailToCustomer`; checkbox)
+- **Send Delivery Address If Different** — `ctl00$PageContent$ddlSendDeliveryAddressIfDifferent` (`ctl00_PageContent_ddlSendDeliveryAddressIfDifferent`; select)
+  - `0` — No
+  - `1` — Yes
+- **Currency Price Type** — `ctl00$PageContent$ddlCurrencyPriceType` (`ctl00_PageContent_ddlCurrencyPriceType`; select)
+  - `1` — Banknote Selling
+  - `2` — Forex Selling
+- **All Products** — `ctl00$PageContent$ddlAllProductsShow` (`ctl00_PageContent_ddlAllProductsShow`; select)
+  - `1` — Show
+  - `0` — Hide
+- **Different Payment Link** — `ctl00$PageContent$txtPaymentLink` (`ctl00_PageContent_txtPaymentLink`; text)
+- **Payment Parameters** — `ctl00$PageContent$ddlPaymentParameter` (`ctl00_PageContent_ddlPaymentParameter`; select) [multiple]
+  - `1` — Request contract approval at payment
+  - `2` — E-Payment With Commission
+  - `4` — E-Payment Commission-Selective
+  - `8` — Overdue Customers Cnnot Pay In Installments
+  - `32` — Currency selection for online payment
+  - `64` — Use POS currency in payment
+  - `128` — Showing installments if there is an overdue debt in online payment
+  - `256` — Don't Show Pos discount rate in online payment
+  - `512` — Online ödemede vadesi geçen göster
+  - `1024` — Ödeme tiplerinde indirim gösterme
+  - `2048` — Kredi kartı ödemelerini tek çekim ve taksit olarak ayır
+  - `4096` — BankBinV2 yapısı aktif et
+  - `8192` — Ödeme detayda komisyon göster
+  - `16384` — Ödeme detayda hesaba geçen net tutar göster
+  - `32768` — Firma Bazlı Ödeme Grubu Kullansın
+
+### Admin / Application Form Settings (2 controls)
+
+- **Application Form Settings** — `ctl00$PageContent$ddlParameterLogin` (`ctl00_PageContent_ddlParameterLogin`; select) [multiple]
+  - `1` — First Name
+  - `2` — Last Name
+  - `4` — Company
+  - `8` — Phone
+  - `16` — Tax Office
+  - `32` — Tax No
+  - `64` — City
+  - `128` — Country
+  - `256` — Address
+  - `512` — Email
+  - `1024` — Dealer Website
+  - `2048` — TC Citizen No
+  - `4096` — Contract Approval on Application
+  - `8192` — New membership text
+  - `16384` — Hide membership button
+  - `32768` — Show Non Membership Shopping
+  - `65536` — Hide menu settings when creating sub-dealer
+  - `131072` — Postal code
+  - `262144` — Description
+  - `524288` — Password
+  - `1048576` — Individual
+  - `2097152` — Adres eklemede teslimat ve fatura adresi seçimi göster
+  - `4194304` — Dosya yükle göster
+  - `8388608` — Mobil telefon
+  - `16777216` — Üye olan firmanın promosyon kullanımı aktif olsun
+  - `33554432` — Üye olan firmanın stok gösterimi kapalı olsun
+  - `67108864` — Üyelikte aktivasyon linki oluştur
+  - `134217728` — Üye olan firmanın sipariş tamamlama butonu kapalı olsun
+  - `268435456` — Üye olan firmanın fiyatı kapalı olsun
+  - `536870912` — Üye olan firmanın piyasa fiyatı kapalı olsun
+- **Application Form Menu Display** — `ctl00$PageContent$ddlParameterLoginMenu` (`ctl00_PageContent_ddlParameterLoginMenu`; select) [multiple]
+  - `1` — First Name
+  - `2` — Last Name
+  - `4` — Company
+  - `8` — Phone
+  - `16` — Tax Office
+  - `32` — Tax No
+  - `64` — City
+  - `128` — Country
+  - `256` — Address
+  - `512` — Email
+  - `1024` — Dealer Website
+  - `2048` — TC Citizen No
+  - `4096` — Contract Approval on Application
+  - `8192` — Tax Approval Code
+  - `16384` — Hide membership button
+  - `32768` — Individual/Corporate selection
+  - `65536` — Phone Number
+  - `131072` — Address
+  - `262144` — Description
+
+### Admin / Admin (24 controls)
+
+- **Admin  Parameter** — `ctl00$PageContent$ddlParameterAdmin` (`ctl00_PageContent_ddlParameterAdmin`; select) [multiple]
+  - `1` — Show Purpose Module in Technical Settings
+  - `2` — Show VAT Exempt in Price Type
+  - `4` — Show Installment Limit in Pos Management
+  - `8` — Company Based Hiding
+  - `16` — Show Company Based Installment Rates in Pos Management
+  - `32` — Show Order Export Button
+  - `64` — Show Order Pending Export Button
+  - `128` — Show Transfer To PDF Button In Order Detail
+  - `256` — Clicking Current In Cart To Show Account Balance
+  - `512` — Show Transfer To PDF Button In Account Activity
+  - `1024` — Regional Warehouse Display
+  - `2048` — Technical Settings:
+In SQL Data Structure Parameter
+"SQL Data Structure" option appears
+  - `4096` — Xml Export:
+Makes the "Update Time" option appear.
+  - `8192` — Displaying Service Orders in Order Adding and Product Order Reports
+  - `16384` — Customer Representative Selection (Users)
+  - `32768` — Customer Representative Selection (Customer Representatives)
+  - `65536` — Add Company:
+Choice of Company Parameters to Display.
+  - `131072` — Payment Parameter
+Overdue Customers Can not Pay In Installments
+  - `262144` — Parameter Sub Dealer
+  - `524288` — Brand hiding by company
+  - `1048576` — Hide Product
+  - `2097152` — Show as "Available" if Stock is 0
+  - `4194304` — Hide warehouse
+  - `8388608` — Company: Show currency in account tracking
+  - `16777216` — Show Category in Cart
+  - `33554432` — Export as JSON
+  - `67108864` — Show Account Limit
+  - `134217728` — Show payment entry
+  - `268435456` — Send agent code on order
+  - `536870912` — Showing Campaigns on a Product Basis
+  - `1073741824` — Use product discount 2 in cross discount
+  - `2147483648` — Brand discount structure by company
+  - `4294967296` — Return button in order detail
+  - `8589934592` — Let Customer Representative See Only Current Warehouses
+  - `17179869184` — Add to cart by warehouse
+  - `34359738368` — Show add to cart based on warehouse
+  - `68719476736` — Advanced cross discount (based on payment type)
+  - `137438953472` — Show banner popup based on customer
+  - `274877906944` — Update Campaign Price in Integration
+  - `549755813888` — Only customer representative can see additional field 2
+  - `1099511627776` — B4B single price type default product display
+  - `2199023255552` — B4B multi price type default product display
+  - `4398046511104` — Platform > Products > Show related products
+  - `8796093022208` — Show discount type in technical settings
+  - `17592186044416` — Show all customers' order history to representatives
+  - `35184372088832` — Installment restriction based on due date
+  - `70368744177664` — Block orders if there is overdue debt
+  - `140737488355328` — Separate login as dealer and member login
+  - `281474976710656` — Show invoice image (GIB)
+  - `562949953421312` — Show DBS transactions in account movements
+  - `1125899906842624` — Show account balance in online payment
+  - `2251799813685248` — Add to account movements automatically when order is confirmed
+  - `4503599627370496` — Use pre-order
+  - `9007199254740992` — Disable complete order
+  - `18014398509481984` — Show product search in cart
+  - `36028797018963968` — Standard warehouse splitting
+  - `72057594037927936` — Advanced warehouse splitting
+  - `144115188075855872` — Show region-based banner image
+  - `288230376151711744` — Use SEO tags in product detail
+  - `576460752303423488` — Disable representative login
+  - `1152921504606846976` — Always enable online payment for representative
+  - `2305843009213693952` — Invoice design for Europe
+  - `4611686018427387904` — Platform: Show start and end date in periodic order
+- **Cart Parameter** — `ctl00$PageContent$ddlOrderParameter` (`ctl00_PageContent_ddlOrderParameter`; select) [multiple]
+  - `1` — Request Contract Approval
+  - `2` — Request Delivery Address Selection
+  - `4` — Request Cargo Selection
+  - `8` — Request Invoice Address Selection
+  - `16` — Do not show list price in order
+  - `32` — Show Coupon
+  - `64` — Don't Show Delivery Date on Balance Order
+  - `128` — Additional Field-2 Is Shown In The Order
+  - `256` — Show Product Short Description In The Order
+  - `512` — Do Not Show Discounts In Cart
+  - `1024` — Dont Show Add New Adress
+  - `2048` — Use Container
+  - `4096` — Show promotion products in cart
+  - `8192` — Group cart products by category
+  - `16384` — Show only discounted prices in order mail
+  - `32768` — Show cash on delivery within payment options
+  - `65536` — Show prices including VAT in cart
+  - `131072` — Show account balance in email
+  - `262144` — Use Google Analytics In Order
+  - `524288` — Don't Send Maturity Difference
+  - `1048576` — Show who added to cart
+  - `2097152` — Dealer Limit Tracking
+  - `4194304` — Current Limit Warning
+  - `8388608` — Include pending orders in limit tracking
+  - `16777216` — Separate billing and delivery addresses
+  - `33554432` — Show price in balance order
+  - `67108864` — Use brand-based discount
+  - `134217728` — Check DBS and limit when printing e-invoice
+  - `268435456` — Added to cart?Check it out
+  - `536870912` — Check balance order when adding to cart
+  - `1073741824` — Product totals in the cart including VAT
+  - `2147483648` — Do not show due date
+  - `4294967296` — Show currency total in cart
+  - `8589934592` — Count total quantities by product type in cart
+  - `17179869184` — Do not show description in account movements
+  - `34359738368` — Show order completer in order email
+  - `68719476736` — Show exchange rates in order email
+  - `137438953472` — Live Cart Update by Brand or Payment Type
+  - `274877906944` — Show sent orders in order
+  - `549755813888` — Box-based order / Show box quantity
+  - `1099511627776` — Add to cart by variation group
+  - `2199023255552` — Show marketplace code in cart
+  - `4398046511104` — Show prices including VAT in dealer order detail
+  - `8796093022208` — Cari hesaplarda ciro göster
+  - `17592186044416` — Sepette ana ürünleri göster
+  - `35184372088832` — Sepette iade sözleşmesi iste
+  - `70368744177664` — Bakiye siparişte iptal talebi göster
+  - `140737488355328` — Sipariş detayda kalan göster
+  - `281474976710656` — Sepette kredi kartı ödemelerini tek çekim ve taksit olarak ayır
+  - `562949953421312` — Siparişte Firma Etiket Yorumu Görünsün
+  - `1125899906842624` — Show Internal Note Field For Representative
+  - `2251799813685248` — Eski Temsilci Satış Raporu Sekmelerini Göster
+  - `4503599627370496` — Cari hareketlerde işlem tipleri göster
+  - `9007199254740992` — Cari hareketlerde gerçekleşen vade göster
+  - `18014398509481984` — Desi bazlı kargo kullan
+  - `36028797018963968` — Sepeti sıfırla göster
+  - `72057594037927936` — Sepet ürünlerini kendi kurlarıyla göster
+  - `144115188075855872` — Müşteri Temsilcisi indirim girdiğinde cari indirimini yok saysın
+- **Account Parameter** — `ctl00$PageContent$ddlParameterAccount` (`ctl00_PageContent_ddlParameterAccount`; select) [multiple]
+  - `1` — Don't Show Limit
+  - `2` — Don't Show Total Balance Order
+  - `4` — Don't Show Total debt
+  - `8` — Don't Show Total Receivable
+  - `16` — Don't Show Limit Remaining Balance
+  - `32` — Don't Show Other Balance
+  - `64` — Don't Show Total Order in Account Balance
+  - `128` — Do not show overdue
+  - `256` — Show Account Number by Price Type
+  - `512` — Üst menüde bakiye gösterme
+- **Main Products** — `ctl00$PageContent$ddMainProducts` (`ctl00_PageContent_ddMainProducts`; select) [multiple]
+  - `64` — Main Page
+  - `128` — Sale
+  - `256` — Most Saled
+  - `512` — New Product
+  - `1024` — Most Viewed
+  - `2048` — Product Of The Day
+  - `4096` — Product Of The Week
+  - `8192` — Product Of The Month
+  - `1` — Part 1
+  - `2` — Part 2
+  - `4` — Part 3
+  - `8` — Part 4
+  - `16` — Part 5
+  - `32` — Part 6
+  - `16384` — Brands
+- **Integrated** — `ctl00$PageContent$ddlintegrated` (`ctl00_PageContent_ddlintegrated`; select)
+  - `0` — False
+  - `1` — True
+- **Discount Type** — `ctl00$PageContent$ddldiscountTypeInvoice` (`ctl00_PageContent_ddldiscountTypeInvoice`; select)
+  - `0` — Sum
+  - `1` — Ratio
+- **Add New Shipping Address** — `ctl00$PageContent$DDLDeliveryAddress` (`ctl00_PageContent_DDLDeliveryAddress`; select)
+  - `0` — Hide
+  - `1` — Show
+- **Bonus** — `ctl00$PageContent$ddlBonusShow` (`ctl00_PageContent_ddlBonusShow`; select)
+  - `0` — Hide
+  - `1` — Show
+- **Site Map** — `ctl00$PageContent$ddlSiteMap` (`ctl00_PageContent_ddlSiteMap`; select)
+  - `0` — Hide
+  - `1` — Show
+- **Dealer Sub-Dealer Property** — `ctl00$PageContent$ddSubDealerShow` (`ctl00_PageContent_ddSubDealerShow`; select)
+  - `0` — Hide
+  - `1` — Show
+- **Adding Address You Added Company Information** — `ctl00$PageContent$chkBillingAdress` (`ctl00_PageContent_chkBillingAdress`; checkbox)
+- **Dealer Name** — `ctl00$PageContent$TxtDealerName` (`ctl00_PageContent_TxtDealerName`; text)
+- **Recaptcha Code** — `ctl00$PageContent$txtBayiYetkiliKisi` (`ctl00_PageContent_txtBayiYetkiliKisi`; text)
+- **Dealer Website** — `ctl00$PageContent$txtBayiWebAdres` (`ctl00_PageContent_txtBayiWebAdres`; text)
+- **E Invoice No** — `ctl00$PageContent$txtEInvoiceNo` (`ctl00_PageContent_txtEInvoiceNo`; text)
+- **Use Encryption** — `ctl00$PageContent$ddlUseMd5Encryption` (`ctl00_PageContent_ddlUseMd5Encryption`; select)
+  - `0` — Normal
+  - `1` — MD5
+- **Variations Showing** — `ctl00$PageContent$ddlVariationShow` (`ctl00_PageContent_ddlVariationShow`; select)
+  - `0` — Please Select
+  - `1` — Spreadsheets Views (Used In Variation With 2 Options)
+  - `2` — Tablolu gösterim (Çok seçenekli varyasyon)
+  - `3` — Drop-down List Display
+  - `4` — Multi-selection display (Selected variation total reflected in quantity)
+  - `8` — Single-selection display
+  - `16` — Stock Based Boxed Display
+- **Menu Display** — `ctl00$PageContent$ddlParameterMenu` (`ctl00_PageContent_ddlParameterMenu`; select) [multiple]
+  - `1` — Dont Show Orders
+  - `2` — Dont Show Messages
+  - `4` — Dont Show Balance Orders
+  - `8` — Don't Show Payment Systems
+  - `16` — Don't Show Cart Menu
+  - `32` — Don't Show Product Stock Page
+  - `64` — Don't Show Most Viewed
+  - `128` — Don't Show New Products
+  - `256` — Don't Show Stock Descriptions
+  - `512` — Don't Show Sorting
+  - `1024` — Don't Show Out Of Stock Menu
+  - `2048` — Don't Show Products Menu
+  - `4096` — Don't  Show Account Activity Menu
+  - `8192` — Don't  Show Balance Menu
+  - `16384` — Don't Show Value Tracking Menu
+  - `32768` — Don't  Show Account Numbers Menu
+  - `65536` — Don't  Show News Menu
+  - `131072` — Don't  Show Fast Order Menu
+  - `262144` — Don't Show Online Payment Menu
+  - `524288` — Don't Show Credit Card Payment Menu
+  - `1048576` — Don't  Show Sub Dealer Menu
+  - `2097152` — Don't  Show Offer Menu
+  - `4194304` — Don't  Show Offer List Menu
+  - `8388608` — Don't Show Currency Menu
+  - `16777216` — Don't Show Requests Menu
+  - `33554432` — Don't Show Category Selection
+  - `67108864` — Don't Show Brand Selection
+  - `134217728` — Don't Show Season Selection
+  - `268435456` — Don't Show Today's Deals Search
+  - `536870912` — Don't Show Bestsellers Search
+  - `1073741824` — Don't Show Campaign Search
+  - `2147483648` — Don't Show New Products Search
+  - `4294967296` — Don't Show The Most Viewed Search
+  - `8589934592` — Promosyon butonu göster
+  - `17179869184` — Show Invoice Address Option in Add Address
+  - `34359738368` — Don't Show Login Menu
+  - `68719476736` — Save Searched Word
+  - `137438953472` — Show Identity Number When Adding Address
+  - `274877906944` — Show campaign button
+  - `549755813888` — Yeni ürünler butonu göster
+  - `1099511627776` — Show country selection when adding address
+  - `2199023255552` — Do not show global search
+  - `4398046511104` — Show installment price option
+  - `8796093022208` — Show OEM Search
+  - `17592186044416` — Request Privacy Agreement confirmation in login
+  - `35184372088832` — Show "WhatsApp Support"
+  - `70368744177664` — Show run flat filter
+  - `140737488355328` — Don't Show Comments Menu
+  - `281474976710656` — Don't show company code
+  - `562949953421312` — Product search with barcode
+  - `1125899906842624` — Only show in-stock items as selected
+  - `2251799813685248` — Show brands menu
+  - `4503599627370496` — Show Company Page
+  - `9007199254740992` — Show “Delete My Account” menu
+  - `18014398509481984` — Show notifications menu
+  - `36028797018963968` — Show debt/credit by month
+  - `72057594037927936` — Show overdue amounts by month
+  - `144115188075855872` — Show add product to cart by barcode
+  - `288230376151711744` — Show retail price selection
+  - `576460752303423488` — Müşteri seçiminde fiyat tipi görünsün
+  - `1152921504606846976` — Haftanın ürünleri menüsünü göster
+  - `2305843009213693952` — Adres güncelle butonu gösterme
+  - `4611686018427387904` — Akıllı arama gösterme
+  - `4611686018427387904` — Akıllı arama gösterme
+- **Menu Display 2** — `ctl00$PageContent$ddlParameterMenu2` (`ctl00_PageContent_ddlParameterMenu2`; select) [multiple]
+  - `1` — Cariye Özel Ürün Menüsü Göster
+- **Dynamic Search Parameter** — `ctl00$PageContent$ddlParameterDynamicSearch` (`ctl00_PageContent_ddlParameterDynamicSearch`; select) [multiple]
+  - `1` — General Search
+  - `2` — Brand
+  - `4` — Model
+- **Currency type in order integration transfer** — `ctl00$PageContent$ddIntegrationCurrency` (`ctl00_PageContent_ddIntegrationCurrency`; select)
+  - `0` — Please Select
+  - `2` — $
+  - `8` — ¥
+  - `3` — €
+  - `11` — AUD
+  - `13` — BGN
+  - `7` — CHD
+  - `6` — DKK
+  - `4` — GBP
+  - `12` — IRR
+  - `10` — KWD
+  - `14` — lei
+  - `9` — SAR
+  - `5` — SEK
+  - `1` — TL
+- **Send WhatsApp Order Notification** — `ctl00$PageContent$chkWhatsAppOrderNotification` (`ctl00_PageContent_chkWhatsAppOrderNotification`; checkbox)
+- **Favorite Icon Position / Left / Right / Top / Bottom** — `ctl00$PageContent$FavoriteIconPosition` (`ctl00_PageContent_rbFavoriteIconLeft`; radio)
+- **Favorite Icon Position / Left / Right / Top / Bottom** — `ctl00$PageContent$FavoriteIconVerticalPosition` (`ctl00_PageContent_rbFavoriteIconTop`; radio)

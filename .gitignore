@@ -1,0 +1,50 @@
+# Local credentials and configuration
+.env
+.env.*
+!.env.example
+**/appsettings.Development.json
+**/appsettings.Local.json
+**/appsettings.*.local.json
+**/settings.local.json
+**/secrets.json
+**/secrets.*.json
+*.user
+*.suo
+*.pfx
+*.p12
+*.pem
+*.key
+*.token
+
+# Build output and installed dependencies
+**/bin/
+**/obj/
+**/node_modules/
+**/dist/
+**/coverage/
+*.tsbuildinfo
+.vite/
+
+# Database backups, generated database files, and local SQL logs
+*.bak
+*.bak.*
+*.bacpac
+*.trn
+*.mdf
+*.ldf
+*.log
+
+# Raw user-supplied legacy evidence may contain customer-specific snapshots
+/docs/evidence/legacy/
+
+# Temporary delivery recording files
+/docs/evidence/delivery/.video-work/
+/docs/evidence/delivery/*.tmp
+
+# Unclassified chat-export images at repository root; review before intentionally adding
+/ChatGPT Görseli*.png
+
+# Local test and editor artifacts
+TestResults/
+.vs/
+.idea/
