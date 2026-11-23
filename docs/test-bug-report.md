@@ -1,8 +1,14 @@
+# Current release addendum — 2026-11-23
+
+The synthetic public demo is deployed at https://talhaantep.github.io/B2B/ and was opened successfully by the project owner. The public-demo branch passed `npm test` (**36/36**) and `VITE_PUBLIC_DEMO=true` production build. The local full-stack frontend had passed 35/35 and the .NET Release build passed with zero warnings/errors. The preceding compatibility pass recorded 56/56 filtered non-database backend tests and eight focused SQL API groups; those groups were not rerun during public-demo publication.
+
+The first GitHub Actions deployment attempt returned Pages API `404 Not Found`; the repository Pages source was initialised/configured and the workflow rerun. The static page was subsequently opened. This resolves the frontend showcase deployment only. The ASP.NET Core API and SQL Server remain local-only; no full-stack public deployment is claimed.
+
 # Test and bug report
 
-## Final delivery check — 2026-11-23
+## Final delivery check — 2026-11-22
 
-Current commands run: frontend `npm test` passed **35/35**; frontend `npm run build` passed; backend `dotnet build B2BStore.Settings.slnx --configuration Release --no-restore` passed with 0 warnings and 0 errors. Backend test suites and SQL integration groups were not rerun in this final delivery-capture pass. The preceding compatibility pass recorded 56/56 filtered non-database backend tests and eight focused SQL API groups with verified backups/readback/restoration. No database writes occurred during the final delivery-capture pass. Seven synthetic Mock-mode screenshots and MP4/WebM recordings are present under `docs/evidence/delivery/`.
+Current commands run: frontend `npm test` passed 35/35; frontend `npm run build` passed; backend `dotnet build B2BStore.Settings.slnx --configuration Release --no-restore` passed with 0 warnings and 0 errors. Backend test suites and SQL integration groups were not rerun in this delivery pass. No database writes occurred. Prior backend and SQL integration results below remain historical, preserved evidence.
 ## Current consolidated release status — 2026-11-22
 
 This status supersedes earlier discovery and milestone snapshots in this report. Those dated findings remain as historical evidence and are not current-state claims.
@@ -18,12 +24,12 @@ This status supersedes earlier discovery and milestone snapshots in this report.
 
 | Area | Command | Result |
 |---|---|---|
-| Frontend tests | `npm test` | Latest final delivery-capture run passed: **35 tests across 2 files**, including EN/TR behavior, bilingual search, selected option labels, all 98 catalog controls, source option integrity, and the Mock-versus-SQL connection notice. |
+| Frontend tests | `npm test` | Latest run passed: 29 tests across 2 files, including EN/TR default/switch/persistence, bilingual search, selected option labels, all 98 catalog controls and source option integrity. |
 | Frontend production build | `npm run build` | Final run passed: `vue-tsc -b` and Vite production build. |
 | Backend Release build | `dotnet build .\B2BStore.Settings.slnx --configuration Release --no-restore` | Final run passed: API and tests target `net10.0`; 0 warnings and 0 errors. |
-| Backend Release non-database tests | `dotnet test B2BStore.Settings.slnx -c Release --no-build` with the explicit exclusion filter for SQL-dependent integration classes | Passed **56/56** in the 2026-11-22 compatibility pass. Not rerun during the final delivery-capture pass. |
+| Backend Release non-write tests | `dotnet test B2BStore.Settings.slnx --configuration Release --no-restore --filter 'FullyQualifiedName!~CatalogPersistentIntegrationTests&FullyQualifiedName!~RollbackWriteSafetyTests&FullyQualifiedName!~PersistentWriteSafetyTests'` with private local SQL configuration; write flag removed | Final run passed: 16/16, including both read-only SQL integration tests. Database mutation and rollback test classes were not rerun; prior verified groups are retained below. |
 | SQL rollback validation | `RollbackWriteSafetyTests` | Passed: SiteStatus and ParameterOrder read back inside a transaction; rollback restored original values. A stale concurrency conflict after the first update also rolled back. `Store5_Analysis` was rejected before connection. |
-| Focused SQL API groups | Authenticated local Development API, isolated test mode | Eight newly enabled fields passed serial API save/readback, direct SQL verification and exact restoration in the 2026-11-22 compatibility pass. Each group had an external checksum-verified backup. This was not rerun during the final delivery-capture pass. |
+| Persistent API test | Authenticated local Development API | Three numeric text fields were individually saved through `PUT /api/settings`, read back through the API and SQL, restored to captured originals, and verified. External backups passed `RESTORE VERIFYONLY WITH CHECKSUM`. |
 | API authorization and isolation | Service checks and local Development API | Test-mode writes require Development + SQL mode, explicit process flag, bearer auth, fixed allowlist, exact Store5_Settings_Test database, and MemberCode=store5. Analysis DB requests are rejected before connection. Normal-mode authenticated `PUT /api/settings` returns 405. Values were suppressed. |
 | Earlier local API smoke | .NET 10 Development API + PowerShell HTTP requests | Passed: `/health` returned `ok`; settings returned SQL mode with 98 controls. Values were suppressed. |
 | Admin/dealer portal | No portal interaction | Test Edilemedi: no authorized session/runtime workflow was provided for this implementation pass. |
@@ -51,10 +57,10 @@ Final read-only preflight reported database `Store5_Settings_Test`, exactly one 
 
 - **Recovered `ProductCompany` and verified explicit-NULL persistence (2026-11-21/22):** A fresh external backup passed `RESTORE VERIFYONLY WITH CHECKSUM`. Recovery set only `ProductCompany` to its captured NULL baseline for the unique `store5` row. Then the presence-aware API contract distinguished omitted scalar, explicit `null`, and empty string; contract tests passed 14/14. A separate single-field authenticated API integration test made a fresh external checksum-verified backup, saved a source option, verified API and SQL readback, restored explicit NULL through the API, and verified restoration through both API and SQL (1/1 passed). No previous persistence groups were rerun. `ProductCompany` is now test-mode-only; legacy behavior is still unknown. Test API is stopped and normal API mode reports writes disabled.
 
-- **Historical snapshot, superseded by the 2026-11-22 compatibility pass:** the Development test-mode allowlist had 85 fields, with 49 authenticated API round-trip and 36 service-level-only adapters. The current allowlist is 93 settings adapters; see the final compatibility section and `docs/final-release-report.md`.
-- The five file upload controls now use a separate application-owned asset service. This verifies new-app upload/readback/delete behavior only; it does not establish a legacy portal upload convention. The two favorite-position controls use independent application-owned extension enums, but their legacy destination and old-portal reader remain unverified.
-- Legacy portal persistence behavior remains unverified; replacement-app API round trips do not prove that the original portal saves or reads through these fields.
-- No existing-portal runtime behavior has been tested; no defect in the legacy portal is claimed or fixed.
+- Legacy persistence behavior remains unknown for all 98 controls because the original save handler is unavailable. The current Development test-mode allowlist has 85 fields; 49 have authenticated API round-trip evidence and 36 adapters have service-level evidence only. The standard/Production API is read-only.
+- Five file upload controls and two radio option controls (one group) cannot be persisted safely from current evidence.
+- Legacy portal persistence behavior remains unverified; transient SQL round trips do not prove that the original portal saves through these fields.
+- No existing-portal behavior has been tested; no defect in the legacy portal is claimed or fixed.
 
 ## Verification — expanded editable settings (2026-11-20)
 
@@ -170,5 +176,3 @@ English is the default UI language; Turkish is selectable and remembered in loca
 ## Compatibility pass test note (2026-11-22)
 
 The 56/56 filtered non-database backend test result is separate from the SQL integration evidence. Eight new SQL-backed HTTP groups passed serially with external verified backups and exact restoration. The broad backend invocation without required SQL test environment variables failed in the integration tests at their safety preconditions; it did not exercise database writes. Frontend tests passed 34/34; Release backend build passed with no warnings/errors; frontend production build passed. Original browser DOM evidence subsequently resolved the ParameterModules/ParameterAdmin option assignment; app-owned extension values still have no demonstrated reader in the old portal.
-
-

@@ -1,15 +1,19 @@
+# Current release context — 2026-11-23
+
+The public GitHub Pages site is a static frontend-only synthetic showcase at https://talhaantep.github.io/B2B/. It is not connected to the ASP.NET Core API or SQL Server. The full-stack replacement remains a local implementation. The analysis and mapping limitations below are unchanged: the original Web Forms save handler is unavailable and old-portal persistence parity is unverified for all 98 controls.
+
 # Technical analysis report
 
 ## Current consolidated release status — 2026-11-22
 
 This status supersedes earlier discovery and milestone snapshots in this report. Those dated findings remain as historical evidence and are not current-state claims.
 
-- The UI catalog contains 98 unique DealerSystemSetting control IDs and the UI represents all 98 controls. The authenticated Development-only settings API has a fixed allowlist of 93 settings adapters; five image controls use a separate application-owned asset service and are not part of that 93-setting list.
-- Five of the 93 settings adapters use application-owned extension keys because no legacy destination/reader was established: `ParameterProductDetailNotLogin2`, `ParameterMenu2`, `WhatsAppOrderNotification`, `FavoriteIconPosition`, and `FavoriteIconVerticalPosition`. `ParameterProductSearch` is hybrid: its low 16-bit word is stored in candidate `DealerSettings.ParameterProductSearch` (`smallint`) and its high word in an application-owned extension key. These app-owned portions do not establish old-portal compatibility.
-- `ParameterPayment` preserves the same unsigned 16-bit bit pattern in SQL `smallint` through signed representation. Original browser DOM evidence confirms `ddlParameterModules` option `1` maps to `DealerSettings.ParameterModules` (`int`), while the separate `ddlParameterAdmin` option `32` maps to `DealerSettings.ParameterAdmin` (`bigint`).
-- Legacy save-handler parity and runtime portal effects remain unverified for all 98 controls because the original server-side Web Forms handler is unavailable.
-- Current normal API mode is read-only; isolated test-write flags are disabled. Final SQL checks were SELECT-only against `Store5_Settings_Test` and the unique `MemberCode=store5` row. No database writes or public deployment occurred during the final delivery-capture pass.
-- Latest final delivery-capture checks: frontend tests 35/35 and production build passed; the .NET Release solution build passed with zero warnings/errors. The preceding compatibility pass recorded 56/56 filtered non-database backend tests and eight focused SQL API groups; those were not rerun in the final capture pass. Seven synthetic Mock-mode screenshots and MP4/WebM recordings are present under `docs/evidence/delivery/`.
+- The UI catalog contains 98 unique DealerSystemSetting control IDs. The authenticated Development-only settings API has a fixed allowlist of 93 setting adapters; five image controls use the separate application-owned asset service.
+- Five setting controls use application-owned extension keys because no legacy destination was established: `ParameterProductDetailNotLogin2`, `ParameterMenu2`, `WhatsAppOrderNotification`, `FavoriteIconPosition`, and `FavoriteIconVerticalPosition`. Their new-app save/readback/restoration was tested; old-portal reads remain unverified. `ParameterProductSearch` is hybrid: its low 16-bit word is stored in candidate `DealerSettings.ParameterProductSearch` (`smallint`), and its high word in an application-owned extension key.
+- `ParameterPayment` is persisted as the same unsigned 16-bit bit pattern in SQL `smallint` using signed representation. `ParameterModules` option `1` belongs to `ddlParameterModules` / `DealerSettings.ParameterModules` (`int`); `ParameterAdmin` option `32` belongs to the separate `ddlParameterAdmin` / `DealerSettings.ParameterAdmin` (`bigint`).
+- Legacy save-handler parity remains unverified for all 98 controls because the original server-side Web Forms handler is unavailable.
+- Current normal API mode is read-only; isolated test-write flags are disabled. Final SQL checks were SELECT-only against `Store5_Settings_Test` and the unique `MemberCode=store5` row. No database writes or public deployment occurred during this final delivery pass.
+- Historical test and backup evidence is retained in the SQL/test reports. Backend test suites and SQL integration groups were not rerun during this delivery pass; only frontend tests/build and backend Release build are current-run results.
 
 ## Status and evidence labels
 
@@ -47,7 +51,7 @@ The latest inventory reports 98 controls: 65 selects, of which 22 are multi-sele
 | Admin / Admin | 24 |
 | **Total** | **98** |
 
-The supplied inventory did not establish legacy option values or persistence semantics for the two radio controls. The replacement app represents the favorite-position fields with independent application-owned enums, but their old-portal destinations/readers remain unverified. The five file inputs now use a separate application-owned asset service; this is new-app storage only and does not establish the legacy portal's upload convention.
+The two radio controls have no option values in the supplied inventory artifact, so the UI shows them as unavailable rather than inventing options. Five file inputs are visible but disabled until storage behavior is verified.
 
 ## Candidate database mapping
 
@@ -158,7 +162,7 @@ Latest prior milestone validation: backend Release build 0 warnings/errors; non-
 
 ## Final local application QA (2026-11-22)
 
-Historical snapshot (superseded by the final compatibility implementation): 98 catalog controls and UI editors, 93 Development-only settings adapters, and five application-owned asset slots. The final 93-setting adapter allowlist includes five extension-backed controls; these are not draft-only in the replacement app, but old-portal reads remain unverified. `ParameterProductSearch` is hybrid (candidate SQL low word plus app-owned extension high word). `ParameterModules` option `1` maps to `DealerSettings.ParameterModules` (`int`); separate `ParameterAdmin` option `32` maps to `DealerSettings.ParameterAdmin` (`bigint`). Normal API mode is read-only.
+Current reconciled status: 98 catalog controls, 98 UI editors, 93 isolated Development SQL adapters, five application-only asset slots, and five SQL-draft-only controls. `ParameterModules` is available with its DOM-confirmed option value `1`; the separate `ParameterAdmin` control retains option value `32`. Both map independently to their corresponding `DealerSettings` columns (`ParameterModules` int and `ParameterAdmin` bigint). All 93 SQL adapters have authenticated API save/readback/restoration evidence; legacy Web Forms save-handler parity remains unknown. Normal API mode is read-only.
 
 ## Final compatibility implementation status - 2026-11-22
 
@@ -173,5 +177,4 @@ The final seven controls were handled as follows:
 
 The `dbo.DealerSystemSettingExtension` schema was applied explicitly to `Store5_Settings_Test` only using `backend/B2BStore.Settings.Api/Migrations/001_DealerSystemSettingExtension.sql`. It has a `(MemberCode, SettingKey)` primary key and no unverified foreign key. It is not part of the legacy portal schema. The 2026-11-22 SQL tests were serialized, took a separate external checksum-verified backup for each field group, and restored their original values. Final read-only checks confirmed one target row, `ProductCompany` still NULL, the three direct column baselines restored, and zero `store5` extension rows.
 
-Compatibility-pass validation (2026-11-22): .NET 10 Release build succeeded with zero warnings/errors; 56 non-database backend tests passed. Frontend tests passed 34/34 and production build succeeded. Eight new SQL-backed HTTP groups passed (Payment, Modules, Product Search, two extension masks, WhatsApp Boolean, and two favorite-position enums); each group's backup passed checksum verification, and values were restored. In the subsequent final delivery-capture pass, the frontend gained a focused Mock-versus-SQL connection-notice regression test and the latest frontend result was 35/35; frontend production build and .NET Release build passed again. Backend suites and SQL integration groups were not rerun during that final capture pass. The normal API remained read-only. The legacy save handler remains unavailable, so no exact legacy implementation parity is asserted.
-
+Validation in this continuation: .NET 10 Release build succeeded with zero warnings/errors; 56 non-database backend tests passed. Frontend tests passed 34/34 and production build succeeded. Eight new SQL-backed HTTP groups passed (Payment, Modules, Product Search, two extension masks, WhatsApp Boolean, and two favorite-position enums). Eight latest group backups passed checksum verification. Normal API was restarted with both write flags absent; it returned 98 settings, `canSaveSettings=false`, and returned 405 to a harmless PUT check. No write to `Store5_Analysis` or any MemberCode other than `store5` occurred in this pass. The legacy save handler remains unavailable, so no exact legacy implementation parity is asserted.

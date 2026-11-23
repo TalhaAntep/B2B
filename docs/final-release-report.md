@@ -1,36 +1,64 @@
 # Final release report
 
-Audit date: 2026-11-23. This report describes the latest repository snapshot and the final local delivery checks. No database write or public deployment was performed during the final delivery-capture pass.
+**Updated:** 2026-11-23  
+**Source repository:** https://github.com/TalhaAntep/B2B  
+**Public demo:** https://talhaantep.github.io/B2B/
 
-## Delivery status
+## Executive summary
 
-- **98/98 controls** are represented in the UI catalog and editor inventory.
-- **93 settings API adapters** are available only in authenticated Development isolated-test mode and have prior isolated API save/readback/restoration evidence. Five image controls use a separate application-owned asset service; these are not part of the 93 SQL/settings adapters.
-- Five of the 93 settings adapters use application-owned extension keys because their legacy destinations/readers are not established: `ParameterProductDetailNotLogin2`, `ParameterMenu2`, `WhatsAppOrderNotification`, `FavoriteIconPosition`, and `FavoriteIconVerticalPosition`. `ParameterProductSearch` uses a hybrid low SQL word plus extension-backed high word. These app-owned values do not establish old-portal compatibility.
-- `ParameterPayment` preserves the unsigned 16-bit bit pattern in SQL `smallint`. Original browser DOM evidence confirms `ddlParameterModules` option `1` maps to `DealerSettings.ParameterModules` (`int`), while the separate `ddlParameterAdmin` option `32` maps to `DealerSettings.ParameterAdmin` (`bigint`).
-- Legacy Web Forms save-handler parity and portal effects remain unverified for all 98 controls because the original server-side handler is unavailable.
+The local replacement application and the public synthetic frontend showcase are available. The public GitHub Pages deployment was opened successfully by the project owner on 2026-11-23. The public release contains only a static Vue frontend and synthetic unset setting values. It does not host the ASP.NET Core API or SQL Server.
 
-## Final local checks
+Accordingly, the project is **not a complete full-stack public deployment**. The implementation is available locally with its documented ASP.NET Core and SQL Server integration. The public demo demonstrates the UI only. This distinction is explicit to avoid implying that public users can connect to or persist real dealer settings.
 
-| Check | Result |
-|---|---|
-| Frontend tests | `npm test`: passed, **35/35** tests in two files. |
-| Frontend production build | `npm run build`: passed (`vue-tsc -b` and Vite production build). |
-| Backend Release build | `dotnet build B2BStore.Settings.slnx --configuration Release --no-restore`: passed, 0 warnings and 0 errors. |
-| Backend non-database tests | **56/56 passed** in the 2026-11-22 compatibility pass. Not rerun during the final delivery-capture pass. |
-| SQL integration groups | Eight focused groups passed in the 2026-11-22 compatibility pass, each with an external checksum-verified backup, API/SQL readback, and exact restoration. Not rerun during the final delivery-capture pass. |
-| SQL/read-only verification | Final SQL checks in the local audit were SELECT-only. The SQL-backed API returned 98 settings in `SqlServer` mode with `ReadOnly`, `canSaveSettings=false`, `canManageApplicationAssets=false`, and the test-write flag false. |
-| Database writes | None during the final delivery-capture pass. |
-| Browser media | Seven Playwright screenshots plus a 10.36-second H.264 MP4 and original WebM were captured from the real Vue app in synthetic Mock mode. The mock values were unset; no SQL connection was used for the media. The MP4 was inspected with `ffprobe`; browser page errors were reported as zero. |
+## Implemented scope
 
-## Safety and compatibility limits
+- 98 distinct setting/control IDs are represented in the UI catalogue.
+- Vue 3 + TypeScript + Vite frontend supports categories, search, EN/TR labels, control rendering, and draft state.
+- ASP.NET Core .NET 10 Web API and SQL Server integration are implemented for local use.
+- The settings API has a fixed 93-setting authenticated Development-only persistence allowlist; five image slots use a separate application-owned asset service.
+- Normal/Production mode is read-only. Explicit persistent tests were confined to `Store5_Settings_Test` and `MemberCode=store5`; production was not used.
+- Application-owned extension keys and image storage are not claimed to be compatible with the old portal.
+- Public demo mode uses 98 browser-generated unset values, does not call the API/SQL Server, and disables server-side persistence and asset operations.
 
-Normal mode is read-only. The Development test-write flags remain disabled. Final SQL checks were limited to the configured `Store5_Settings_Test` target and the exact `MemberCode=store5` row; no other member row was selected. `Store5_Analysis` was not modified. Application-owned extension values and image assets are not claimed to be compatible with or consumed by the old portal.
+## Current validation
 
-The original save handler, old-portal reads for extension storage, and legacy asset retrieval convention remain unavailable or unverified. Save-validation feedback was not captured because read-only mode has no Save action; the screenshots show disabled-save and local-draft behavior. See `docs/evidence/delivery/README.md`.
+| Validation | Result | Scope/date |
+|---|---|---|
+| Public-demo frontend tests | **36/36 passed** | User-run on `public-demo`, 2026-11-23. |
+| Public-demo production build | **Passed** | `VITE_PUBLIC_DEMO=true` + `npm run build`, 2026-11-23. |
+| Local frontend tests | **35/35 passed** | Local SQL-backed UI code path, 2026-11-22. |
+| Local frontend production build | **Passed** | `npm run build`, 2026-11-22. |
+| .NET Release solution build | **Passed; 0 warnings, 0 errors** | `dotnet build B2BStore.Settings.slnx -c Release --no-restore`, 2026-11-22. |
+| Filtered backend non-database suite | **56/56 passed** | Prior compatibility pass, 2026-11-22; not rerun during public-demo work. |
+| Focused SQL API groups | **8 groups passed** | Prior compatibility pass; each had verified external backup, readback and exact restoration; not rerun during public-demo work. |
+| Public Pages smoke check | **Opened successfully** | Project owner opened the deployed URL, 2026-11-23. |
 
-## Git and deployment
+## Database safety
 
-Initial Git baseline commit `263bb0b` was created on `main` and pushed to the public `TalhaAntep/B2B` GitHub repository. A separate local `public-demo` branch has since been created for the static synthetic demo. The initial commit excluded the SQL backup, local credentials/configuration, raw legacy-evidence bundle, and temporary recording workspace. The public repository is intentionally visible; continue checking every future commit for secrets, personal data, customer data, and private files.
+The original `Store5_Analysis` database was not used for writes. Controlled SQL integration was performed against the isolated local `Store5_Settings_Test` database and exact `MemberCode=store5`, with external checksum-verified backups and restoration evidence. The final local SQL/API checks before public-demo work were read-only. No SQL connection, SQL write, or database backup is part of the GitHub Pages deployment.
 
-No public website deployment has yet been verified. The current publication target is a static GitHub Pages demo from the `public-demo` branch; it is designed to use 98 browser-generated synthetic unset values and to make no API or SQL calls. The local branch must be reviewed, committed and pushed, GitHub Pages must be enabled with GitHub Actions, and the resulting URL must be externally checked before calling the demo deployed. A full-stack SQL-backed public application remains a separate future phase requiring hosted synthetic SQL, reviewed user identity/authorization, compatibility checks, access controls, secret management, asset-storage review and release approval. See `docs/deployment.md`.
+## Legacy compatibility limits
+
+The original Web Forms C# code-behind/save handler was not available. Therefore legacy save-handler behaviour and exact old-portal parity remain unverified for all 98 controls. Five setting fields with no demonstrated legacy destination use application-owned extension keys; five image fields use application-owned asset storage. `ParameterProductSearch` is hybrid, with its low word in the candidate SQL column and high word in app-owned extension storage. These are explicit replacement-application decisions, not proof that the old portal reads those values.
+
+## Deployment status
+
+- **Git source:** Public repository `TalhaAntep/B2B`; initial baseline commit `263bb0b` is on `main`. Public synthetic demo was pushed on the separate `public-demo` branch.
+- **Static frontend:** Deployed through GitHub Pages + GitHub Actions at https://talhaantep.github.io/B2B/ and opened successfully on 2026-11-23.
+- **ASP.NET Core API:** Not hosted publicly.
+- **SQL Server:** Not hosted publicly; local isolated test database only.
+- **Authentication and authorization:** No public full-stack identity/tenant security implementation is approved; the local bearer token is not exposed to the public demo.
+
+## Required next work only if full-stack deployment is expected
+
+1. Select a provider with a supported SQL Server-compatible database and verified free-tier/cost limits.
+2. Create a new synthetic database; never use `store5.bak`, `Store5_Settings_Test`, `Store5_Analysis`, or real dealer values for a public environment.
+3. Design and review per-user authentication and per-tenant authorization for the ASP.NET Core API; do not reuse the local single-token scheme publicly.
+4. Configure secret storage, CORS allowlist, HTTPS, rate limits, audit logging, error redaction, and asset persistence/disablement.
+5. Run compatibility and end-to-end tests against that synthetic hosted database before claiming full-stack deployment.
+
+## Release conclusion
+
+**Local full-stack implementation:** available.  
+**Public synthetic frontend demo:** deployed and reachable.  
+**Public SQL-backed full-stack deployment:** not completed.

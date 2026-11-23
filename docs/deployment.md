@@ -1,56 +1,73 @@
-# Deployment plan — public static demo
+# Deployment status and plan
 
-## Current state
+**Last updated:** 2026-11-23  
+**Repository:** https://github.com/TalhaAntep/B2B  
+**Public demo:** https://talhaantep.github.io/B2B/
 
-- GitHub repository: `https://github.com/TalhaAntep/B2B` (Public).
-- Initial source commit `263bb0b` is on `main` and was pushed to `origin/main`. A local `public-demo` branch has been created for the static demo; it must be pushed after its changes are reviewed and committed.
-- No public website URL is live yet. The expected GitHub Pages project URL after a successful deployment is `https://talhaantep.github.io/B2B/`; verify it in a browser before describing it as deployed.
-- The public demo uses only the Vue static frontend and the checked-in parameter catalog. It creates 98 synthetic, unset values in the browser. It does not call the ASP.NET API or SQL Server.
-- `Store5_Settings_Test`, `Store5_Analysis`, `source/store5.bak`, local configuration, bearer tokens, and all real dealer values must remain excluded from the Pages artifact.
+## Executive status
+
+The **synthetic frontend demo is deployed and reachable** on GitHub Pages. The **complete Vue + ASP.NET Core API + SQL Server application is not deployed as a full-stack hosted service**. The deployment requirement is therefore partially met: an accessible, free, synthetic, read-only frontend showcase exists; the backend and SQL Server remain local-only.
+
+Do not describe the public page as a live dealer administration service. It is not connected to an API or database and cannot persist settings.
+
+## What is deployed
+
+| Component | Current state | Notes |
+|---|---|---|
+| Vue 3 + TypeScript frontend | **Publicly deployed** | GitHub Pages project site at `https://talhaantep.github.io/B2B/`. |
+| Settings catalogue | **Included in static build** | 98 UI controls are represented. |
+| Demo data | **Synthetic, browser-generated** | Values are unset/NULL; no real dealer data is loaded. |
+| Settings editing | **Draft only** | Any interaction remains in browser state; no server-side Save endpoint is available. |
+| Image controls | **Local preview only** | File selection can preview in the browser; no upload or storage request is made. |
+| ASP.NET Core API | **Not publicly deployed** | Runs locally for the SQL-backed application. |
+| SQL Server | **Not publicly deployed** | `Store5_Settings_Test` is a local isolated database; it is not the public demo data source. |
+| Production identity / user authorization | **Not implemented for public hosting** | The current local bearer-token model is not suitable for exposing the full settings API publicly. |
 
 ## Public demo architecture
 
-| Component | Deployment | Purpose |
-|---|---|---|
-| Vue 3 + TypeScript | GitHub Pages | Static project showcase built from `frontend/`. |
-| Synthetic data | Browser memory | `createPublicDemoItems()` maps all 98 catalog controls to `value: null`, `editable: false`. |
-| ASP.NET Core API | Not deployed | Local-only service; no API host is required for the public demo. |
-| SQL Server | Not deployed | No database connection or database credentials exist in the public demo build. |
-| Settings writes | Disabled | UI changes remain browser-only drafts; the Save action is unavailable. |
-| Asset persistence | Disabled | File selection is only a local preview; no upload/delete request is made. |
+- Git repository: `https://github.com/TalhaAntep/B2B` (Public).
+- Deployment branch: `public-demo`.
+- Workflow: `.github/workflows/deploy-public-demo.yml`.
+- Pages source: GitHub Actions.
+- Build flag: `VITE_PUBLIC_DEMO=true`.
+- Published artifact: `frontend/dist` only.
+- Public URL: `https://talhaantep.github.io/B2B/`.
 
-The Vite build uses `VITE_PUBLIC_DEMO=true` to select the static demo branch and the repository subpath base `/B2B/`. `frontend/src/App.vue` returns synthetic data before reaching API calls. The public branch does not require any GitHub repository secrets.
+The static build creates all 98 catalogue items with synthetic unset values. The public-demo code path does not call `/api`, does not contact SQL Server, does not contain connection strings or bearer tokens, and disables server-side save and asset-management capabilities. The website was opened successfully by the project owner on 2026-11-23 after the GitHub Pages workflow was corrected and rerun.
 
-## Publish steps
+## Verification and deployment history
 
-1. Review the public repository for secrets or unintended data before every push. Keep it Public only if all committed code and evidence are approved for public viewing.
-2. Work on `public-demo`; do not change `main` for this static demo task.
-3. Run frontend tests and both normal and `VITE_PUBLIC_DEMO=true` production builds locally. Confirm the public demo has no API requests and that the Save/upload actions are unavailable.
-4. Commit the reviewed changes and push `public-demo` to `origin`.
-5. In GitHub repository Settings → Pages, choose **GitHub Actions** as the deployment source.
-6. Open Actions and verify `Deploy public synthetic demo` passes.
-7. Open `https://talhaantep.github.io/B2B/` in a private browser window. Verify all 98 settings load, EN/TR works, search works, edits remain drafts, no Save/upload action is exposed, and the browser network panel shows no `/api` requests.
-8. Only after those checks pass, record the public URL in the README and final delivery report.
+1. `npm test` on the public-demo branch: **36/36 tests passed**.
+2. `VITE_PUBLIC_DEMO=true; npm run build`: passed.
+3. The initial GitHub Actions run failed with Pages API `404 Not Found` because Pages was not yet initialised/configured for Actions.
+4. GitHub Pages was configured and the workflow rerun.
+5. The project owner opened `https://talhaantep.github.io/B2B/` successfully on 2026-11-23.
 
-## Security and data boundaries
+For the exact build and test history, see `docs/final-release-report.md` and `docs/test-bug-report.md`.
 
-- The GitHub Pages artifact contains static frontend assets only. It does not contain the ASP.NET API binaries, local appsettings, `.env` files, connection strings, bearer tokens, `source/store5.bak`, SQL data files, or SQL backups.
-- The static public demo has no connection to `Store5_Settings_Test` or `Store5_Analysis`. Never restore a database backup into GitHub Pages or commit real customer values.
-- `canSaveSettings` and `canManageApplicationAssets` remain `false` in public demo mode. Browser drafts are not sent to a server and disappear when the page is reset/reloaded.
-- The GitHub Actions workflow grants only `contents: read`, `pages: write`, and `id-token: write`; it has no application secrets.
-- Public source publication is intentional. Never commit tokens, private keys, personal data, customer data, or the excluded legacy-evidence bundle. If a secret is ever committed, making the repository private or deleting the latest file is not enough: revoke/rotate the secret and consider the full Git history exposed.
+## Why the full-stack service is still local
 
-## Separate future phase: full-stack hosted application
+The current ASP.NET Core Production configuration requires a server-side admin token, a SQL connection, and a fixed member context. The local token scheme is not a reviewed multi-user identity and authorization design for a public multi-tenant management API. Deploying the current API with a shared token would expose sensitive settings and would not satisfy the required user/tenant isolation.
 
-The GitHub Pages demo does **not** satisfy a live SQL-backed production deployment. A separate full-stack project would require a SQL Server-compatible managed database populated only with synthetic data, a hosted ASP.NET Core API, per-user identity and authorization (not the current single local admin token), exact-origin access controls, HTTPS, secret management, rate limits, logging redaction, durable asset storage or disabled uploads, and a cost/availability review. No Azure subscription is available in the currently checked university directory; Azure is not mandatory for the static demo. Do not provision paid services or deploy any database as part of this Pages task.
+The full-stack phase needs, at minimum:
 
-## Current blockers
+1. A hosted SQL Server-compatible database containing synthetic data only, with schema compatibility tested against the application and migrations reviewed.
+2. A hosted ASP.NET Core API, with public user authentication, per-user/per-tenant authorization, strict tenant scoping, rate limits, input validation, and audit logging.
+3. Secret management outside source control, exact CORS origins, HTTPS, redacted logs, and controlled error responses.
+4. A decision on asset persistence (or permanent disabling of public uploads).
+5. A provider and region assessment covering current free-tier limits, sleep/cold-start behaviour, disk persistence, storage, request/runtime quotas, SQL compatibility, and possible overage charges.
+6. Security review and explicit approval before connecting any hosted API/database.
 
-- Static demo code and workflow are prepared on the local `public-demo` branch but have not yet been committed/pushed in the current stage.
-- GitHub Pages has not yet been enabled with the GitHub Actions source.
-- No public site URL has been verified.
-- Full-stack ASP.NET/SQL hosting remains out of scope and has not been configured.
+No Azure subscription was available in the checked university directory. Azure is **not required** for the GitHub Pages demo. No paid resources or hosted database have been provisioned.
 
-## Current checks
+## Public data and secret boundaries
 
-The existing local delivery checks remain: frontend `npm test` **35/35**, frontend production build passed, and .NET Release solution build passed with zero warnings and zero errors. After the static demo changes are applied, repeat frontend tests and build in the user's Windows environment with `VITE_PUBLIC_DEMO=true`; do not rerun SQL integration tests or enable write flags for this static demo.
+Never publish or upload `source/store5.bak`, `Store5_Settings_Test`, `Store5_Analysis`, real dealer records, local settings files, `.env` files, connection strings, bearer tokens, passwords, private keys, or raw legacy evidence that has not been reviewed for sensitive information. The public demo should remain synthetic and read-only.
+
+If any credential is ever committed to a public repository, deleting the file or switching the repository to private is insufficient; revoke/rotate the exposed credential and review Git history.
+
+## Release decision
+
+- **Static public showcase:** deployed and verified.
+- **Full-stack public deployment:** not complete; do not claim otherwise.
+- **Local SQL-backed implementation:** available with the documented local setup and isolated test database; Production mode remains read-only.
