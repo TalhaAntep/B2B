@@ -10,7 +10,8 @@ public sealed class SqlExtensionSettingsPersistence(
     ParameterCatalog catalog,
     string? connectionString,
     string? memberCode,
-    bool writeModeEnabled)
+    bool writeModeEnabled,
+    bool hostedMode = false)
 {
     public const string ProductSearchId = DealerSettingValueCodec.ParameterProductSearchParameterId;
     public const string ProductSearchHighKey = "ParameterProductSearch.HighMask";
@@ -21,7 +22,7 @@ public sealed class SqlExtensionSettingsPersistence(
     public const string FavoriteIconVerticalPositionId = "ctl00_PageContent_rbFavoriteIconTop";
 
     private const string TargetMemberCode = "store5";
-    private const string TargetDatabase = "Store5_Settings_Test";
+    private string TargetDatabase => hostedMode ? HostedWriteGuard.Database : RollbackWriteTestGuard.TargetDatabase;
 
     private sealed record ExtensionDefinition(string ParameterId, string Key, string ValueType);
     private static readonly ExtensionDefinition[] ExtensionDefinitions =
@@ -113,19 +114,20 @@ public sealed class SqlExtensionSettingsPersistence(
         bool authenticated,
         CancellationToken cancellationToken)
     {
-        RollbackWriteTestGuard.EnsureAllowed(writeModeEnabled, authenticated, memberCode, connectionString);
+        if (hostedMode) HostedWriteGuard.EnsureAllowed(writeModeEnabled, authenticated, memberCode, connectionString);
+        else RollbackWriteTestGuard.EnsureAllowed(writeModeEnabled, authenticated, memberCode, connectionString);
         if (changes.Count == 0 || changes.Select(change => change.ParameterId).Distinct(StringComparer.Ordinal).Count() != changes.Count
             || changes.Any(change => !IsSupportedWrite(change.ParameterId)))
             throw new SettingsException("MappingNotVerified", "The request contains a setting outside the fixed extension allowlist.");
         if (string.IsNullOrWhiteSpace(connectionString))
-            throw new SettingsException("DatabaseNotConfigured", "The approved local test database could not be reached.");
+            throw new SettingsException("DatabaseNotConfigured", "The configured SQL database could not be reached.");
 
         var definitions = catalog.AllSettings.ToDictionary(item => item.ParameterId, StringComparer.Ordinal);
         foreach (var change in changes) ValidateControl(definitions[change.ParameterId], change);
 
         await using var connection = new SqlConnection(connectionString);
         try { await connection.OpenAsync(cancellationToken); }
-        catch (SqlException) { throw new SettingsException("DatabaseNotConfigured", "The approved local test database could not be reached."); }
+        catch (SqlException) { throw new SettingsException("DatabaseNotConfigured", "The configured SQL database could not be reached."); }
         await EnsureDatabaseAsync(connection, cancellationToken);
         await EnsureTargetRowAsync(connection, null, cancellationToken);
         await EnsureExtensionSchemaAsync(connection, cancellationToken);
@@ -172,14 +174,14 @@ public sealed class SqlExtensionSettingsPersistence(
             if (!committed)
             {
                 try { await transaction.RollbackAsync(CancellationToken.None); }
-                catch (SqlException) { throw new SettingsException("RollbackVerificationFailed", "The isolated settings transaction could not be rolled back safely."); }
+                catch (SqlException) { throw new SettingsException("RollbackVerificationFailed", "The settings transaction could not be rolled back safely."); }
             }
         }
 
         var afterCommit = await ReadCurrentValuesAsync(connection, null, changes, cancellationToken);
         foreach (var change in changes)
             if (!SettingUpdateValidator.ValuesEqual(afterCommit[change.ParameterId], expectedResults[change.ParameterId]))
-                throw new SettingsException("ReadbackMismatch", "A committed isolated extension setting could not be verified.");
+                throw new SettingsException("ReadbackMismatch", "A committed application-owned extension setting could not be verified.");
         return afterCommit;
     }
 
@@ -228,7 +230,7 @@ public sealed class SqlExtensionSettingsPersistence(
         SqlConnection connection, SqlTransaction? transaction, IReadOnlyList<SettingChange> changes, CancellationToken token)
     {
         if (!await TableExistsAsync(connection, transaction, token))
-            throw new SettingsException("DatabaseIsolationViolation", "Apply the explicit extension-table migration to Store5_Settings_Test before enabling these settings.");
+            throw new SettingsException("DatabaseIsolationViolation", "Apply the matching DealerSystemSettingExtension migration to the configured database before saving these application-owned settings.");
         var values = new Dictionary<string, string?>(StringComparer.Ordinal);
         var keys = changes.Select(change => change.ParameterId == ProductSearchId ? ProductSearchHighKey : ByParameterId[change.ParameterId].Key)
             .Distinct(StringComparer.Ordinal).ToArray();
@@ -374,18 +376,18 @@ public sealed class SqlExtensionSettingsPersistence(
         return result is null or DBNull ? null : Convert.ToString(result, CultureInfo.InvariantCulture);
     }
 
-    private static async Task EnsureTargetRowAsync(SqlConnection connection, SqlTransaction? transaction, CancellationToken token)
+    private async Task EnsureTargetRowAsync(SqlConnection connection, SqlTransaction? transaction, CancellationToken token)
     {
         await using var command = new SqlCommand("SELECT COUNT_BIG(*) FROM dbo.DealerSettings WITH (UPDLOCK,HOLDLOCK) WHERE MemberCode=@memberCode;", connection, transaction);
         command.Parameters.AddWithValue("@memberCode", TargetMemberCode);
         RowSelectionGuard.EnsureSingleTarget(Convert.ToInt64(await command.ExecuteScalarAsync(token), CultureInfo.InvariantCulture));
     }
 
-    private static async Task EnsureDatabaseAsync(SqlConnection connection, CancellationToken token)
+    private async Task EnsureDatabaseAsync(SqlConnection connection, CancellationToken token)
     {
         await using var command = new SqlCommand("SELECT DB_NAME();", connection);
         var database = Convert.ToString(await command.ExecuteScalarAsync(token), CultureInfo.InvariantCulture);
-        if (!string.Equals(database, TargetDatabase, StringComparison.Ordinal))
+        if (!string.Equals(database, hostedMode ? HostedWriteGuard.Database : TargetDatabase, StringComparison.OrdinalIgnoreCase))
             throw new SettingsException("DatabaseIsolationViolation", "The connected database is not the approved isolated test database.");
     }
 
@@ -402,7 +404,7 @@ public sealed class SqlExtensionSettingsPersistence(
     private static async Task EnsureExtensionSchemaAsync(SqlConnection connection, CancellationToken token)
     {
         if (!await TableExistsAsync(connection, null, token))
-            throw new SettingsException("DatabaseIsolationViolation", "Apply the explicit extension-table migration to Store5_Settings_Test before enabling these settings.");
+            throw new SettingsException("DatabaseIsolationViolation", "Apply the matching DealerSystemSettingExtension migration to the configured database before saving these application-owned settings.");
         const string sql = "SELECT c.name,t.name,c.max_length,c.is_nullable FROM sys.columns c JOIN sys.types t ON t.user_type_id=c.user_type_id WHERE c.object_id=OBJECT_ID(N'dbo.DealerSystemSettingExtension');";
         await using var command = new SqlCommand(sql, connection);
         await using var reader = await command.ExecuteReaderAsync(token);

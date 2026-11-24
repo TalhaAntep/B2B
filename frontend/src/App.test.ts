@@ -57,6 +57,37 @@ describe('read-only settings experience', () => {
     Reflect.deleteProperty(URL, 'revokeObjectURL');
   });
 
+  it('auto-connects without an admin token in explicit hosted public-write mode', async () => {
+    const settings = allSettings.map((setting) => ({
+      parameterId: setting.parameterId,
+      value: setting.parameterId === 'ctl00_PageContent_ddlSiteStatus' ? '1'
+        : setting.parameterId === 'ctl00_PageContent_ddlOrderParameter' ? '1'
+          : setting.parameterId === 'ctl00_PageContent_ddlLayout' ? '1'
+            : setting.parameterId === 'ctl00_PageContent_ddlDontShowMenuAtDealers' ? '1'
+              : setting.parameterId === 'ctl00_PageContent_chkDeliveryDateShow' ? true : null,
+      mappingStatus: setting.mapping.status,
+      editable: true,
+    } satisfies SettingItem));
+    requestMock.mockImplementation(async (input: RequestInfo | URL) => {
+      const path = String(input);
+      const body = path.endsWith('/settings/capabilities')
+        ? { canSaveSettings: true, canManageApplicationAssets: true, environment: 'HostedPublicWrite', target: 'Public shared settings' }
+        : path.endsWith('/application-assets')
+          ? { assets: {}, applicationOnly: true, legacyPortalCompatible: false }
+          : { mode: 'SqlServer', items: settings, testWritesEnabled: true } satisfies SettingsResponse;
+      return new Response(JSON.stringify(body), { status: 200, headers: { 'Content-Type': 'application/json' } });
+    });
+    const wrapper = mount(App);
+    await flushPromises();
+    expect(wrapper.find('.admin-token-entry').exists()).toBe(false);
+    expect(wrapper.find('.mode-pill').text()).toContain('Bağlandı');
+    expect(wrapper.find('.message-public').text()).toContain('ortak veritabanına kaydedilir');
+    expect(requestMock).toHaveBeenCalledWith('/api/settings', expect.objectContaining({
+      headers: expect.not.objectContaining({ Authorization: expect.any(String) }),
+    }));
+    wrapper.unmount();
+  });
+
   it('uses Turkish-first customer labels while preserving original identifiers and values', () => {
     expect(categoryDisplayLabel('Product Details')).toBe('Ürün Detayları');
     const site = allSettings.find((setting) => setting.originalLabel === 'Site State')!;
@@ -105,9 +136,14 @@ describe('read-only settings experience', () => {
     });
     localStorage.removeItem('b2b-settings-language');
     const wrapper = await connectedApp();
-    expect(wrapper.text()).toContain('Demo settings loaded. Values are synthetic and unset; no SQL connection was used.');
+    expect(wrapper.text()).toContain('Demo');
+    expect(wrapper.text()).not.toMatch(/Demo settings loaded|SQL settings loaded/i);
     expect(wrapper.text()).not.toContain('SQL settings loaded.');
-    expect(wrapper.findAll('.summary-card strong')[1].text()).toBe('98');
+    expect(wrapper.findAll('.category-nav-item')).toHaveLength(11);
+    expect(wrapper.find('.section-sidebar').exists()).toBe(true);
+    expect(wrapper.find('.summary-row').exists()).toBe(false);
+    expect(wrapper.find('.message-demo').exists()).toBe(false);
+    expect(wrapper.find('.page-count').exists()).toBe(false);
     wrapper.unmount();
   });
 
@@ -286,6 +322,35 @@ describe('read-only settings experience', () => {
     wrapper.unmount();
   });
 
+  it('finds settings by purpose text through the single global search', async () => {
+    const wrapper = await connectedApp();
+    expect(wrapper.find('.topbar-search').exists()).toBe(true);
+    await wrapper.find('input[type="search"]').setValue('Logo');
+    expect((wrapper.find('input[type="search"]').element as HTMLInputElement).value).toBe('Logo');
+    expect(wrapper.text()).toContain('Koyu Logo');
+    expect(wrapper.text()).toContain('Açık Logo');
+
+    await wrapper.find('input[type="search"]').setValue('browser tab');
+    expect(wrapper.text()).toContain('Site Simgesi');
+    expect(wrapper.findAll('.setting-card')).toHaveLength(1);
+
+    await wrapper.find('input[type="search"]').setValue('odeme');
+    expect(wrapper.text()).toContain('Ödeme');
+    expect(wrapper.findAll('.setting-card').length).toBeGreaterThan(0);
+    wrapper.unmount();
+  });
+
+  it('focuses quick search with Ctrl+K and clears it with Escape', async () => {
+    const wrapper = await connectedApp(document.body);
+    const searchInput = wrapper.find('input[type="search"]');
+    window.dispatchEvent(new KeyboardEvent('keydown', { key: 'k', ctrlKey: true, bubbles: true }));
+    expect(document.activeElement).toBe(searchInput.element);
+    await searchInput.setValue('Product Search');
+    searchInput.element.dispatchEvent(new KeyboardEvent('keydown', { key: 'Escape', bubbles: true }));
+    expect((searchInput.element as HTMLInputElement).value).toBe('');
+    wrapper.unmount();
+  });
+
   it('shows the Turkish label for a selected value while keeping the source value selected', async () => {
     const loaded = allSettings.map((setting) => ({
       parameterId: setting.parameterId,
@@ -349,11 +414,11 @@ describe('read-only settings experience', () => {
     expect(wrapper.find('.mode-pill').text()).toContain('Bağlı değil');
     expect(wrapper.find('.message-error').text()).toContain('Yerel API’ye ulaşılamadı');
     expect(wrapper.find('.message-error').text()).not.toContain('socket detail');
-    expect(wrapper.findAll('.summary-card strong')[1].text()).toBe('0');
+    expect(wrapper.find('.empty-state').exists()).toBe(true);
     wrapper.unmount();
   });
 
-  async function connectedApp() {
+  async function connectedApp(attachTo?: Element) {
     const currentImplementation = requestMock.getMockImplementation();
     requestMock.mockImplementation((input: RequestInfo | URL, init?: RequestInit) => {
       if (String(input).endsWith('/settings/capabilities')) {
@@ -363,7 +428,7 @@ describe('read-only settings experience', () => {
       }
       return currentImplementation!(input, init) as Promise<Response>;
     });
-    const wrapper = mount(App);
+    const wrapper = mount(App, attachTo ? { attachTo } : undefined);
     await wrapper.find('.connect-panel button').trigger('click');
     await flushPromises();
     return wrapper;
@@ -375,7 +440,7 @@ describe('read-only settings experience', () => {
     const wrapper = await connectedApp();
     const menu = wrapper.findAll('.category-nav-item').find((button) => button.text().includes('Menü'));
     await menu?.trigger('click');
-    expect(wrapper.find('h1').text()).toBe('Menü');
+    expect(wrapper.find('.section-sidebar-heading h2').text()).toBe('Menü');
     expect((wrapper.find('input[type="search"]').element as HTMLInputElement).value).toBe('');
     wrapper.unmount();
   });
@@ -404,6 +469,22 @@ describe('read-only settings experience', () => {
     wrapper.unmount();
   });
 
+  it('uses a two-level settings navigation and filters by the selected section', async () => {
+    const wrapper = await connectedApp();
+    const design = wrapper.findAll('.category-nav-item').find((button) => button.text().includes('Tasarım'))!;
+    await design.trigger('click');
+    expect(wrapper.find('.section-sidebar').exists()).toBe(true);
+    expect(wrapper.findAll('.section-nav-item').length).toBeGreaterThan(1);
+    const colors = wrapper.findAll('.section-nav-item').find((button) => button.text().includes('Renkler'))!;
+    await colors.trigger('click');
+    expect(wrapper.text()).toContain('Yerleşim Rengi');
+    expect(wrapper.text()).not.toContain('Koyu Logo');
+    await wrapper.find('input[type="search"]').setValue('Koyu Logo');
+    expect(wrapper.find('.section-sidebar').exists()).toBe(false);
+    expect(wrapper.text()).toContain('Koyu Logo');
+    wrapper.unmount();
+  });
+
   it('keeps technical mapping and raw values collapsed until requested', async () => {
     const wrapper = await connectedApp();
     await wrapper.find('input[type="search"]').setValue('UseFiltering');
@@ -411,7 +492,7 @@ describe('read-only settings experience', () => {
     const details = card.find('details.technical-details');
     expect((details.element as HTMLDetailsElement).open).toBe(false);
     expect(details.find('summary').text()).toBe('Teknik bilgiler');
-    expect(card.find('.setting-title-row').text()).toContain('Taslak');
+    expect(card.find('.setting-title-row .setting-read-only').exists()).toBe(false);
     expect(card.find('.help-text').text()).toContain('etkileri doğrulanmamıştır');
     expect(card.find('.mapping-badge').exists()).toBe(false);
     await details.find('summary').trigger('click');
@@ -431,21 +512,23 @@ describe('read-only settings experience', () => {
   it('shows the original control type for every setting while limiting persistence to the test allowlist', async () => {
     testWrites = true;
     const wrapper = await connectedApp();
-    expect(wrapper.text()).toContain('Store5_Settings_Test');
+    expect(wrapper.find('.mode-pill').text()).toContain('Bağlandı');
+    expect(wrapper.find('.message-demo').exists()).toBe(false);
+    expect(wrapper.text()).not.toMatch(/test ortamı|test veritabanı|Store5_Settings_Test|test environment/i);
     await wrapper.find('input[type="search"]').setValue('ctl00_PageContent_ddlSiteStatus');
-    expect(wrapper.find('#test-site-status').exists()).toBe(true);
+    expect(wrapper.find('#setting-site-status').exists()).toBe(true);
     await wrapper.find('input[type="search"]').setValue('ParameterOrder');
     expect(wrapper.findAll('.editable-options input[type="checkbox"]').length).toBeGreaterThan(0);
     await wrapper.find('input[type="search"]').setValue('ddlLayout');
-    expect(wrapper.find('#test-layout').exists()).toBe(true);
-    expect(wrapper.find('#test-layout').text()).toContain('Sepete Ekle düğmesini');
+    expect(wrapper.find('#setting-layout').exists()).toBe(true);
+    expect(wrapper.find('#setting-layout').text()).toContain('Sepete Ekle düğmesini');
     await wrapper.find('input[type="search"]').setValue('DontShowMenuAtDealers');
-    expect(wrapper.find('#test-menu-visibility').exists()).toBe(true);
-    expect(wrapper.find('#test-menu-visibility').text()).toContain('Gizle');
+    expect(wrapper.find('#setting-menu-visibility').exists()).toBe(true);
+    expect(wrapper.find('#setting-menu-visibility').text()).toContain('Gizle');
     await wrapper.find('input[type="search"]').setValue('DeliveryDateShow');
     expect(wrapper.find('.setting-value input[type="checkbox"]').exists()).toBe(true);
     await wrapper.find('input[type="search"]').setValue('UseFiltering');
-    expect(wrapper.find('.setting-editable').text()).toContain('Test ortamında kaydedilebilir');
+    expect(wrapper.find('.setting-editable').exists()).toBe(false);
     expect(wrapper.findAll('.editable-options input[type="checkbox"]').length).toBe(4);
     wrapper.unmount();
   });
@@ -499,7 +582,7 @@ describe('read-only settings experience', () => {
     });
     const wrapper = await connectedApp();
     await wrapper.find('input[type="search"]').setValue('Site State');
-    await wrapper.find('#test-site-status').setValue('0');
+    await wrapper.find('#setting-site-status').setValue('0');
     await wrapper.find('input[type="search"]').setValue('ParameterOrder');
     const orderOption = wrapper.findAll('.editable-options input[type="checkbox"]').find((input) => (input.element as HTMLInputElement).value === '1');
     await orderOption?.setValue(true);
@@ -524,7 +607,7 @@ describe('read-only settings experience', () => {
       expect.objectContaining({ parameterId: 'ctl00_PageContent_ddlParameterStock', expectedValue: '1', bitOperations: [{ optionValue: '2', enabled: true }] }),
     ]));
     expect(requestMock.mock.calls.some(([url, init]) => String(url).endsWith('/settings') && init?.method === 'PUT')).toBe(true);
-    expect(wrapper.text()).toContain('yeniden okunarak doğrulandı');
+    expect(wrapper.text()).toContain('yeniden doğrulandı');
     wrapper.unmount();
   });
 
@@ -535,7 +618,7 @@ describe('read-only settings experience', () => {
     const control = wrapper.find('.setting-card select');
     expect(control.exists()).toBe(true);
     expect((control.element as HTMLSelectElement).value).toBe('');
-    expect(wrapper.text()).toContain('Test ortamında kaydedilebilir');
+    expect(wrapper.find('.message-demo').exists()).toBe(false);
     await control.setValue('1');
     expect(wrapper.find('.save-bar').exists()).toBe(true);
     await wrapper.find('.save-bar .button-primary').trigger('click');
@@ -570,7 +653,7 @@ describe('read-only settings experience', () => {
     wrapper.unmount();
   });
 
-  it('labels app-owned uploads as unavailable to the legacy portal and uploads only in test mode', async () => {
+  it('presents image controls as first-class management fields and uploads them through the asset service', async () => {
     testWrites = true;
     requestMock.mockImplementation(async (input: RequestInfo | URL, init?: RequestInit) => {
       const url = String(input);
@@ -587,16 +670,19 @@ describe('read-only settings experience', () => {
       })), testWritesEnabled: true } satisfies SettingsResponse), { status: 200 });
     });
     const wrapper = await connectedApp();
+    expect(wrapper.find('.section-sidebar').exists()).toBe(true);
     await wrapper.find('input[type="search"]').setValue('Logo (Dark)');
-    expect(wrapper.text()).toContain('eski portalda görünmez');
+    expect(wrapper.find('input[type="file"]').exists()).toBe(true);
+    expect(wrapper.text()).toContain('Bu görsel yeni yönetim panelinde kullanılır.');
+    expect(wrapper.find('.save-bar').exists()).toBe(false);
     const fileInput = wrapper.find('input[type="file"]');
     const imageFile = new File(['image'], 'dealer-logo.png', { type: 'image/png' });
     Object.defineProperty(fileInput.element, 'files', { value: { item: (index: number) => index === 0 ? imageFile : null } });
     await fileInput.trigger('change');
-    await wrapper.find('.setting-card .button-secondary').trigger('click');
+    await wrapper.find('.asset-actions .button-primary').trigger('click');
     await flushPromises();
     expect(requestMock.mock.calls.some(([url, init]) => String(url).includes('/application-assets/') && init?.method === 'POST')).toBe(true);
-    expect(wrapper.text()).toContain('Eski bayi portalında kullanılmaz');
+    expect(wrapper.text()).toContain('Görsel bu yönetim paneline kaydedildi.');
     wrapper.unmount();
   });
 
@@ -608,19 +694,19 @@ describe('read-only settings experience', () => {
     const wrapper = await connectedApp();
     await wrapper.find('input[type="search"]').setValue('ctl00_PageContent_ddlSiteStatus');
     expect(wrapper.find('.setting-card').exists()).toBe(true);
-    expect(wrapper.find('#test-site-status').exists()).toBe(false);
+    expect(wrapper.find('#setting-site-status').exists()).toBe(false);
     expect(wrapper.find('.setting-card .setting-read-only').exists()).toBe(true);
     await wrapper.find('input[type="search"]').setValue('ddlLayout');
-    expect(wrapper.find('#test-layout').exists()).toBe(false);
+    expect(wrapper.find('#setting-layout').exists()).toBe(false);
     await wrapper.find('input[type="search"]').setValue('DontShowMenuAtDealers');
-    expect(wrapper.find('#test-menu-visibility').exists()).toBe(false);
+    expect(wrapper.find('#setting-menu-visibility').exists()).toBe(false);
     await wrapper.find('input[type="search"]').setValue('DeliveryDateShow');
     expect(wrapper.find('.setting-value input[type="checkbox"]').exists()).toBe(true);
     expect(wrapper.find('.save-bar').exists()).toBe(false);
     wrapper.unmount();
   });
 
-  it('keeps unsupported changes as drafts and never reports them saved', async () => {
+  it('keeps image drafts in their own upload flow instead of the settings save bar', async () => {
     testWrites = true;
     const wrapper = await connectedApp();
     await wrapper.find('input[type="search"]').setValue('Logo (Dark)');
@@ -629,7 +715,8 @@ describe('read-only settings experience', () => {
     Object.defineProperty(input.element, 'files', { configurable: true, value: { item: (index: number) => index === 0 ? file : null } });
     await input.trigger('change');
     expect(wrapper.find('.asset-preview').attributes('src')).toBe('blob:test-preview');
-    expect(wrapper.find('.save-bar').text()).toContain('taslak olarak kalır');
+    expect(wrapper.find('.save-bar').exists()).toBe(false);
+    expect(wrapper.find('.asset-actions .button-primary').text()).toBe('Görseli kaydet');
     expect(requestMock.mock.calls.some(([url, init]) => String(url).endsWith('/settings') && init?.method === 'PUT')).toBe(false);
     wrapper.unmount();
   });
@@ -652,27 +739,28 @@ describe('read-only settings experience', () => {
     await wrapper.find('.setting-card button').trigger('click');
     await flushPromises();
     expect(requestMock.mock.calls.some(([url, init]) => String(url).includes('/application-assets/') && init?.method === 'DELETE')).toBe(true);
-    expect(wrapper.text()).toContain('Uygulama görseli kaldırıldı');
+    expect(wrapper.text()).toContain('Görsel kaldırıldı');
     wrapper.unmount();
   });
 
-  it('applies supported changes while keeping unsupported edits as visible drafts', async () => {
+  it('saves setting changes while preserving a separate pending image upload', async () => {
     testWrites = true;
     const wrapper = await connectedApp();
     await wrapper.find('input[type="search"]').setValue('Site State');
-    await wrapper.find('#test-site-status').setValue('0');
+    await wrapper.find('#setting-site-status').setValue('0');
     await wrapper.find('input[type="search"]').setValue('Logo (Dark)');
     const file = new File(['safe test draft'], 'logo.png', { type: 'image/png' });
     const input = wrapper.find('.setting-value input[type="file"]');
     Object.defineProperty(input.element, 'files', { configurable: true, value: { item: (index: number) => index === 0 ? file : null } });
     await input.trigger('change');
     expect(wrapper.find('.save-bar').text()).toContain('1 değişiklik uygulanabilir');
-    expect(wrapper.find('.save-bar').text()).toContain('1 değişiklik taslak olarak kalır');
+    expect(wrapper.find('.save-bar').text()).not.toContain('değişiklik taslak olarak kalır');
     await wrapper.find('.save-bar .button-primary').trigger('click');
     await flushPromises();
     expect(requestMock.mock.calls.some(([url, init]) => String(url).endsWith('/settings') && init?.method === 'PUT')).toBe(true);
     expect(wrapper.text()).toContain('Kaydedilebilir ayarlar gruplar halinde uygulandı');
-    expect(wrapper.find('.save-bar').text()).toContain('taslak olarak kalır');
+    expect(wrapper.find('.save-bar').exists()).toBe(false);
+    expect(wrapper.find('.asset-actions .button-primary').text()).toBe('Görseli kaydet');
     wrapper.unmount();
   });
 
@@ -680,9 +768,9 @@ describe('read-only settings experience', () => {
     testWrites = true;
     const wrapper = await connectedApp();
     await wrapper.find('input[type="search"]').setValue('ddlLayout');
-    await wrapper.find('#test-layout').setValue('0');
+    await wrapper.find('#setting-layout').setValue('0');
     await wrapper.find('input[type="search"]').setValue('DontShowMenuAtDealers');
-    await wrapper.find('#test-menu-visibility').setValue('0');
+    await wrapper.find('#setting-menu-visibility').setValue('0');
     await wrapper.find('input[type="search"]').setValue('DeliveryDateShow');
     await wrapper.find('.setting-value input[type="checkbox"]').setValue(false);
     await wrapper.find('.save-bar .button-primary').trigger('click');

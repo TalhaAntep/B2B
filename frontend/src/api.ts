@@ -17,7 +17,7 @@ export interface SettingsResponse {
 export interface SettingsCapabilities {
   canSaveSettings: boolean;
   canManageApplicationAssets: boolean;
-  environment: 'ReadOnly' | 'IsolatedLocalDemo';
+  environment: 'ReadOnly' | 'IsolatedLocalDemo' | 'HostedStore' | 'HostedPublicWrite';
   target: string | null;
 }
 
@@ -49,6 +49,8 @@ export interface PersistentSettingsSaveResult {
   layout?: number | null;
   dontShowMenuAtDealers?: number | null;
   deliveryDateShow?: boolean | null;
+  /** Values read back by the server after the SQL transaction commits. */
+  values?: Record<string, SettingValue>;
 }
 
 export interface ApplicationAssetMetadata {
@@ -64,6 +66,11 @@ export interface ApplicationAssetListResponse {
   legacyPortalCompatible: false;
 }
 
+let adminToken = '';
+
+/** Keeps the administrator token in memory only; it is never persisted in browser storage. */
+export function setAdminToken(token: string): void { adminToken = token.trim(); }
+
 export class ApiError extends Error {
   constructor(message: string, readonly status: number) {
     super(message);
@@ -76,7 +83,7 @@ async function request<T>(path: string, init?: RequestInit): Promise<T> {
   try {
     response = await fetch(`/api${path}`, {
       ...init,
-      headers: { 'Content-Type': 'application/json', ...init?.headers },
+      headers: { 'Content-Type': 'application/json', ...(adminToken ? { Authorization: `Bearer ${adminToken}` } : {}), ...init?.headers },
     });
   } catch {
     throw new ApiError('Yerel API’ye ulaşılamadı. API hizmetinin 127.0.0.1:5080 adresinde çalıştığını kontrol edin.', 0);
@@ -107,7 +114,7 @@ async function applicationAssetRequest<T>(path: string, init?: RequestInit): Pro
   try {
     response = await fetch(`/api/application-assets${path}`, {
       ...init,
-      headers: { ...init?.headers },
+      headers: { ...(adminToken ? { Authorization: `Bearer ${adminToken}` } : {}), ...init?.headers },
     });
   } catch {
     throw new ApiError('Yerel API’ye ulaşılamadı.', 0);

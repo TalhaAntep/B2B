@@ -10,7 +10,8 @@ public sealed class SqlPersistentSettingsTestService(
     ParameterCatalog catalog,
     string? connectionString,
     string? memberCode,
-    bool testModeEnabled)
+    bool testModeEnabled,
+    bool hostedMode = false)
 {
     private const string SiteStatusId = "ctl00_PageContent_ddlSiteStatus";
     private const string ParameterOrderId = "ctl00_PageContent_ddlOrderParameter";
@@ -150,12 +151,13 @@ public sealed class SqlPersistentSettingsTestService(
         }
         if (request.Changes is not null)
             throw new SettingsException("ValidationFailed", "At least one catalog setting change is required.");
-        RollbackWriteTestGuard.EnsureAllowed(testModeEnabled, authenticated, memberCode, connectionString);
+        if (hostedMode) HostedWriteGuard.EnsureAllowed(testModeEnabled, authenticated, memberCode, connectionString);
+        else RollbackWriteTestGuard.EnsureAllowed(testModeEnabled, authenticated, memberCode, connectionString);
         Validate(request);
 
         await using var connection = new SqlConnection(connectionString);
         try { await connection.OpenAsync(cancellationToken); }
-        catch (SqlException) { throw new SettingsException("DatabaseNotConfigured", "The approved local test database could not be reached."); }
+        catch (SqlException) { throw new SettingsException("DatabaseNotConfigured", "The configured SQL database could not be reached."); }
         await EnsureTargetDatabaseAsync(connection, cancellationToken);
         await EnsureSchemaAsync(connection, cancellationToken);
 
@@ -233,7 +235,8 @@ public sealed class SqlPersistentSettingsTestService(
         bool authenticated,
         CancellationToken cancellationToken)
     {
-        RollbackWriteTestGuard.EnsureAllowed(testModeEnabled, authenticated, memberCode, connectionString);
+        if (hostedMode) HostedWriteGuard.EnsureAllowed(testModeEnabled, authenticated, memberCode, connectionString);
+        else RollbackWriteTestGuard.EnsureAllowed(testModeEnabled, authenticated, memberCode, connectionString);
         if (changes.Count == 0 || changes.Select(change => change.ParameterId).Distinct(StringComparer.Ordinal).Count() != changes.Count)
             throw new SettingsException("ValidationFailed", "Catalog changes must be non-empty and contain each setting once.");
         var definitions = catalog.AllSettings.ToDictionary(setting => setting.ParameterId, StringComparer.Ordinal);
@@ -245,7 +248,7 @@ public sealed class SqlPersistentSettingsTestService(
                 || definition.Mapping.TableCandidate != "DealerSettings"
                 || !string.Equals(definition.Mapping.ColumnCandidate, allowed.Column, StringComparison.Ordinal)
                 || !string.Equals(definition.Mapping.SqlDataType, allowed.SqlType, StringComparison.OrdinalIgnoreCase))
-                throw new SettingsException("MappingNotVerified", "A setting is not in the fixed isolated write allowlist or its catalog mapping differs.");
+                throw new SettingsException("MappingNotVerified", "A setting is not in the fixed write allowlist or its catalog mapping differs.");
             ValidateCatalogControl(definition, allowed.SqlType, allowed.Bitmask);
             if (SettingUpdateValidator.HasNoRequestedValue(change)) continue;
             ValidateCatalogChange(definition, allowed.SqlType, allowed.Bitmask, definition.Mapping.Nullable == true, change);
@@ -257,7 +260,7 @@ public sealed class SqlPersistentSettingsTestService(
 
         await using var connection = new SqlConnection(connectionString);
         try { await connection.OpenAsync(cancellationToken); }
-        catch (SqlException) { throw new SettingsException("DatabaseNotConfigured", "The approved local test database could not be reached."); }
+        catch (SqlException) { throw new SettingsException("DatabaseNotConfigured", "The configured SQL database could not be reached."); }
         await EnsureTargetDatabaseAsync(connection, cancellationToken);
         var columnShapes = await EnsureCatalogSchemaAsync(connection, changes.Select(change => CatalogWriteAllowlist[change.ParameterId]).ToArray(), cancellationToken);
         foreach (var change in changes)
@@ -317,9 +320,9 @@ public sealed class SqlPersistentSettingsTestService(
                     };
                 command.Parameters.Add(SqlValueConverter.CreateParameter("@expectedValue", sqlType,
                     expectedValue, precision, scale, columnShapes.TryGetValue(column, out shape) ? shape.Size : 0));
-                command.Parameters.AddWithValue("@memberCode", RollbackWriteTestGuard.TargetMemberCode);
+                command.Parameters.AddWithValue("@memberCode", memberCode!);
                 var updatedMemberCode = await command.ExecuteScalarAsync(cancellationToken);
-                if (!string.Equals(Convert.ToString(updatedMemberCode, CultureInfo.InvariantCulture), RollbackWriteTestGuard.TargetMemberCode, StringComparison.Ordinal))
+                if (!string.Equals(Convert.ToString(updatedMemberCode, CultureInfo.InvariantCulture), memberCode!, StringComparison.Ordinal))
                     throw new SettingsException("ConcurrencyConflict", "A setting changed before the save.");
             }
 
@@ -589,16 +592,16 @@ public sealed class SqlPersistentSettingsTestService(
     private async Task<IReadOnlyDictionary<string, object?>> ReadCatalogValuesAsync(SqlConnection connection,
         SqlTransaction? transaction, IReadOnlyList<SettingChange> changes, CancellationToken token)
     {
-        await using var count = new SqlCommand("SELECT COUNT_BIG(*) FROM dbo.DealerSettings WITH (UPDLOCK,HOLDLOCK) WHERE MemberCode=@memberCode;", connection, transaction);
-        count.Parameters.AddWithValue("@memberCode", RollbackWriteTestGuard.TargetMemberCode);
-        var total = Convert.ToInt64(await count.ExecuteScalarAsync(token), CultureInfo.InvariantCulture);
-        RowSelectionGuard.EnsureSingleTarget(total);
         var selected = changes.Select(change => CatalogWriteAllowlist[change.ParameterId]).DistinctBy(field => field.Column).ToArray();
         var columns = string.Join(',', selected.Select(field => $"[{field.Column}]"));
-        await using var command = new SqlCommand($"SELECT {columns} FROM dbo.DealerSettings WITH (UPDLOCK,HOLDLOCK) WHERE MemberCode=@memberCode;", connection, transaction);
-        command.Parameters.AddWithValue("@memberCode", RollbackWriteTestGuard.TargetMemberCode);
+        // Read the target row and its match count together. This preserves the
+        // duplicate-member safety check while avoiding a separate SQL round trip.
+        await using var command = new SqlCommand($"SELECT {columns}, COUNT_BIG(*) OVER() AS [__rowCount] FROM dbo.DealerSettings WITH (UPDLOCK,HOLDLOCK) WHERE MemberCode=@memberCode;", connection, transaction);
+        command.Parameters.AddWithValue("@memberCode", memberCode!);
         await using var reader = await command.ExecuteReaderAsync(token);
         if (!await reader.ReadAsync(token)) throw new SettingsException("MemberCodeMissing", "The approved settings row is unavailable.");
+        var total = Convert.ToInt64(reader.GetValue(selected.Length), CultureInfo.InvariantCulture);
+        RowSelectionGuard.EnsureSingleTarget(total);
         var values = new Dictionary<string, object?>(StringComparer.Ordinal);
         for (var index = 0; index < selected.Length; index++)
         {
@@ -687,12 +690,12 @@ public sealed class SqlPersistentSettingsTestService(
         throw new SettingsException("ValidationFailed", "ParameterOrder must be a SQL bigint decimal string.");
     }
 
-    private static async Task EnsureTargetDatabaseAsync(SqlConnection connection, CancellationToken token)
+    private async Task EnsureTargetDatabaseAsync(SqlConnection connection, CancellationToken token)
     {
         await using var command = new SqlCommand("SELECT DB_NAME();", connection);
         var database = Convert.ToString(await command.ExecuteScalarAsync(token), CultureInfo.InvariantCulture);
-        if (!string.Equals(database, RollbackWriteTestGuard.TargetDatabase, StringComparison.Ordinal))
-            throw new SettingsException("DatabaseIsolationViolation", "The connected database is not the approved isolated test database.");
+        if (!string.Equals(database, (hostedMode ? HostedWriteGuard.Database : RollbackWriteTestGuard.TargetDatabase), StringComparison.OrdinalIgnoreCase))
+            throw new SettingsException("DatabaseIsolationViolation", "The connected database does not match the configured write target.");
     }
 
     private static async Task EnsureSchemaAsync(SqlConnection connection, CancellationToken token)
@@ -710,14 +713,14 @@ public sealed class SqlPersistentSettingsTestService(
             throw new SettingsException("DatabaseIsolationViolation", "The isolated test database schema does not match the approved fields.");
     }
 
-    private static async Task<Snapshot> ReadTargetAsync(SqlConnection connection, SqlTransaction? transaction, CancellationToken token)
+    private async Task<Snapshot> ReadTargetAsync(SqlConnection connection, SqlTransaction? transaction, CancellationToken token)
     {
         await using var count = new SqlCommand("SELECT COUNT_BIG(*) FROM dbo.DealerSettings WITH (UPDLOCK,HOLDLOCK) WHERE MemberCode=@memberCode;", connection, transaction);
-        count.Parameters.AddWithValue("@memberCode", RollbackWriteTestGuard.TargetMemberCode);
+        count.Parameters.AddWithValue("@memberCode", memberCode!);
         var total = Convert.ToInt64(await count.ExecuteScalarAsync(token), CultureInfo.InvariantCulture);
         RowSelectionGuard.EnsureSingleTarget(total);
         await using var command = new SqlCommand("SELECT [SiteStatus],[ParameterOrder],[Layout],[DontShowMenuAtDealers],[DeliveryDateShow] FROM dbo.DealerSettings WITH (UPDLOCK,HOLDLOCK) WHERE MemberCode=@memberCode;", connection, transaction);
-        command.Parameters.AddWithValue("@memberCode", RollbackWriteTestGuard.TargetMemberCode);
+        command.Parameters.AddWithValue("@memberCode", memberCode!);
         await using var reader = await command.ExecuteReaderAsync(token);
         if (!await reader.ReadAsync(token)) throw new SettingsException("MemberCodeMissing", "The approved settings row is unavailable.");
         return new Snapshot(reader.IsDBNull(0) ? null : reader.GetInt32(0),
@@ -727,43 +730,43 @@ public sealed class SqlPersistentSettingsTestService(
             reader.IsDBNull(4) ? null : reader.GetBoolean(4));
     }
 
-    private static async Task UpdateSiteStatusAsync(SqlConnection connection, SqlTransaction transaction, PersistentSiteStatusChange change, CancellationToken token)
+    private async Task UpdateSiteStatusAsync(SqlConnection connection, SqlTransaction transaction, PersistentSiteStatusChange change, CancellationToken token)
     {
         const string sql = "UPDATE dbo.DealerSettings SET [SiteStatus]=@newValue WHERE MemberCode=@memberCode AND (([SiteStatus]=@expectedValue) OR ([SiteStatus] IS NULL AND @expectedValue IS NULL));";
         await using var command = new SqlCommand(sql, connection, transaction);
         command.Parameters.Add(SqlValueConverter.CreateParameter("@newValue", "int", change.NewValue));
         command.Parameters.Add(SqlValueConverter.CreateParameter("@expectedValue", "int", change.ExpectedValue));
-        command.Parameters.AddWithValue("@memberCode", RollbackWriteTestGuard.TargetMemberCode);
+        command.Parameters.AddWithValue("@memberCode", memberCode!);
         if (await command.ExecuteNonQueryAsync(token) != 1) throw new SettingsException("ConcurrencyConflict", "SiteStatus changed before the save.");
     }
 
-    private static async Task UpdateOrderAsync(SqlConnection connection, SqlTransaction transaction, string? expectedValue, string newValue, CancellationToken token)
+    private async Task UpdateOrderAsync(SqlConnection connection, SqlTransaction transaction, string? expectedValue, string newValue, CancellationToken token)
     {
         const string sql = "UPDATE dbo.DealerSettings SET [ParameterOrder]=@newValue WHERE MemberCode=@memberCode AND (([ParameterOrder]=@expectedValue) OR ([ParameterOrder] IS NULL AND @expectedValue IS NULL));";
         await using var command = new SqlCommand(sql, connection, transaction);
         command.Parameters.Add(SqlValueConverter.CreateParameter("@newValue", "bigint", newValue));
         command.Parameters.Add(SqlValueConverter.CreateParameter("@expectedValue", "bigint", expectedValue));
-        command.Parameters.AddWithValue("@memberCode", RollbackWriteTestGuard.TargetMemberCode);
+        command.Parameters.AddWithValue("@memberCode", memberCode!);
         if (await command.ExecuteNonQueryAsync(token) != 1) throw new SettingsException("ConcurrencyConflict", "ParameterOrder changed before the save.");
     }
 
-    private static async Task UpdateIntegerAsync(SqlConnection connection, SqlTransaction transaction, string column, string sqlType, int? expectedValue, int newValue, CancellationToken token)
+    private async Task UpdateIntegerAsync(SqlConnection connection, SqlTransaction transaction, string column, string sqlType, int? expectedValue, int newValue, CancellationToken token)
     {
         var sql = $"UPDATE dbo.DealerSettings SET [{column}]=@newValue WHERE MemberCode=@memberCode AND (([{column}]=@expectedValue) OR ([{column}] IS NULL AND @expectedValue IS NULL));";
         await using var command = new SqlCommand(sql, connection, transaction);
         command.Parameters.Add(SqlValueConverter.CreateParameter("@newValue", sqlType, newValue));
         command.Parameters.Add(SqlValueConverter.CreateParameter("@expectedValue", sqlType, expectedValue));
-        command.Parameters.AddWithValue("@memberCode", RollbackWriteTestGuard.TargetMemberCode);
+        command.Parameters.AddWithValue("@memberCode", memberCode!);
         if (await command.ExecuteNonQueryAsync(token) != 1) throw new SettingsException("ConcurrencyConflict", $"{column} changed before the save.");
     }
 
-    private static async Task UpdateBooleanAsync(SqlConnection connection, SqlTransaction transaction, PersistentBooleanChange change, CancellationToken token)
+    private async Task UpdateBooleanAsync(SqlConnection connection, SqlTransaction transaction, PersistentBooleanChange change, CancellationToken token)
     {
         const string sql = "UPDATE dbo.DealerSettings SET [DeliveryDateShow]=@newValue WHERE MemberCode=@memberCode AND (([DeliveryDateShow]=@expectedValue) OR ([DeliveryDateShow] IS NULL AND @expectedValue IS NULL));";
         await using var command = new SqlCommand(sql, connection, transaction);
         command.Parameters.Add(SqlValueConverter.CreateParameter("@newValue", "bit", change.NewValue));
         command.Parameters.Add(SqlValueConverter.CreateParameter("@expectedValue", "bit", change.ExpectedValue));
-        command.Parameters.AddWithValue("@memberCode", RollbackWriteTestGuard.TargetMemberCode);
+        command.Parameters.AddWithValue("@memberCode", memberCode!);
         if (await command.ExecuteNonQueryAsync(token) != 1) throw new SettingsException("ConcurrencyConflict", "DeliveryDateShow changed before the save.");
     }
 

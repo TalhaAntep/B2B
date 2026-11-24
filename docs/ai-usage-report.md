@@ -50,3 +50,16 @@ The original browser DOM evidence corrected the `ParameterModules` / `ParameterA
 ## Remaining human review
 
 A technical reviewer should still verify the 98-control inventory, five legacy mapping gaps, app-owned extension/asset decisions, and all `Not tested` portal effects. Public full-stack hosting requires a separate human security and provider approval; no security certification or external acceptance sign-off is claimed.
+
+## Hosted public-write mode change (2026-11-23)
+
+ChatGPT assisted with an owner-requested optional MonsterASP `HostedPublicWrite` mode so visitors can connect without entering the administrator token and save to the same synthetic `db82141` / `store5` database. The change is opt-in via a hosting environment variable, retains the exact database/member guard and the fixed typed settings/extension allowlists, and adds a UI notice that the settings are shared and publicly editable. This intentionally relaxes the assignment's authentication requirement; it is documented as a temporary evaluation-only deviation. The owner must rebuild/publish and verify this mode. The .NET build and live public-write behavior of this specific change have not yet been independently verified by ChatGPT.
+
+## Hosted deployment and public-write follow-up (2026-11-24)
+
+- ChatGPT assisted with the MonsterASP hosted-write guard, performance update, public-write opt-in, and deployment documentation.
+- The owner ran the Windows publish script and shared successful Vue production build and .NET 10 publish output for the hosted main build. The owner then deployed that build to MonsterASP.
+- The owner supplied the live startup log, SQL readiness result (`ready`), successful UI connection, one successful Save/readback confirmation, and reported that the later performance update made refresh/save responsive.
+- The anonymous public-write option is opt-in through `B2BSTORE_PUBLIC_WRITE_ENABLED=true`. Its source is present in this repository package. Its active state in the MonsterASP environment-variable panel has not been independently confirmed in the available conversation evidence.
+- This follow-up did not include a fresh full 98-setting hosted test run. Previously reported local test/build results retain their original scope and dates; they are not represented as tests of the latest hosted public-write source.
+- HTTPS was not confirmed; the owner exercised the hosted website over HTTP.

@@ -1,35 +1,45 @@
-# Codex ile B2B STORE projesine başlama
+# B2B STORE — hızlı başlangıç
 
-Bu pakette üç dosya bulunur:
+Bu depo, B2B STORE Teknik Ayarlar modülünün Vue 3 + TypeScript frontend, ASP.NET Core .NET 10 API ve SQL Server katmanını içerir.
 
-- `AGENTS.md`: Codex'in depo kökünde takip etmesi gereken çalışma kuralları.
-- `PROJECT_REQUIREMENTS.md`: İş tanımı, fonksiyonel/teknik gereksinimler, teslimatlar ve kabul kriterleri.
-- `README_START_HERE.md`: Bu paketin nasıl kullanılacağı.
+## Önce oku
 
-## 1. Dosyaları projeye yerleştir
+1. `README.md` — mevcut mimari, modlar ve dağıtımlar.
+2. `docs/deployment.md` — MonsterASP, GitHub Pages ve ortam değişkenleri.
+3. `docs/delivery-checklist.md` — istenen A–D teslimatları ve doğrulanmış sınırlamalar.
+4. `docs/technical-analysis-report.md` ve `docs/test-and-defect-report.md` — analiz ve test sonuçları.
 
-1. Bilgisayarında B2B STORE için kullanacağın proje klasörünü aç.
-2. `AGENTS.md` ve `PROJECT_REQUIREMENTS.md` dosyalarını proje köküne kopyala.
-3. `README_START_HERE.md` dosyasını da istersen kökte tutabilirsin.
-4. Gerçek `.bak`, parola, token veya müşteri verisini Git deposuna ekleme.
+## Frontend
 
-Örnek:
-
-```text
-B2B-STORE-TECHNICAL-SETTINGS/
-├── AGENTS.md
-├── PROJECT_REQUIREMENTS.md
-└── README_START_HERE.md
+```powershell
+Set-Location .\frontend
+npm ci
+npm test
+npm run build
 ```
 
-Kaynak kod arşivini açtığında mevcut proje klasörlerini bu yapının altına yerleştirmek yerine, mevcut repo köküne göre belgeleri konumlandır. Var olan `AGENTS.md` varsa üzerine yazma; iki dosyanın talimatlarını dikkatle birleştir.
+## Backend
 
-## 2. Codex'e verilecek ilk talimat
+.NET 10 SDK ile depo kökünde:
 
-Aşağıdaki prompt'u Codex'e gönder:
+```powershell
+dotnet restore .\B2BStore.Settings.slnx
+dotnet build .\B2BStore.Settings.slnx --configuration Release
+dotnet test .\B2BStore.Settings.slnx --configuration Release
+```
 
-> Önce repo kökündeki `AGENTS.md` ve `PROJECT_REQUIREMENTS.md` dosyalarını tamamen oku. Bu aşamada hiçbir dosyayı değiştirme, yeni kod yazma, paket kurma, veritabanını güncelleme veya deployment yapma. Yalnızca mevcut repository'yi keşfet: klasör yapısını, Vue/TypeScript ve .NET projelerini, sürümleri, başlangıç komutlarını, testleri, DealerSystemSetting/DealerSettings/DealerSystemSettings referanslarını, SQL nesnelerini ve Bitwise kullanımlarını bul. Veritabanı yedeğine veya hassas ayarlara dokunma. Bulguları kanıt durumlarıyla ayırarak gereksinim dokümanındaki keşif çıktılarında raporla. Eksik kaynakları ve belirsizlikleri açıkça belirt. En sonda önerdiğin bir sonraki küçük adımı sun.
+SQL entegrasyon testlerini çalıştırmadan önce `docs/deployment.md` ve `docs/sql-validation-report.md` içindeki hedef veritabanı kısıtlarını okuyun. `Store5_Analysis` hiçbir zaman yazma hedefi değildir.
 
-## 3. Önemli not
+## MonsterASP publish
 
-Şu an eldeki `store5.bak` SQL Server yedeğidir. Kaynak kodların bulunduğu `store5.rar` arşivinin ayrıca indirilip incelenmesi gerekir. `.bak` dosyasının varlığı, uygulama kaynak kodlarının da hazır olduğu anlamına gelmez.
+Windows üzerinde Node/npm ve .NET 10 SDK hazırken:
+
+```powershell
+powershell.exe -NoProfile -ExecutionPolicy Bypass -File ".\scripts\publish-monsterasp.ps1"
+```
+
+Çıktı: `artifacts\B2BStore-MonsterASP-Publish.zip`. Yayın ve ortam değişkenleri için `docs/deployment.md` belgesini takip edin.
+
+## Public-write modu uyarısı
+
+`B2BSTORE_PUBLIC_WRITE_ENABLED=true`, tüm ziyaretçilere ortak SQL ayarlarını değiştirme izni verir. Yalnızca sentetik değerlendirme verisiyle ve geçici olarak kullanılmalıdır. Bu seçenek assignment authentication gereksiniminden bilinçli bir sapmadır; gerçek müşteri verisi veya üretim için uygun değildir.

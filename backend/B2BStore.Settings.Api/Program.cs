@@ -1,6 +1,7 @@
 using System.Security.Cryptography;
 using System.Text;
 using System.Text.Json;
+using Microsoft.Data.SqlClient;
 using B2BStore.Settings.Api;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -22,17 +23,28 @@ var writeTestFlag = string.Equals(Environment.GetEnvironmentVariable("B2BSTORE_S
 var writeTestModeEnabled = writeTestFlag && builder.Environment.IsDevelopment()
     && string.Equals(mode, "SqlServer", StringComparison.OrdinalIgnoreCase);
 var settingsWriteMode = Environment.GetEnvironmentVariable("B2BSTORE_SETTINGS_WRITE_MODE");
+var publicWriteFlag = string.Equals(Environment.GetEnvironmentVariable("B2BSTORE_PUBLIC_WRITE_ENABLED"), "true", StringComparison.OrdinalIgnoreCase);
 var isolatedLocalWriteModeEnabled = string.Equals(settingsWriteMode, "IsolatedLocalDemo", StringComparison.Ordinal)
     && builder.Environment.IsDevelopment()
     && string.Equals(mode, "SqlServer", StringComparison.OrdinalIgnoreCase);
-var applicationWriteModeEnabled = writeTestModeEnabled || isolatedLocalWriteModeEnabled;
+var hostedWriteModeEnabled = string.Equals(settingsWriteMode, "HostedStore", StringComparison.Ordinal)
+    && builder.Environment.IsProduction()
+    && string.Equals(mode, "SqlServer", StringComparison.OrdinalIgnoreCase);
+// Explicit, temporary no-token mode for the isolated synthetic MonsterASP store.
+// Every write remains confined to the fixed db82141/store5 target and fixed setting allowlists.
+var hostedPublicWriteEnabled = hostedWriteModeEnabled && publicWriteFlag;
+var applicationWriteModeEnabled = writeTestModeEnabled || isolatedLocalWriteModeEnabled || hostedWriteModeEnabled;
 
 if (writeTestFlag && !writeTestModeEnabled)
     throw new InvalidOperationException("B2BSTORE_SQL_WRITE_TEST_MODE is available only in Development with SqlServer mode.");
-if (settingsWriteMode is not null && !isolatedLocalWriteModeEnabled)
-    throw new InvalidOperationException("B2BSTORE_SETTINGS_WRITE_MODE=IsolatedLocalDemo is available only in Development with SqlServer mode.");
+if (settingsWriteMode is not null && !isolatedLocalWriteModeEnabled && !hostedWriteModeEnabled)
+    throw new InvalidOperationException("B2BSTORE_SETTINGS_WRITE_MODE must be IsolatedLocalDemo in Development or HostedStore in Production, with SqlServer mode.");
+if (publicWriteFlag && !hostedPublicWriteEnabled)
+    throw new InvalidOperationException("B2BSTORE_PUBLIC_WRITE_ENABLED=true is allowed only with Production + SqlServer + HostedStore.");
 if (isolatedLocalWriteModeEnabled)
     RollbackWriteTestGuard.EnsureAllowed(true, true, memberCode, connectionString);
+if (hostedWriteModeEnabled)
+    HostedWriteGuard.EnsureAllowed(true, true, memberCode, connectionString);
 
 if (!string.Equals(mode, "Mock", StringComparison.OrdinalIgnoreCase)
     && !string.Equals(mode, "SqlServer", StringComparison.OrdinalIgnoreCase))
@@ -42,7 +54,7 @@ if (!string.Equals(mode, "Mock", StringComparison.OrdinalIgnoreCase)
 
 if (builder.Environment.IsProduction())
 {
-    if (string.IsNullOrWhiteSpace(adminToken)) throw new InvalidOperationException("B2BSTORE_ADMIN_TOKEN is required in Production.");
+    if (!hostedPublicWriteEnabled && string.IsNullOrWhiteSpace(adminToken)) throw new InvalidOperationException("B2BSTORE_ADMIN_TOKEN is required in Production unless the explicit public-write mode is enabled.");
     if (string.IsNullOrWhiteSpace(connectionString)) throw new InvalidOperationException("B2BSTORE_SQL_CONNECTION is required in Production.");
     if (string.IsNullOrWhiteSpace(memberCode)) throw new InvalidOperationException("B2BSTORE_MEMBER_CODE is required in Production.");
     if (string.Equals(mode, "Mock", StringComparison.OrdinalIgnoreCase))
@@ -62,11 +74,23 @@ builder.Services.ConfigureHttpJsonOptions(options =>
     options.SerializerOptions.PropertyNamingPolicy = JsonNamingPolicy.CamelCase);
 
 var app = builder.Build();
+// Serve the Vue application from the same origin as the API in hosted deployments.
+app.UseDefaultFiles();
+app.UseStaticFiles();
 app.UseCors("local-ui");
 app.Use(async (context, next) =>
 {
-    if (context.Request.Path == "/health")
+    if (context.Request.Path.StartsWithSegments("/health"))
     {
+        await next();
+        return;
+    }
+
+    if (hostedPublicWriteEnabled)
+    {
+        // Deliberately grants anonymous access to the hosted settings API only in the
+        // explicit public-write mode. This is not suitable for production customer data.
+        context.Items["B2BStoreAdminAuthorized"] = true;
         await next();
         return;
     }
@@ -93,20 +117,48 @@ app.Use(async (context, next) =>
 });
 
 app.MapGet("/health", () => Results.Ok(new { status = "ok" }));
+
+// Read-only hosted SQL readiness probe. It exposes no database name, row count,
+// connection details, or setting values. It is intentionally not a write test.
+app.MapGet("/health/database", async (CancellationToken cancellationToken) =>
+{
+    if (string.IsNullOrWhiteSpace(connectionString) || string.IsNullOrWhiteSpace(memberCode))
+        return Results.Problem("Database readiness is not configured.", statusCode: StatusCodes.Status503ServiceUnavailable);
+
+    try
+    {
+        await using var connection = new SqlConnection(connectionString);
+        await connection.OpenAsync(cancellationToken);
+        await using var command = new SqlCommand(
+            "IF OBJECT_ID(N'dbo.DealerSettings', N'U') IS NULL OR COL_LENGTH(N'dbo.DealerSettings', N'MemberCode') IS NULL SELECT CONVERT(bigint, -1); ELSE SELECT COUNT_BIG(*) FROM dbo.DealerSettings WHERE MemberCode = @memberCode;",
+            connection);
+        command.Parameters.AddWithValue("@memberCode", memberCode);
+        var count = Convert.ToInt64(await command.ExecuteScalarAsync(cancellationToken), System.Globalization.CultureInfo.InvariantCulture);
+        if (count == 1)
+            return Results.Ok(new { status = "ready" });
+        return Results.Problem(
+            count == 0 ? "The configured settings record was not found." : "The configured settings record is ambiguous or the required table is unavailable.",
+            statusCode: StatusCodes.Status409Conflict);
+    }
+    catch (Exception)
+    {
+        return Results.Problem("The hosted database readiness check failed.", statusCode: StatusCodes.Status503ServiceUnavailable);
+    }
+});
 app.MapGet("/api/settings/catalog", (ParameterCatalog loaded) => Results.Ok(loaded));
 app.MapGet("/api/settings/capabilities", () => Results.Ok(new
 {
-    canSaveSettings = isolatedLocalWriteModeEnabled,
-    canManageApplicationAssets = isolatedLocalWriteModeEnabled,
-    environment = isolatedLocalWriteModeEnabled ? "IsolatedLocalDemo" : "ReadOnly",
-    target = isolatedLocalWriteModeEnabled ? "Store5_Settings_Test / store5" : null,
+    canSaveSettings = applicationWriteModeEnabled,
+    canManageApplicationAssets = applicationWriteModeEnabled,
+    environment = hostedPublicWriteEnabled ? "HostedPublicWrite" : hostedWriteModeEnabled ? "HostedStore" : isolatedLocalWriteModeEnabled ? "IsolatedLocalDemo" : "ReadOnly",
+    target = hostedPublicWriteEnabled ? "Public shared settings" : hostedWriteModeEnabled ? "db82141 / store5" : isolatedLocalWriteModeEnabled ? "Store5_Settings_Test / store5" : null,
 }));
 app.MapGet("/api/settings", async (ISettingsStore store, CancellationToken cancellationToken) =>
 {
     try
     {
         var result = await store.ReadAsync(cancellationToken);
-        return Results.Ok(result with { TestWritesEnabled = isolatedLocalWriteModeEnabled });
+        return Results.Ok(result with { TestWritesEnabled = applicationWriteModeEnabled });
     }
     catch (SettingsException exception) { return SettingsError(exception); }
     catch (Exception) { return Results.Problem("Settings could not be read.", statusCode: 503); }
@@ -121,7 +173,10 @@ if (applicationWriteModeEnabled)
         var authenticated = context.Items["B2BStoreAdminAuthorized"] is true;
         try
         {
-            RollbackWriteTestGuard.EnsureAllowed(applicationWriteModeEnabled, authenticated, memberCode, connectionString);
+            if (hostedWriteModeEnabled)
+                HostedWriteGuard.EnsureAllowed(applicationWriteModeEnabled, authenticated, memberCode, connectionString);
+            else
+                RollbackWriteTestGuard.EnsureAllowed(applicationWriteModeEnabled, authenticated, memberCode, connectionString);
             var form = await request.ReadFormAsync(cancellationToken);
             var file = form.Files.GetFile("file");
             if (file is null) return Results.BadRequest(new ApiError("InvalidAsset", "Choose an image file to upload."));
@@ -140,7 +195,10 @@ if (applicationWriteModeEnabled)
         var authenticated = context.Items["B2BStoreAdminAuthorized"] is true;
         try
         {
-            RollbackWriteTestGuard.EnsureAllowed(applicationWriteModeEnabled, authenticated, memberCode, connectionString);
+            if (hostedWriteModeEnabled)
+                HostedWriteGuard.EnsureAllowed(applicationWriteModeEnabled, authenticated, memberCode, connectionString);
+            else
+                RollbackWriteTestGuard.EnsureAllowed(applicationWriteModeEnabled, authenticated, memberCode, connectionString);
             var asset = await assetStorage.ReadAsync(parameterId, cancellationToken);
             if (asset is null) return Results.NotFound();
             context.Response.Headers.CacheControl = "private, no-store";
@@ -155,7 +213,10 @@ if (applicationWriteModeEnabled)
         var authenticated = context.Items["B2BStoreAdminAuthorized"] is true;
         try
         {
-            RollbackWriteTestGuard.EnsureAllowed(applicationWriteModeEnabled, authenticated, memberCode, connectionString);
+            if (hostedWriteModeEnabled)
+                HostedWriteGuard.EnsureAllowed(applicationWriteModeEnabled, authenticated, memberCode, connectionString);
+            else
+                RollbackWriteTestGuard.EnsureAllowed(applicationWriteModeEnabled, authenticated, memberCode, connectionString);
             var asset = await assetStorage.ReadAsync(parameterId, cancellationToken);
             if (asset is null) return Results.NotFound();
             context.Response.Headers["X-Content-Type-Options"] = "nosniff";
@@ -170,7 +231,10 @@ if (applicationWriteModeEnabled)
         var authenticated = context.Items["B2BStoreAdminAuthorized"] is true;
         try
         {
-            RollbackWriteTestGuard.EnsureAllowed(applicationWriteModeEnabled, authenticated, memberCode, connectionString);
+            if (hostedWriteModeEnabled)
+                HostedWriteGuard.EnsureAllowed(applicationWriteModeEnabled, authenticated, memberCode, connectionString);
+            else
+                RollbackWriteTestGuard.EnsureAllowed(applicationWriteModeEnabled, authenticated, memberCode, connectionString);
             return Results.Ok(new { assets = await assetStorage.ListAsync(cancellationToken), applicationOnly = true, legacyPortalCompatible = false });
         }
         catch (SettingsException exception) { return SettingsError(exception); }
@@ -182,7 +246,10 @@ if (applicationWriteModeEnabled)
         var authenticated = context.Items["B2BStoreAdminAuthorized"] is true;
         try
         {
-            RollbackWriteTestGuard.EnsureAllowed(applicationWriteModeEnabled, authenticated, memberCode, connectionString);
+            if (hostedWriteModeEnabled)
+                HostedWriteGuard.EnsureAllowed(applicationWriteModeEnabled, authenticated, memberCode, connectionString);
+            else
+                RollbackWriteTestGuard.EnsureAllowed(applicationWriteModeEnabled, authenticated, memberCode, connectionString);
             return Results.Ok(new { deleted = await assetStorage.DeleteAsync(parameterId, cancellationToken), applicationOnly = true });
         }
         catch (SettingsException exception) { return SettingsError(exception); }
@@ -209,10 +276,10 @@ if (writeTestModeEnabled)
 
 if (applicationWriteModeEnabled)
 {
-    var persistentTestService = new SqlPersistentSettingsTestService(catalog, connectionString, memberCode, applicationWriteModeEnabled);
-    var extensionSettingsService = new SqlExtensionSettingsPersistence(catalog, connectionString, memberCode, applicationWriteModeEnabled);
-    // The application save route is available only through an explicit process setting in
-    // Development/SqlServer mode. The service enforces the fixed allowlist and exact target.
+    var persistentTestService = new SqlPersistentSettingsTestService(catalog, connectionString, memberCode, applicationWriteModeEnabled, hostedWriteModeEnabled);
+    var extensionSettingsService = new SqlExtensionSettingsPersistence(catalog, connectionString, memberCode, applicationWriteModeEnabled, hostedWriteModeEnabled);
+    // The application save route is available only through an explicit Development or hosted
+    // write mode. The service enforces the fixed allowlist and exact database/member target.
     app.MapPut("/api/settings", async (
         UpdateRequest request,
         HttpContext context,
@@ -241,7 +308,7 @@ if (applicationWriteModeEnabled)
             return Results.Ok(result);
         }
         catch (SettingsException exception) { return SettingsError(exception); }
-        catch (Exception) { return Results.Problem("The isolated settings save could not be verified.", statusCode: 503); }
+        catch (Exception) { return Results.Problem("The settings save could not be verified.", statusCode: 503); }
     });
 
     if (writeTestModeEnabled)
@@ -258,10 +325,13 @@ if (applicationWriteModeEnabled)
                 return Results.Ok(result);
             }
             catch (SettingsException exception) { return SettingsError(exception); }
-            catch (Exception) { return Results.Problem("The isolated settings save could not be verified.", statusCode: 503); }
+            catch (Exception) { return Results.Problem("The settings save could not be verified.", statusCode: 503); }
         });
     }
 }
+
+// Client-side Vue routes fall back to the hosted application entry point.
+app.MapFallbackToFile("index.html");
 
 app.Run();
 

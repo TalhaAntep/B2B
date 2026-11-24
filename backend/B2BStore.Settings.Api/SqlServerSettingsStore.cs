@@ -10,23 +10,29 @@ public sealed class SqlServerSettingsStore(ParameterCatalog catalog, string? con
         var (connection, columnTypes) = await OpenAndInspectAsync(cancellationToken);
         await using (connection)
         {
-            var rowCount = await GetTargetRowCountAsync(connection, null, cancellationToken);
-            RowSelectionGuard.EnsureSingleTarget(rowCount);
             var definitions = catalog.AllSettings.Where(item => item.Mapping.TableCandidate == "DealerSettings" && item.Mapping.ColumnCandidate is not null).ToArray();
             var available = definitions.Where(item => columnTypes.ContainsKey(item.Mapping.ColumnCandidate!)).ToArray();
             var values = new Dictionary<string, object?>(StringComparer.Ordinal);
             if (available.Length > 0)
             {
                 var columns = string.Join(", ", available.Select(item => QuoteIdentifier(item.Mapping.ColumnCandidate!)));
-                await using var command = new SqlCommand($"SELECT {columns} FROM dbo.DealerSettings WHERE MemberCode = @memberCode;", connection);
+                // Combine row selection and duplicate detection in one query.
+                await using var command = new SqlCommand($"SELECT {columns}, COUNT_BIG(*) OVER() AS [__rowCount] FROM dbo.DealerSettings WHERE MemberCode = @memberCode;", connection);
                 command.Parameters.AddWithValue("@memberCode", memberCode!);
                 await using var reader = await command.ExecuteReaderAsync(cancellationToken);
                 if (!await reader.ReadAsync(cancellationToken)) throw new SettingsException("MemberCodeMissing", "The configured member record is no longer available.");
+                var rowCount = Convert.ToInt64(reader.GetValue(available.Length), CultureInfo.InvariantCulture);
+                RowSelectionGuard.EnsureSingleTarget(rowCount);
                 for (var index = 0; index < available.Length; index++)
                 {
                     var normalized = Normalize(reader.GetValue(index), reader.GetFieldType(index), columnTypes[available[index].Mapping.ColumnCandidate!]);
                     values[available[index].ParameterId] = DealerSettingValueCodec.ToApiValue(available[index].ParameterId, normalized);
                 }
+            }
+            else
+            {
+                var rowCount = await GetTargetRowCountAsync(connection, null, cancellationToken);
+                RowSelectionGuard.EnsureSingleTarget(rowCount);
             }
             await SqlExtensionSettingsPersistence.ApplyReadValuesAsync(catalog, connection, values, memberCode!, cancellationToken);
             foreach (var item in catalog.AllSettings) values.TryAdd(item.ParameterId, null);

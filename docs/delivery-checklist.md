@@ -1,50 +1,49 @@
 # Final delivery checklist
 
-**Updated:** 2026-11-23  
+**Updated:** 2026-11-24  
 **Repository:** https://github.com/TalhaAntep/B2B  
-**Public demo:** https://talhaantep.github.io/B2B/
+**Static synthetic demo:** https://talhaantep.github.io/B2B/  
+**MonsterASP full-stack app:** http://b2b-store-settings.runasp.net/
 
 ## Assignment deliverables
 
 | Deliverable | Status | Evidence / notes |
 |---|---|---|
-| A — Technical Analysis Report | **Prepared; legacy evidence gaps disclosed** | `docs/technical-analysis-report.md`, `docs/technical-analysis.md`, `docs/parameter-catalog.md` / `.json`, `docs/mapping-audit.md` / `.json`, `docs/setting-editability-matrix.md`, `docs/database-inventory.md`, `docs/legacy-persistence-reverse-engineering.md`. |
-| B — Test and Defect Report | **Prepared; some required portal tests are unavailable** | `docs/test-and-defect-report.md` is the summary; `docs/test-bug-report.md` is the detailed test history/matrix; `docs/sql-validation-report.md` documents isolated SQL tests and restoration. `docs/evidence/delivery/` contains seven screenshots and MP4/WebM. |
-| C — Working Software | **Local full-stack application complete; public frontend demo deployed** | Vue 3 + TypeScript, ASP.NET Core .NET 10 API, SQL Server LocalDB integration, local read-only mode, isolated Development-only write tests. Public GitHub Pages demo is frontend-only and synthetic; API/SQL are not hosted. |
-| D — AI Usage Summary | **Prepared** | `docs/ai-usage-report.md`; includes AI assistance, verification, human-review points, and limitations. |
+| A — Technical Analysis Report | **Prepared; legacy evidence gaps disclosed** | `docs/technical-analysis-report.md`, `docs/technical-analysis.md`, parameter catalogue, mapping audit, editability matrix, database inventory, legacy persistence reverse-engineering. |
+| B — Test and Defect Report | **Prepared; portal test gaps disclosed** | `docs/test-and-defect-report.md`, `docs/test-bug-report.md`, `docs/sql-validation-report.md`, seven synthetic screenshots and short video in `docs/evidence/delivery/`. |
+| C — Working Software | **Full-stack MonsterASP deployment smoke-tested; not fully acceptance-tested** | Vue 3 + TypeScript frontend, ASP.NET Core .NET 10 API, SQL Server on MonsterASP (`db82141` / `store5`), plus local tests and GitHub Pages static showcase. Owner confirmed DB `ready`, admin connection and one successful Save/readback. |
+| D — AI Usage Summary | **Prepared and updated** | `docs/ai-usage-report.md`; includes tools, AI contributions, human verification and limitations. |
 
 ## Deployment acceptance
 
 | Requirement | Status | Explanation |
 |---|---|---|
-| Free publicly accessible demo | **Met for static showcase** | GitHub Pages: https://talhaantep.github.io/B2B/; opened by the project owner on 2026-11-23. |
-| Synthetic/demo data only | **Met** | 98 browser-generated unset values; no API/SQL requests in public demo mode. |
-| No public credentials or database | **Met by design** | The Pages artifact contains only the static frontend build; no API secret, connection string, SQL backup, or customer data is used. |
-| Full-stack hosted API | **Not met** | ASP.NET Core API remains local. |
-| Hosted SQL Server | **Not met** | SQL Server remains local (`Store5_Settings_Test`); no public SQL service was provisioned. |
-| Public multi-user authentication/tenant authorization | **Not met / not approved** | Current local bearer token is not suitable for a public management API. |
-| Free-tier compatibility and end-to-end hosted test | **Not completed** | A complete free SQL Server-compatible backend host has not been selected or verified. |
+| Free publicly accessible showcase | **Met** | GitHub Pages static showcase, synthetic and read-only. |
+| Full-stack hosted API | **Met for the current MonsterASP test deployment** | ASP.NET Core .NET 10 is running under MonsterASP; this is an owner-observed smoke test, not a provider-independent production design. |
+| Hosted SQL Server | **Met for the synthetic evaluation database** | `db82141`, `MemberCode=store5`; `/health/database` returned `ready`. |
+| Hosted settings read | **Owner-verified** | Admin UI connected and loaded settings. |
+| Hosted Save/readback | **Partially verified** | One setting Save reported success and readback. No complete 98-control hosted test matrix. |
+| Performance update | **Owner-reported** | Updated source removed redundant post-save reloads and combined row uniqueness/read queries; owner reported refresh/save became responsive. |
+| Anonymous public writes | **Implemented as an opt-in source mode; live activation not independently confirmed** | Requires `B2BSTORE_PUBLIC_WRITE_ENABLED=true`; anyone can alter shared settings when enabled. |
+| HTTPS | **Not confirmed** | The hosted link was used over HTTP. |
 
 ## Software and validation evidence
 
 - UI catalogue: **98 controls**.
-- Authenticated Development-only settings API allowlist: **93 settings adapters**; five file controls use separate application-owned asset storage. This is new-application persistence, not proof of old-portal save-handler parity.
-- Normal and Production API mode: read-only.
-- Public synthetic demo branch: `npm test` passed **36/36**; `VITE_PUBLIC_DEMO=true` production build passed.
-- Local full-stack frontend: `npm test` passed **35/35**; normal production build passed.
-- Backend: `.NET 10` Release solution build passed with **0 warnings / 0 errors**.
-- Earlier compatibility pass: **56/56** filtered non-database backend tests passed; eight focused SQL API groups passed with external checksum-verified backups, API/SQL readback, and exact restoration. These suites were not rerun during the last documentation and public-demo pass.
-- The final local SQL-backed check before public-demo work was SELECT-only, returned 98 settings, and reported `ReadOnly` / no write capabilities. No database writes occurred during the public-demo deployment.
-- Screenshots/video use synthetic Mock-mode values, not real `store5` data.
+- New-app fixed SQL settings adapters: **93**; five unresolved legacy mappings use app-owned extension keys; five image controls use a separate app-owned asset API.
+- Earlier local validation: frontend tests/build passed; .NET Release solution build passed with zero warnings/errors; 56 filtered non-database backend tests passed; eight focused isolated SQL API groups passed with external checksum-verified backups, readback and restoration. See detailed reports for dates and suite boundaries.
+- MonsterASP owner-observed smoke test (2026-11-23): app started in Production, SQL readiness returned `ready`, admin-token connection succeeded, one Save operation reported successful persistence/readback, and performance update was reported as responsive.
+- The public GitHub Pages build remains separate and synthetic; its screenshots/video contain no SQL customer values.
 
 ## Known gaps that must be stated to the evaluator
 
 1. The original ASP.NET Web Forms server-side save handler was unavailable. Exact old-portal save behaviour and parity remain unverified for all 98 controls.
-2. Five settings use application-owned extension keys because legacy destinations/readers were not established; five image slots use application-owned asset storage. Those features are not claimed to be consumed by the old portal.
-3. The portal effects of all controls were not fully tested in a controlled before/after experiment. Unavailable tests are marked as unverified/not tested in the mapping and test reports.
-4. The public site is a static synthetic showcase, not the full SQL-backed admin service. ASP.NET API and SQL Server are local only.
-5. The short MP4 is a 10.36-second synthetic UI capture. It does not demonstrate a live SQL save flow or the full-stack hosted service.
+2. Five settings use application-owned extension keys because legacy destinations/readers were not established; five image slots use application-owned asset storage. Those are not claimed to affect the old portal.
+3. The portal effects of all controls were not fully tested in controlled before/after experiments. Not-tested fields are identified in the reports.
+4. MonsterASP is a temporary synthetic evaluation deployment. One hosted Save flow was checked; all 98 settings were not tested against the hosted database.
+5. The optional anonymous public-write mode is a deliberate deviation from the assignment's authentication requirement. If active, every visitor can change shared settings; it must be identified as temporary and synthetic-only.
+6. HTTPS was not confirmed. Do not use real customer data or credentials on the current HTTP deployment.
 
 ## Suggested hand-in items
 
-Send the public GitHub repository and demo URLs, plus a single report/evidence ZIP containing the four deliverable areas A–D and the screenshots/video. Do **not** send the `.bak` file, connection strings, local token/configuration, real customer data, or unreviewed raw legacy evidence.
+Send the GitHub repository and relevant demo URLs, plus the report/evidence ZIP containing deliverables A–D and the screenshots/video. Do **not** send `.bak` files, connection strings, tokens, local configuration, real customer data, or unreviewed raw legacy evidence.
